@@ -44,7 +44,7 @@ export default function WhatIsSection() {
           <div className="relative">
             <div className="relative h-[360px] md:h-[420px] rounded-3xl overflow-hidden shadow-card">
               <Image
-                src="/images/what-is-lumieramed.jpg"
+                src="/images/step-begin.png"
                 alt="Medical student learning in a Chinese hospital"
                 fill
                 className="object-cover"

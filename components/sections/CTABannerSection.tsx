@@ -3,7 +3,7 @@ import Button from "@/components/ui/Button";
 
 export default function CTABannerSection() {
   return (
-    <section className="py-12 md:py-20 px-4 sm:px-6 lg:px-8">
+    <section className="bg-brand-light py-12 md:py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="relative rounded-3xl overflow-hidden w-full min-h-[700px] md:min-h-[400px] flex items-center justify-center">
           {/* Background image */}
@@ -30,7 +30,7 @@ export default function CTABannerSection() {
               <Button href="/browse-placements" size="lg">
                 Enquire Now
               </Button>
-              <Button href="/contact" size="lg" variant="secondary">
+              <Button href="/contact" size="lg" variant="transparent">
                 Contact Us
               </Button>
             </div>

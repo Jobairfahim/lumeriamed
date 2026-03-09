@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ButtonHTMLAttributes, AnchorHTMLAttributes } from "react";
 
-type ButtonVariant = "primary" | "secondary" | "outline" | "ghost";
+type ButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "transparent";
 type ButtonSize    = "sm" | "md" | "lg";
 
 interface BaseProps {
@@ -23,6 +23,7 @@ const variants: Record<ButtonVariant, string> = {
   secondary: "bg-white text-brand-navy border border-brand-border hover:bg-brand-gray hover:border-brand-teal",
   outline:   "border-2 border-brand-teal text-brand-teal bg-transparent hover:bg-brand-tealLight",
   ghost:     "text-brand-slate hover:text-brand-teal hover:bg-brand-tealLight bg-transparent",
+  transparent: "bg-white/10 text-white hover:bg-white/20",
 };
 
 const sizes: Record<ButtonSize, string> = {
