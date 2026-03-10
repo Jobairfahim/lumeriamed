@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   description:
     "LumieraMed connects medical students with accredited clinical elective placements across China's leading hospitals.",
   keywords: ["medical elective", "China", "clinical placement", "medical students", "LumieraMed"],
+  icons: {
+    icon: "/images/logo.ico",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
