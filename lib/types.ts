@@ -34,6 +34,7 @@ export interface EnquiryForm {
 /** Full placement enquiry form */
 export interface PlacementEnquiryForm {
   firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   university: string;

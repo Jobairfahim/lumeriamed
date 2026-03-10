@@ -1,179 +1,439 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { X, Upload, Send } from "lucide-react";
-import { Input, Textarea } from "@/components/ui/ui/Input";
+import { useRef, useState } from "react";
+import { ChevronDown, Paperclip, Send, Upload, X } from "lucide-react";
 import Button from "@/components/ui/ui/Button";
 import type { PlacementEnquiryForm } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
 interface PlacementEnquiryModalProps {
   isOpen: boolean;
   onClose: () => void;
   placementTitle?: string;
-  /**
-   * ── INTEGRATION POINT ──
-   * onSubmit={async (form, files) => submitPlacementEnquiry(form, files)}
-   */
-  onSubmit?: (form: PlacementEnquiryForm, files: File[]) => Promise<{ success: boolean; error?: string }>;
+  onSubmit?: (
+    form: PlacementEnquiryForm,
+    files: File[]
+  ) => Promise<{ success: boolean; error?: string }>;
 }
 
-const SPECIALTIES = ["Cardiology","Emergency Medicine","General Surgery","Internal Medicine","Neurology","Obstetrics & Gynecology","Oncology","Orthopaedics","Paediatrics","Psychiatry","Radiology & Imaging","Traditional Chinese Medicine","Other"];
-const LANGUAGES   = ["English","Chinese (Mandarin)","Bilingual (Both)"];
-const DURATIONS   = ["2 weeks","4 weeks","6 weeks","8 weeks","10 weeks","12 weeks","Flexible"];
+const SPECIALTIES = [
+  "Cardiology",
+  "Emergency Medicine",
+  "General Surgery",
+  "Internal Medicine",
+  "Neurology",
+  "Obstetrics & Gynecology",
+  "Oncology",
+  "Orthopaedics",
+  "Paediatrics",
+  "Psychiatry",
+  "Radiology & Imaging",
+  "Traditional Chinese Medicine",
+  "Other",
+];
+
+const LANGUAGES = ["English", "Chinese (Mandarin)", "Bilingual (Both)"];
+const DURATIONS = [
+  "2 weeks",
+  "4 weeks",
+  "6 weeks",
+  "8 weeks",
+  "10 weeks",
+  "12 weeks",
+  "Flexible",
+];
 
 const EMPTY: PlacementEnquiryForm = {
-  firstName: "", email: "", phone: "", university: "", yearOfStudy: "",
-  preferredSpecialty: "", preferredCities: "", duration: "",
-  preferredStartDate: "", language: "", additionalInfo: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  university: "",
+  yearOfStudy: "",
+  preferredSpecialty: "",
+  preferredCities: "",
+  duration: "",
+  preferredStartDate: "",
+  language: "",
+  additionalInfo: "",
 };
 
-export default function PlacementEnquiryModal({ isOpen, onClose, placementTitle, onSubmit }: PlacementEnquiryModalProps) {
-  const router = useRouter();
-  const [form, setForm]       = useState<PlacementEnquiryForm>(EMPTY);
-  const [files, setFiles]     = useState<File[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState<string | null>(null);
-  const fileRef               = useRef<HTMLInputElement>(null);
+type FieldProps = {
+  label: string;
+  name: keyof PlacementEnquiryForm;
+  value?: string;
+  placeholder?: string;
+  required?: boolean;
+  type?: string;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => void;
+  className?: string;
+};
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+function Field({
+  label,
+  name,
+  value,
+  placeholder,
+  required,
+  type = "text",
+  onChange,
+  className,
+}: FieldProps) {
+  return (
+    <div className={cn("flex flex-col gap-2", className)}>
+      <label className="text-[12px] font-medium text-[#43474a]">
+        {label}
+        {required && <span className="text-[#e16464]">*</span>}
+      </label>
+      <input
+        name={name}
+        type={type}
+        value={value ?? ""}
+        placeholder={placeholder}
+        onChange={onChange}
+        className="h-11 w-full rounded-[10px] border border-[#efefef] bg-[#f8f8f8] px-4 text-[12px] text-[#32363a] placeholder:text-[#b4b4b4] outline-none transition focus:border-brand-teal"
+      />
+    </div>
+  );
+}
+
+type SelectFieldProps = {
+  label: string;
+  name: keyof PlacementEnquiryForm;
+  value?: string;
+  placeholder: string;
+  required?: boolean;
+  options: readonly string[];
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => void;
+  className?: string;
+};
+
+function SelectField({
+  label,
+  name,
+  value,
+  placeholder,
+  required,
+  options,
+  onChange,
+  className,
+}: SelectFieldProps) {
+  return (
+    <div className={cn("flex flex-col gap-2", className)}>
+      <label className="text-[12px] font-medium text-[#43474a]">
+        {label}
+        {required && <span className="text-[#e16464]">*</span>}
+      </label>
+      <div className="relative">
+        <select
+          name={name}
+          value={value ?? ""}
+          onChange={onChange}
+          className="h-11 w-full appearance-none rounded-[10px] border border-[#efefef] bg-[#f8f8f8] px-4 pr-10 text-[12px] text-[#32363a] outline-none transition focus:border-brand-teal"
+        >
+          <option value="">{placeholder}</option>
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          size={15}
+          className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#8a8f93]"
+        />
+      </div>
+    </div>
+  );
+}
+
+export default function PlacementEnquiryModal({
+  isOpen,
+  onClose,
+  placementTitle,
+  onSubmit,
+}: PlacementEnquiryModalProps) {
+  const router = useRouter();
+  const [form, setForm] = useState<PlacementEnquiryForm>(EMPTY);
+  const [files, setFiles] = useState<File[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     setError(null);
-    setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async () => {
-    if (!form.firstName || !form.email || !form.phone || !form.university ||
-        !form.yearOfStudy || !form.preferredSpecialty || !form.duration || !form.preferredStartDate) {
+    if (
+      !form.firstName ||
+      !form.lastName ||
+      !form.email ||
+      !form.yearOfStudy ||
+      !form.preferredSpecialty ||
+      !form.duration ||
+      !form.preferredStartDate ||
+      !form.additionalInfo
+    ) {
       setError("Please fill in all required fields.");
       return;
     }
+
     if (!onSubmit) {
       onClose();
       router.push("/enquiry-success");
       return;
     }
+
     setLoading(true);
     setError(null);
     const result = await onSubmit(form, files);
     setLoading(false);
+
     if (result.success) {
-      setForm(EMPTY); setFiles([]); onClose();
+      setForm(EMPTY);
+      setFiles([]);
+      onClose();
       router.push("/enquiry-success");
-    } else {
-      setError(result.error ?? "Something went wrong. Please try again.");
+      return;
     }
+
+    setError(result.error ?? "Something went wrong. Please try again.");
   };
 
   if (!isOpen) return null;
 
-  const selectClass = "w-full px-4 py-3 rounded-xl border border-brand-border bg-white text-brand-navy text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal transition-all appearance-none";
-
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl relative animate-fade-up flex flex-col max-h-[92vh]" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4 backdrop-blur-[2px]"
+      onClick={onClose}
+    >
+      <div
+        className="relative flex max-h-[94vh] w-full max-w-[880px] flex-col overflow-hidden rounded-[18px] bg-white shadow-[0_24px_80px_rgba(0,0,0,0.22)] animate-fade-up"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center text-[#464b4f] transition hover:text-black"
+          aria-label="Close"
+        >
+          <X size={20} />
+        </button>
 
-        {/* Header */}
-        <div className="px-7 pt-7 pb-5 border-b border-brand-border flex-shrink-0">
-          <h2 className="font-display font-semibold text-brand-navy text-2xl">Placement Enquiry Form</h2>
-          <p className="text-brand-slate text-sm mt-1 leading-snug">
-            Please provide the following information so we can match you with the best placement options.
-            Fields marked with <span className="text-red-500">*</span> are required.
-          </p>
-          {placementTitle && (
-            <div className="mt-3 inline-flex items-center gap-2 bg-brand-tealLight text-brand-teal text-xs font-medium px-3 py-1.5 rounded-full">
-              🏥 {placementTitle}
-            </div>
-          )}
-        </div>
-
-        {/* Scrollable body */}
-        <div className="overflow-y-auto flex-1 px-7 py-6">
-          <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Input label="First Name"     name="firstName" placeholder="Enter your first name"       value={form.firstName} onChange={handleChange} required />
-              <Input label="Email Address"  name="email"     type="email" placeholder="your@email.com" value={form.email}     onChange={handleChange} required />
-            </div>
-
-            <Input label="Phone Number" name="phone" type="tel" placeholder="+1 (555) 123-4567" value={form.phone} onChange={handleChange} required />
-            <Input label="University / Medical School" name="university" placeholder="Your institution" value={form.university} onChange={handleChange} required />
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Input label="Year of Study" name="yearOfStudy" placeholder="e.g. Year 3, Final Year" value={form.yearOfStudy} onChange={handleChange} required />
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-brand-navy">Preferred Specialty <span className="text-brand-teal">*</span></label>
-                <select name="preferredSpecialty" value={form.preferredSpecialty} onChange={handleChange} className={selectClass}>
-                  <option value="" disabled>Select specialty</option>
-                  {SPECIALTIES.map((s) => <option key={s} value={s}>{s}</option>)}
-                </select>
+        <div className="overflow-y-auto px-5 pb-5 pt-7 sm:px-6 sm:pb-6 sm:pt-8">
+          <div className="mb-5 pr-10">
+            <h2 className="text-[22px] font-semibold tracking-[-0.03em] text-[#313538]">
+              Placement Enquiry Form
+            </h2>
+            <p className="mt-3 max-w-[690px] text-[11px] leading-[1.45] text-[#808487]">
+              Please Provide The Following Information So We Can Match You With The Best Placement Options. Fields Marked With * Are Required.
+            </p>
+            {placementTitle && (
+              <div className="mt-3 inline-flex items-center rounded-full bg-[#eaf8f7] px-3 py-1 text-[11px] font-medium text-brand-teal">
+                {placementTitle}
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Input label="Preferred Cities" name="preferredCities" placeholder="e.g. Beijing, Shanghai" value={form.preferredCities} onChange={handleChange} />
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-brand-navy">Duration <span className="text-brand-teal">*</span></label>
-                <select name="duration" value={form.duration} onChange={handleChange} className={selectClass}>
-                  <option value="" disabled>Select duration</option>
-                  {DURATIONS.map((d) => <option key={d} value={d}>{d}</option>)}
-                </select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Input label="Preferred Start Date" name="preferredStartDate" type="date" value={form.preferredStartDate} onChange={handleChange} required />
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-brand-navy">Language</label>
-                <select name="language" value={form.language} onChange={handleChange} className={selectClass}>
-                  <option value="">Select Language</option>
-                  {LANGUAGES.map((l) => <option key={l} value={l}>{l}</option>)}
-                </select>
-              </div>
-            </div>
-
-            {/* File upload */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-brand-navy">Upload Your Documents</label>
-              <div
-                onClick={() => fileRef.current?.click()}
-                className="w-full border-2 border-dashed border-brand-border rounded-xl py-4 px-5 flex items-center justify-center gap-2 cursor-pointer hover:border-brand-teal hover:bg-brand-tealLight/40 transition-all"
-              >
-                <Upload size={16} className="text-brand-teal" />
-                <span className="text-brand-slate text-sm">
-                  {files.length > 0 ? files.map((f) => f.name).join(", ") : "Upload CV, Passport, Transcript…"}
-                </span>
-              </div>
-              <input ref={fileRef} type="file" multiple accept=".pdf,.doc,.docx,.jpg,.png" className="hidden" onChange={(e) => { if (e.target.files) setFiles(Array.from(e.target.files)); }} />
-              <p className="text-brand-muted text-xs">Accepted: PDF, DOC, DOCX, JPG, PNG (max 10MB each)</p>
-            </div>
-
-            <Textarea label="Additional Information" name="additionalInfo" placeholder="Any specific requirements, interests, or questions you'd like to share..." value={form.additionalInfo} onChange={handleChange} className="min-h-[90px]" />
-
-            {error && (
-              <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">{error}</div>
             )}
           </div>
-        </div>
 
-        {/* Footer */}
-        <div className="px-7 pb-7 pt-4 border-t border-brand-border flex-shrink-0">
-          <Button onClick={handleSubmit} className="w-full" size="lg" disabled={loading}>
-            {loading ? (
-              <span className="flex items-center gap-2">
-                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
-                </svg>
-                Submitting...
-              </span>
-            ) : (
-              <>Submit Enquiry <Send size={15} /></>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field
+                label="First Name"
+                name="firstName"
+                value={form.firstName}
+                placeholder="Enter your first name"
+                required
+                onChange={handleChange}
+              />
+              <Field
+                label="Last Name"
+                name="lastName"
+                value={form.lastName}
+                placeholder="Enter your last name"
+                required
+                onChange={handleChange}
+              />
+            </div>
+
+            <Field
+              label="Email Address"
+              name="email"
+              value={form.email}
+              type="email"
+              placeholder="username@example.com"
+              required
+              onChange={handleChange}
+            />
+
+            <Field
+              label="Phone Number"
+              name="phone"
+              value={form.phone}
+              type="tel"
+              placeholder="+1 (555) 123-4567"
+              onChange={handleChange}
+            />
+
+            <Field
+              label="University/Medical School"
+              name="university"
+              value={form.university}
+              placeholder="Your institution"
+              onChange={handleChange}
+            />
+
+            <Field
+              label="Year Of Study"
+              name="yearOfStudy"
+              value={form.yearOfStudy}
+              placeholder="e.g. 4/5"
+              required
+              onChange={handleChange}
+            />
+
+            <Field
+              label="Preferred Cities"
+              name="preferredCities"
+              value={form.preferredCities}
+              placeholder="e.g., Beijing, Shanghai"
+              onChange={handleChange}
+            />
+
+            <SelectField
+              label="Preferred Specialty"
+              name="preferredSpecialty"
+              value={form.preferredSpecialty}
+              placeholder="Select Specialty"
+              required
+              options={SPECIALTIES}
+              onChange={handleChange}
+            />
+
+            <SelectField
+              label="Duration"
+              name="duration"
+              value={form.duration}
+              placeholder="Select Duration"
+              required
+              options={DURATIONS}
+              onChange={handleChange}
+            />
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field
+                label="Preferred Start Date"
+                name="preferredStartDate"
+                value={form.preferredStartDate}
+                placeholder="mm/dd/yyyy"
+                required
+                onChange={handleChange}
+              />
+              <SelectField
+                label="Language"
+                name="language"
+                value={form.language}
+                placeholder="Select Language"
+                options={LANGUAGES}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-[12px] font-medium text-[#43474a]">
+                Upload Your Documents
+              </label>
+              <div
+                onClick={() => fileRef.current?.click()}
+                className="flex h-11 w-full cursor-pointer items-center justify-center rounded-[10px] border border-[#efefef] bg-[#f8f8f8] px-4 text-[12px] text-[#8a8f93] transition hover:border-brand-teal"
+              >
+                <span className="mr-2 font-medium text-[#4b4f53]">Upload</span>
+                <Upload size={13} className="text-brand-teal" />
+              </div>
+              {files.length > 0 && (
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {files.map((file) => (
+                    <span
+                      key={`${file.name}-${file.size}`}
+                      className="inline-flex items-center gap-1 rounded-full bg-[#eef7f7] px-3 py-1 text-[11px] text-[#5e6469]"
+                    >
+                      <Paperclip size={11} />
+                      {file.name}
+                    </span>
+                  ))}
+                </div>
+              )}
+              <input
+                ref={fileRef}
+                type="file"
+                multiple
+                accept=".pdf,.doc,.docx,.jpg,.png"
+                className="hidden"
+                onChange={(e) => {
+                  if (e.target.files) setFiles(Array.from(e.target.files));
+                }}
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-[12px] font-medium text-[#43474a]">
+                Additional Information<span className="text-[#e16464]">*</span>
+              </label>
+              <textarea
+                name="additionalInfo"
+                value={form.additionalInfo}
+                placeholder="Any specific requirements, interests, or questions you'd like to share..."
+                onChange={handleChange}
+                rows={6}
+                className="w-full resize-none rounded-[10px] border border-[#efefef] bg-[#f8f8f8] px-4 py-4 text-[12px] text-[#32363a] placeholder:text-[#b4b4b4] outline-none transition focus:border-brand-teal"
+              />
+            </div>
+
+            {error && (
+              <div className="rounded-[10px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                {error}
+              </div>
             )}
-          </Button>
-        </div>
 
-        <button onClick={onClose} className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center text-brand-muted hover:text-brand-navy hover:bg-brand-gray transition-all">
-          <X size={18} />
-        </button>
+            <Button
+              onClick={handleSubmit}
+              className="mt-2 h-12 w-full rounded-[8px] bg-brand-teal text-[13px] font-medium hover:bg-brand-tealDark"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    />
+                  </svg>
+                  Submitting...
+                </span>
+              ) : (
+                <>
+                  Submit Enquiry <Send size={14} />
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

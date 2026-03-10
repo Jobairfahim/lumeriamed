@@ -78,11 +78,13 @@ export default function SubmitEnquiryModal({ isOpen, onClose, onSubmit }: Submit
             <Input label="First Name" name="firstName" placeholder="Enter your first name" value={form.firstName} onChange={handleChange} required />
             <Input label="Last Name"  name="lastName"  placeholder="Enter your last name"  value={form.lastName}  onChange={handleChange} />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-4">
             <Input label="Email" name="email" type="email" placeholder="Enter your email address" value={form.email} onChange={handleChange} required />
+          </div>
+          <div className="grid gap-4">
             <Input label="Phone" name="phone" type="tel"   placeholder="Enter your phone number"  value={form.phone} onChange={handleChange} />
           </div>
-          <Textarea label="Message" name="message" placeholder="Describe your message..." value={form.message} onChange={handleChange} className="min-h-[110px]" />
+          <Textarea label="Message" name="message" placeholder="Describe your message..." value={form.message} onChange={handleChange} className="min-h-[110px]" required />
           {error && (
             <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">{error}</div>
           )}
