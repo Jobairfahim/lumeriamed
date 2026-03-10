@@ -5,7 +5,7 @@ export default function HeroSection() {
   return (
     <section
       id="top"
-      className="relative min-h-[880px] md:min-h-[800px] flex items-end"
+      className="relative min-h-[980px] md:min-h-[800px] flex items-end"
     >
       {/* Background image */}
       <div className="absolute inset-0 overflow-hidden">
