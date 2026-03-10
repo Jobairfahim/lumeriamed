@@ -15,7 +15,7 @@ const iconMap: Record<
 
 export default function WhyChooseSection() {
   return (
-    <section className="bg-wpy-16 md:py-20">
+    <section className="bg-white py-16 md:py-20">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 lg:gap-16 items-start mb-10">
           <h2 className="font-display text-[2.2rem] md:text-[3.15rem] leading-[1.06] font-semibold tracking-[-0.04em] text-[#2f3437] max-w-[11ch]">
