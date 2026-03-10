@@ -1,3 +1,4 @@
+import CTABannerSection from '@/components/sections/CTABannerSection';
 import Image from 'next/image';
 
 export default function AboutPage() {
@@ -183,6 +184,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+      <CTABannerSection />
 
     </div>
   );

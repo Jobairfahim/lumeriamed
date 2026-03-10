@@ -23,8 +23,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ["'Playfair Display'", "Georgia", "serif"],
-        body:    ["'DM Sans'", "sans-serif"],
+        display: ["var(--font-instrument-sans)", "sans-serif"],
+        body: ["var(--font-instrument-sans)", "sans-serif"],
       },
       fontSize: {
         "2xs": "0.65rem",

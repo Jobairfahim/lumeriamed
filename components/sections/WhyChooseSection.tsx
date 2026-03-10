@@ -1,106 +1,87 @@
 import Image from "next/image";
-import { Globe, Users, Heart, Shield } from "lucide-react";
-import SectionHeader from "@/components/ui/ui/SectionHeader";
+import { Globe, Heart, Stethoscope } from "lucide-react";
 import { WHY_CHOOSE_FEATURES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { WhyChooseFeature } from "@/lib/types";
 
-const iconMap: Record<string, React.ComponentType<{ size?: number | string; className?: string }>> = {
+const iconMap: Record<
+  string,
+  React.ComponentType<{ size?: number | string; className?: string }>
+> = {
   globe: Globe,
-  users: Users,
+  stethoscope: Stethoscope,
   heart: Heart,
-  shield: Shield,
 } as const;
 
 export default function WhyChooseSection() {
   return (
-    <section className="py-16 md:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left: Features */}
-          <div className="flex flex-col gap-8">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-              <SectionHeader
-                title="Why Choose Medical Electives in China?"
-              />
-              <p className="text-brand-slate text-sm max-w-[200px] leading-relaxed md:text-right hidden md:block">
-                Discover the unique advantages of completing your medical
-                elective in one of the world&apos;s most dynamic healthcare
-                environments.
-              </p>
-            </div>
+    <section className="bg-wpy-16 md:py-20">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 lg:gap-16 items-start mb-10">
+          <h2 className="font-display text-[2.2rem] md:text-[3.15rem] leading-[1.06] font-semibold tracking-[-0.04em] text-[#2f3437] max-w-[11ch]">
+            Why Choose Medical Electives in China?
+          </h2>
+          <p className="text-[#5f666c] text-[15px] leading-[1.55] max-w-[310px] lg:pt-2">
+            Discover the unique advantages of completing your medical elective in one of the world&apos;s most dynamic healthcare environments.
+          </p>
+        </div>
 
-            <p className="text-brand-slate text-sm leading-relaxed md:hidden">
-              Discover the unique advantages of completing your medical elective
-              in one of the world&apos;s most dynamic healthcare environments.
-            </p>
+        <div className="grid grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)] gap-5 lg:gap-5 items-stretch">
+          <div className="space-y-4">
+            {WHY_CHOOSE_FEATURES.map((feature: WhyChooseFeature) => {
+              const Icon = iconMap[feature.icon];
 
-            <div className="flex flex-col gap-3">
-              {WHY_CHOOSE_FEATURES.map((feature: WhyChooseFeature) => {
-                const Icon = iconMap[feature.icon];
-                return (
+              return (
+                <div
+                  key={feature.id}
+                  className={cn(
+                    "rounded-[6px] px-4 py-4 md:px-4 md:py-5 min-h-[116px] transition-colors duration-200",
+                    feature.highlight ? "bg-[#39b3ae]" : "bg-[#fbfbfb]"
+                  )}
+                >
                   <div
-                    key={feature.id}
                     className={cn(
-                      "flex gap-4 p-5 rounded-2xl transition-all duration-200",
-                      feature.highlight
-                        ? "bg-brand-teal text-white"
-                        : "bg-brand-light hover:bg-brand-gray"
+                      "w-8 h-8 rounded-md flex items-center justify-center mb-5",
+                      feature.highlight ? "bg-white/15" : "bg-[#e9f8f7]"
                     )}
                   >
-                    <div
+                    <Icon
+                      size={15}
+                      className={feature.highlight ? "text-white" : "text-brand-teal"}
+                    />
+                  </div>
+                  <div>
+                    <h3
                       className={cn(
-                        "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0",
-                        feature.highlight
-                          ? "bg-white/20"
-                          : "bg-brand-tealLight"
+                        "font-semibold text-[1rem] md:text-[1.08rem] mb-2 leading-tight",
+                        feature.highlight ? "text-white" : "text-[#313639]"
                       )}
                     >
-                      <Icon
-                        size={18}
-                        className={feature.highlight ? "text-white" : "text-brand-teal"}
-                      />
-                    </div>
-                    <div>
-                      <h3
-                        className={cn(
-                          "font-semibold text-base mb-1",
-                          feature.highlight ? "text-white" : "text-brand-navy"
-                        )}
-                      >
-                        {feature.title}
-                      </h3>
-                      <p
-                        className={cn(
-                          "text-sm leading-relaxed",
-                          feature.highlight ? "text-white/80" : "text-brand-slate"
-                        )}
-                      >
-                        {feature.description}
-                      </p>
-                    </div>
+                      {feature.title}
+                    </h3>
+                    <p
+                      className={cn(
+                        "text-[13px] leading-[1.55] max-w-[31ch]",
+                        feature.highlight ? "text-white/90" : "text-[#757c82]"
+                      )}
+                    >
+                      {feature.description}
+                    </p>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })}
           </div>
 
-          {/* Right: Image */}
-          <div className="relative order-first lg:order-last">
-            <div className="relative h-[500px] md:h-[500px] rounded-3xl overflow-hidden shadow-card">
+          <div className="relative">
+            <div className="relative h-[360px] sm:h-[420px] lg:h-full lg:min-h-[396px] rounded-[12px] overflow-hidden">
               <Image
                 src="/images/why-choose.png"
                 alt="Chinese medical professional at her desk"
                 fill
-                className="object-cover object-top"
+                className="object-cover"
               />
             </div>
-            {/* Floating stat card
-            <div className="absolute bottom-6 left-6 bg-white rounded-2xl shadow-cardHover p-4 flex gap-3 items-center">
-              <div className="w-10 h-10 rounded-xl bg-brand-tealLight flex items-center justify-center">
-                <span className="text-brand-teal text-lg">🏥</span>
-              </div>
-            </div> */}
           </div>
         </div>
       </div>

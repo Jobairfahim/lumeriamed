@@ -1,5 +1,8 @@
 "use client";
 
+import Image from "next/image";
+import { cn } from "@/lib/utils";
+import Button from "@/components/ui/Button";
 import { useModal } from "@/components/modals/ModalProvider";
 
 const SPECIALTIES = [
@@ -14,7 +17,7 @@ const SPECIALTIES = [
   { title: "Psychiatry",                 desc: "Inpatient and outpatient psychiatry and community mental health programs." },
 ];
 
-const CITIES = ["Beijing", "Shanghai", "Guangzhou", "Shenzhen", "Chengdu", "Hangzhou", "Xi'an", "Wuhan"];
+// const CITIES = ["Beijing", "Shanghai", "Guangzhou", "Shenzhen", "Chengdu", "Hangzhou", "Xi'an", "Wuhan"];
 
 export default function BrowsePlacementsPage() {
   const { openPlacement } = useModal();
@@ -51,37 +54,23 @@ export default function BrowsePlacementsPage() {
             We don&apos;t show placement listings because every student&apos;s needs are
             unique. Instead, we personally match you with the ideal placement.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { num: "01", title: "Submit Enquiry",    desc: "Tell us about your specialty interests, preferred dates, language skills, and goals." },
-              { num: "02", title: "Personal Matching", desc: "Our team reviews your profile and matches you with suitable hospitals from our network." },
-              { num: "03", title: "Confirmation",      desc: "Receive placement details, documentation requirements, and guidance within 1–2 weeks." },
-              { num: "04", title: "Begin Your Journey",desc: "Complete preparations with our support and start your transformative clinical experience." },
-            ].map((s) => (
-              <div key={s.num} className="flex flex-col gap-2">
-                <span className="text-brand-teal font-bold text-lg font-display">{s.num}</span>
-                <h3 className="font-semibold text-brand-navy text-base">{s.title}</h3>
-                <p className="text-brand-slate text-sm leading-relaxed">{s.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Specialties ───────────────────────────────────────────────────── */}
-      <section className="bg-brand-light py-14 md:py-20 px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-brand-navy mb-3">
-              Available Specialties
-            </h2>
-            <p className="text-brand-slate text-sm md:text-base max-w-md mx-auto leading-relaxed">
-              We place students across a wide range of clinical specialties in China&apos;s leading hospitals.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-brand-border rounded-2xl overflow-hidden border border-brand-border">
-            {SPECIALTIES.map((s) => (
-              <div key={s.title} className="bg-white p-6 hover:bg-brand-light transition-colors">
+              { image: "enquiry", title: "Submit Enquiry",    desc: "Tell us about your specialty interests, preferred dates, language skills, and goals." },
+              { image: "matchings", title: "Personal Matching", desc: "Our team reviews your profile and matches you with suitable hospitals from our network." },
+              { image: "confirmation", title: "Confirmation",      desc: "Receive placement details, documentation requirements, and guidance within 1–2 weeks." },
+              { image: "begin", title: "Begin Your Journey",desc: "Complete preparations with our support and start your transformative clinical experience." },
+            ].map((s, index) => (
+              <div key={index} className="bg-brand-light p-6 rounded-2xl text-center">
+                <div className="flex justify-center mb-4">
+                  <Image
+                    src={`/images/${s.image}.png`}
+                    alt={s.title}
+                    width={60}
+                    height={60}
+                    className="w-12 h-12"
+                  />
+                </div>
                 <h3 className="font-semibold text-brand-navy text-base mb-2">{s.title}</h3>
                 <p className="text-brand-slate text-sm leading-relaxed">{s.desc}</p>
               </div>
@@ -90,8 +79,84 @@ export default function BrowsePlacementsPage() {
         </div>
       </section>
 
-      {/* ── Cities ────────────────────────────────────────────────────────── */}
+      {/* ── Placement Works Image ─────────────────────────────────────── */}
+      <section className="px-6 py-15">
+        <Image
+          src="/images/placement-works.png"
+          alt="How Our Placement Process Works"
+          width={1320}
+          height={600}
+          className="w-full h-auto object-cover rounded-2xl"
+        />
+      </section>
+
+      {/* ── Specialties ───────────────────────────────────────────────────── */}
+      <section className="bg-brand-light py-14 md:py-20 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-brand-navy mb-3">
+             What We Offer
+            </h2>
+            <p className="text-brand-slate text-sm md:text-base max-w-md mx-auto leading-relaxed">
+              We don&apos;t show placement listings because every student&apos;s needs are unique. Instead, we personally match you with the ideal placement.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {SPECIALTIES.map((s) => (
+              <div key={s.title} className="bg-white p-6 rounded-2xl border border-brand-border hover:bg-brand-light transition-colors shadow-sm">
+                <h3 className="font-semibold text-brand-navy text-base mb-2">{s.title}</h3>
+                <p className="text-brand-slate text-sm leading-relaxed">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="bg-white py-14 md:py-20 px-4">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+          <div>
+            <Image
+              src="/images/partner-inst.png"
+              alt="Our partner institutions"
+              width={720}
+              height={520}
+              className="w-full h-auto rounded-2xl object-cover"
+            />
+          </div>
+          <div>
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-brand-navy mb-4">
+              Our Partner Institutions
+            </h2>
+            <p className="text-brand-slate text-sm md:text-base leading-relaxed mb-5">
+              We work exclusively with accredited, high-quality medical institutions that have demonstrated commitment to international medical education. Our partner hospitals include:
+            </p>
+            <ul className="space-y-3 text-brand-slate text-sm md:text-base leading-relaxed mb-5">
+              <li className="flex gap-3">
+                <span className="mt-2 h-2 w-2 rounded-full bg-brand-teal shrink-0" />
+                <span>Exams, cleanings, fluoride treatments, sealants</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="mt-2 h-2 w-2 rounded-full bg-brand-teal shrink-0" />
+                <span>University-affiliated teaching hospitals with international departments</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="mt-2 h-2 w-2 rounded-full bg-brand-teal shrink-0" />
+                <span>Specialized centers of excellence in specific medical fields</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="mt-2 h-2 w-2 rounded-full bg-brand-teal shrink-0" />
+                <span>Hospitals with English-speaking staff</span>
+              </li>
+            </ul>
+            <p className="text-brand-slate text-sm md:text-base leading-relaxed">
+              Each placement is individually arranged based on your specific requirements, ensuring the best possible match for your educational objectives and career aspirations.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Cities ────────────────────────────────────────────────────────── */}
+      {/* <section className="bg-white py-14 md:py-20 px-4">
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="font-display text-2xl md:text-3xl font-bold text-brand-navy mb-3">
             Placement Locations
@@ -107,7 +172,7 @@ export default function BrowsePlacementsPage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ── Bottom CTA ────────────────────────────────────────────────────── */}
       <section className="bg-brand-teal py-14 px-4 text-center">
