@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { GraduationCap, Mail, Pencil, Phone } from "lucide-react";
 
 const MOCK_PROFILE = {
@@ -36,10 +37,11 @@ export default function ProfilePage() {
 
         <div className="flex flex-col items-center text-center">
           <div className="relative mb-4 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-brand-gray ring-2 ring-[#e8f6f4]">
-            <img
+            <Image
               src={MOCK_PROFILE.avatar}
               alt={MOCK_PROFILE.name}
-              className="h-full w-full object-cover"
+              fill
+              className="object-cover"
             />
             <span className="absolute text-lg font-semibold text-brand-navy">AR</span>
           </div>

@@ -128,7 +128,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   <p className="text-[10px] text-brand-muted">Student ID: {MOCK_USER.studentId}</p>
                 </div>
                 <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-teal">
-                  <img src={MOCK_USER.avatar} alt="" className="h-full w-full object-cover" />
+                  <Image src={MOCK_USER.avatar} alt="" fill className="object-cover" />
                   <span className="absolute text-xs font-bold text-white">JS</span>
                 </div>
               </div>

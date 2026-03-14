@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Mail, GraduationCap, Phone, Clock, Calendar, Globe, MapPin, FileText, Download } from "lucide-react";
 
@@ -35,7 +36,7 @@ const statusStyles: Record<string, string> = {
   Rejected:   "bg-red-100 text-red-600",
 };
 
-export default function ApplicationDetailPage({ params }: { params: { id: string } }) {
+export default function ApplicationDetailPage() {
   const app = MOCK_APPLICATION; // Replace: await getApplication(params.id)
 
   return (
@@ -52,7 +53,7 @@ export default function ApplicationDetailPage({ params }: { params: { id: string
           {/* Avatar + name */}
           <div className="mb-5 flex flex-col items-center border-b border-brand-border pb-5 text-center sm:mb-6 sm:pb-6">
             <div className="relative mb-3 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-brand-gray ring-2 ring-brand-tealLight">
-              <img src={app.student.avatar} alt={app.student.name} className="h-full w-full object-cover" />
+              <Image src={app.student.avatar} alt={app.student.name} fill className="object-cover" />
               <span className="absolute text-sm font-semibold text-brand-navy">AR</span>
             </div>
             <h2 className="font-display font-bold text-brand-navy text-lg">{app.student.name}</h2>

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function PartnerInstitutionsSection() {
   return (
     <section className="bg-white py-16 md:py-20 px-4">
@@ -5,11 +7,12 @@ export default function PartnerInstitutionsSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 
           {/* Left: image */}
-          <div className="rounded-2xl overflow-hidden h-72 md:h-80 bg-brand-gray order-last md:order-first">
-            <img
+          <div className="relative order-last h-72 overflow-hidden rounded-2xl bg-brand-gray md:order-first md:h-80">
+            <Image
               src="/images/partner-institutions.jpg"
               alt="Medical professionals in discussion"
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
             />
           </div>
 

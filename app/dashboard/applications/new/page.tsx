@@ -2,8 +2,6 @@
 
 import { useState, useRef } from "react";
 import { X, Upload, Send } from "lucide-react";
-import { Input, Textarea } from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
 import type { PlacementEnquiryForm } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -13,11 +11,10 @@ import Link from "next/link";
  * import { submitPlacementEnquiry } from "@/lib/api";
  */
 
-const SPECIALTIES = ["Cardiology","Emergency Medicine","General Surgery","Internal Medicine","Neurology","Obstetrics & Gynecology","Oncology","Orthopaedics","Paediatrics","Psychiatry","Radiology & Imaging","Traditional Chinese Medicine","Other"];
 const LANGUAGES   = ["English","Chinese (Mandarin)","Bilingual (Both)"];
 
 const EMPTY: PlacementEnquiryForm = {
-  firstName: "", email: "", phone: "", university: "", yearOfStudy: "",
+  firstName: "", lastName: "", email: "", phone: "", university: "", yearOfStudy: "",
   preferredSpecialty: "", preferredCities: "", duration: "",
   preferredStartDate: "", language: "", additionalInfo: "",
 };
@@ -50,7 +47,7 @@ export default function NewApplicationPage() {
   const inputClass = "w-full rounded-xl border border-brand-border bg-white px-4 py-3 text-sm text-brand-navy placeholder:text-brand-muted transition-all focus:outline-none focus:ring-2 focus:ring-brand-teal";
 
   return (
-    <div className="max-w-2xl">
+    <div className="mx-auto max-w-2xl">
       {/* Header row */}
       <div className="mb-2 flex items-start justify-between gap-3">
         <h1 className="font-display text-xl font-bold text-brand-navy sm:text-[1.625rem]">Placement Enquiry Form</h1>
@@ -72,7 +69,7 @@ export default function NewApplicationPage() {
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-brand-navy">Last Name <span className="text-red-500">*</span></label>
-            <input name="lastName" placeholder="Enter your last name" onChange={handleChange} className={inputClass} />
+            <input name="lastName" placeholder="Enter your last name" value={form.lastName} onChange={handleChange} className={inputClass} />
           </div>
         </div>
 

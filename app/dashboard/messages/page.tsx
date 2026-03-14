@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Mic, Search, SendHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -114,10 +115,11 @@ export default function MessagesPage() {
                 )}
               >
                 <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-gray">
-                  <img
+                  <Image
                     src={conversation.avatar}
                     alt={conversation.name}
-                    className="h-full w-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                   <span className="absolute text-xs font-semibold text-brand-navy">
                     {conversation.name.charAt(0)}
@@ -153,10 +155,11 @@ export default function MessagesPage() {
               Back
             </button>
             <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-brand-gray">
-              <img
+              <Image
                 src={activeConversation.avatar}
                 alt={activeConversation.name}
-                className="h-full w-full object-cover"
+                fill
+                className="object-cover"
               />
               <span className="absolute text-xs font-semibold text-brand-navy">
                 {activeConversation.name.charAt(0)}
@@ -179,10 +182,11 @@ export default function MessagesPage() {
             >
               {item.sender === "other" && (
                 <div className="relative flex h-9 w-9 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-gray">
-                  <img
+                  <Image
                     src="/images/avatar.png"
                     alt="Ahmed Rahmin"
-                    className="h-full w-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                   <span className="absolute text-[10px] font-semibold text-brand-navy">
                     A
@@ -204,10 +208,11 @@ export default function MessagesPage() {
 
               {item.sender === "me" && (
                 <div className="relative flex h-9 w-9 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-gray">
-                  <img
+                  <Image
                     src="/images/avatar.png"
                     alt="John Smith"
-                    className="h-full w-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                   <span className="absolute text-[10px] font-semibold text-brand-navy">
                     J
