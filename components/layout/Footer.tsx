@@ -16,8 +16,8 @@ export default function Footer() {
                 src="/images/logo.png" 
                 alt="LumieraMed Logo" 
                 width={82} 
-                height={42} 
-                className="w-16 h-12"
+                height={32} 
+                className="w-16 h-10"
               />
             </Link>
             <p className="text-brand-slate text-sm leading-relaxed max-w-xs">

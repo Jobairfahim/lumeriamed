@@ -15,18 +15,20 @@ const iconMap: Record<
 
 export default function WhyChooseSection() {
   return (
-    <section className="bg-white py-16 md:py-20">
-      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 lg:gap-16 items-start mb-10">
-          <h2 className="font-display text-[2.2rem] md:text-[3.15rem] leading-[1.06] font-semibold tracking-[-0.04em] text-[#2f3437] max-w-[11ch]">
-            Why Choose Medical Electives in China?
+    <section className="bg-white py-16 md:py-24">
+      <div className="mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8">
+        <div className="mb-10 grid grid-cols-1 items-start gap-8 lg:mb-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-16">
+          <h2 className="max-w-[14ch] font-display text-[2.35rem] font-semibold leading-[1.04] tracking-[-0.05em] text-[#2f3437] md:text-[3.45rem]">
+            Why Choose
+            <br />
+            Medical Electives in China?
           </h2>
-          <p className="text-[#5f666c] text-[15px] leading-[1.55] max-w-[310px] lg:pt-2">
+          <p className="max-w-[320px] text-[15px] leading-[1.6] text-[#5f666c] lg:pt-2">
             Discover the unique advantages of completing your medical elective in one of the world&apos;s most dynamic healthcare environments.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)] gap-5 lg:gap-5 items-stretch">
+        <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-2">
           <div className="space-y-4">
             {WHY_CHOOSE_FEATURES.map((feature: WhyChooseFeature) => {
               const Icon = iconMap[feature.icon];
@@ -35,34 +37,34 @@ export default function WhyChooseSection() {
                 <div
                   key={feature.id}
                   className={cn(
-                    "rounded-[6px] px-4 py-4 md:px-4 md:py-5 min-h-[116px] transition-colors duration-200",
-                    feature.highlight ? "bg-[#39b3ae]" : "bg-[#fbfbfb]"
+                    "group min-h-[140px] rounded-[4px] border border-[#f2f2f2] bg-[#fcfcfb] px-5 py-5 transition-all duration-300 ease-out md:px-6 md:py-6",
+                    "hover:border-[#39b3ae] hover:bg-[#39b3ae]"
                   )}
                 >
                   <div
                     className={cn(
-                      "w-8 h-8 rounded-md flex items-center justify-center mb-5",
-                      feature.highlight ? "bg-white/15" : "bg-[#e9f8f7]"
+                      "mb-5 flex h-8 w-8 items-center justify-center rounded-[10px] bg-[#e8f6f4] transition-colors duration-300",
+                      "group-hover:bg-white/15"
                     )}
                   >
                     <Icon
                       size={15}
-                      className={feature.highlight ? "text-white" : "text-brand-teal"}
+                      className="text-brand-teal transition-colors duration-300 group-hover:text-white"
                     />
                   </div>
                   <div>
                     <h3
                       className={cn(
-                        "font-semibold text-[1rem] md:text-[1.08rem] mb-2 leading-tight",
-                        feature.highlight ? "text-white" : "text-[#313639]"
+                        "mb-2 text-[1.05rem] font-semibold leading-tight text-[#313639] transition-colors duration-300 md:text-[1.12rem]",
+                        "group-hover:text-white"
                       )}
                     >
                       {feature.title}
                     </h3>
                     <p
                       className={cn(
-                        "text-[13px] leading-[1.55] max-w-[31ch]",
-                        feature.highlight ? "text-white/90" : "text-[#757c82]"
+                        "max-w-[32ch] text-[14px] leading-[1.6] text-[#757c82] transition-colors duration-300",
+                        "group-hover:text-white/90"
                       )}
                     >
                       {feature.description}
@@ -74,7 +76,7 @@ export default function WhyChooseSection() {
           </div>
 
           <div className="relative">
-            <div className="relative h-[360px] sm:h-[420px] lg:h-full lg:min-h-[396px] rounded-[12px] overflow-hidden">
+            <div className="relative h-[360px] overflow-hidden rounded-[16px] sm:h-[420px] lg:h-full lg:min-h-[472px]">
               <Image
                 src="/images/why-choose.png"
                 alt="Chinese medical professional at her desk"

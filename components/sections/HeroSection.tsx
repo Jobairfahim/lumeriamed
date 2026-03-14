@@ -32,7 +32,7 @@ export default function HeroSection() {
               Secure Your Clinical <br />
               Elective Placement <br />
               in {" "}
-              <span className="text-brand-teal inline-flex items-center gap-2">
+              <span className="text-white inline-flex items-center gap-2">
                 <Image 
                   src="/images/china.png" 
                   alt="China flag" 

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Button from "@/components/ui/ui/Button";
 import SectionHeader from "@/components/ui/ui/SectionHeader";
 
@@ -14,7 +13,21 @@ export default function WhatIsSection() {
               italicPart="LumieraMed?"
               description=""
             />
+            <br />
+            <br />
+            <br />
 
+
+
+            <div className="pt-2">
+              <Button href="/contact" variant="primary">
+                Contact Us
+              </Button>
+            </div>
+          </div>
+
+          {/* Image side */}
+          <div className="relative">
             <div className="flex flex-col gap-4 text-brand-slate text-base leading-relaxed">
               <p>
                 LumieraMed is a specialized platform dedicated to facilitating
@@ -33,26 +46,6 @@ export default function WhatIsSection() {
               </p>
             </div>
 
-            <div className="pt-2">
-              <Button href="/contact" variant="outline">
-                Contact Us
-              </Button>
-            </div>
-          </div>
-
-          {/* Image side */}
-          <div className="relative">
-            <div className="relative h-[360px] md:h-[420px] rounded-3xl overflow-hidden shadow-card">
-              <Image
-                src="/images/step-begin.png"
-                alt="Medical student learning in a Chinese hospital"
-                fill
-                className="object-cover"
-              />
-            </div>
-            {/* Decorative element */}
-            <div className="absolute -bottom-4 -left-4 w-24 h-24 rounded-2xl bg-brand-tealLight border border-brand-teal/20 hidden md:block" />
-            <div className="absolute -top-4 -right-4 w-16 h-16 rounded-xl bg-brand-gray border border-brand-border hidden md:block" />
           </div>
         </div>
       </div>
