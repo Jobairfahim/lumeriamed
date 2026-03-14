@@ -28,7 +28,7 @@ export default function HeroSection() {
           {/* Blurred card container */}
           <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-2 shadow-2xl max-w-2xl">
             {/* Headline */}
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
+            <h1 className="font-kefa text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
               Secure Your Clinical <br />
               Elective Placement <br />
               in {" "}

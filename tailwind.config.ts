@@ -25,6 +25,7 @@ const config: Config = {
       fontFamily: {
         display: ["var(--font-instrument-sans)", "sans-serif"],
         body: ["var(--font-instrument-sans)", "sans-serif"],
+        kefa: ["Kefa", "var(--font-instrument-sans)", "sans-serif"],
       },
       fontSize: {
         "2xs": "0.65rem",

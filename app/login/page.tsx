@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
 import Button from "@/components/ui/ui/Button";
 import type { LoginForm } from "@/lib/types";
@@ -20,6 +21,7 @@ import type { LoginForm } from "@/lib/types";
  */
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm]       = useState<LoginForm>({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
@@ -39,6 +41,7 @@ export default function LoginPage() {
     setError(null);
     /* ── Replace stub below with API call when backend is ready ── */
     setLoading(false);
+    router.push("/dashboard");
   };
 
   return (
