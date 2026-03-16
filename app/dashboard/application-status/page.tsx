@@ -119,7 +119,7 @@ function DetailItem({
   label,
   value,
 }: {
-  icon: ComponentType<{ className?: string; size?: number; strokeWidth?: number }>;
+  icon: ComponentType<{ className?: string; size?: string | number; strokeWidth?: string | number }>;
   label: string;
   value: string;
 }) {
