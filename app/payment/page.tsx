@@ -77,13 +77,13 @@ function PaymentPageWrapper() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <PaymentPageContent>
-        {({ type, returnTo }) => <PaymentPage type={type as PaymentType} returnTo={returnTo} />}
+        {({ type, returnTo }) => <PaymentPageContentWrapper type={type as PaymentType} returnTo={returnTo} />}
       </PaymentPageContent>
     </Suspense>
   );
 }
 
-function PaymentPage({ type, returnTo }: { type: PaymentType; returnTo: string }) {
+function PaymentPageContentWrapper({ type, returnTo }: { type: PaymentType; returnTo: string }) {
   const router = useRouter();
   const payment = PAYMENT_COPY[type] ?? PAYMENT_COPY.deposit;
 
