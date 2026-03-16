@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { Suspense } from "react";
 import {
   Apple,
   ArrowLeft,
@@ -11,6 +12,7 @@ import {
   Laptop,
   ShieldCheck,
 } from "lucide-react";
+import PaymentPageContent from "./PaymentPageContent";
 
 type PaymentType = "deposit" | "final";
 
@@ -71,11 +73,18 @@ function CheckoutIllustration() {
   );
 }
 
-export default function PaymentPage() {
-  const searchParams = useSearchParams();
+function PaymentPageWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PaymentPageContent>
+        {({ type, returnTo }) => <PaymentPage type={type as PaymentType} returnTo={returnTo} />}
+      </PaymentPageContent>
+    </Suspense>
+  );
+}
+
+function PaymentPage({ type, returnTo }: { type: PaymentType; returnTo: string }) {
   const router = useRouter();
-  const type = (searchParams.get("type") as PaymentType) || "deposit";
-  const returnTo = searchParams.get("returnTo") || "/dashboard/application-status";
   const payment = PAYMENT_COPY[type] ?? PAYMENT_COPY.deposit;
 
   const [email, setEmail] = useState("youremail@example.com");
@@ -252,3 +261,5 @@ export default function PaymentPage() {
     </div>
   );
 }
+
+export default PaymentPageWrapper;
