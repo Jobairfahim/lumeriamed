@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, GraduationCap, MapPin, Users, Clock, Calendar, CheckCircle } from "lucide-react";
 
 // Mock placement options — replace with API fetch
@@ -30,6 +31,7 @@ const PLACEMENT_OPTIONS = [
 
 export default function ChoosePlacementPage() {
   const [selected, setSelected] = useState<string | null>(PLACEMENT_OPTIONS[0].id);
+  const router = useRouter();
 
   return (
     <div>
@@ -84,6 +86,11 @@ export default function ChoosePlacementPage() {
                * Then redirect to payment
                */}
               <button
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setSelected(opt.id);
+                  router.push("/payment?type=final&returnTo=%2Fdashboard%2Fapplication-status");
+                }}
                 className={`w-full py-3 rounded-xl font-medium text-sm transition-all ${
                   isSelected
                     ? "bg-brand-teal text-white hover:bg-brand-tealDark"

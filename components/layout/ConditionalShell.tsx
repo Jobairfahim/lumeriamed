@@ -12,8 +12,9 @@ export default function ConditionalShell({
 }) {
   const pathname = usePathname();
   const isDashboard = pathname.startsWith("/dashboard");
+  const isPayment = pathname.startsWith("/payment");
 
-  if (isDashboard) {
+  if (isDashboard || isPayment) {
     return <>{children}</>;
   }
 
