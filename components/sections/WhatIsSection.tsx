@@ -30,19 +30,13 @@ export default function WhatIsSection() {
           <div className="relative">
             <div className="flex flex-col gap-4 text-brand-slate text-base leading-relaxed">
               <p>
-                LumieraMed is a specialized platform dedicated to facilitating
-                medical elective placements in China for international medical
-                students.
+                LumieraMed is a specialised platform designed to offer medical students unique and easily accessible elective placement opportunities in China.
               </p>
               <p>
-                We partner with prestigious hospitals and medical institutions
-                across China to provide students with unparalleled learning
-                experiences in diverse medical specialties.
+                We partner with leading hospitals and medical institutions across China to provide students with an exceptional blend of learning experiences in diverse medical specialties.
               </p>
               <p>
-                Our mission is to bridge cultures and advance medical education
-                by creating opportunities for future healthcare professionals to
-                gain global exposure and clinical excellence.
+                Our mission is to bridge cultures and advance medical education by creating opportunities for future healthcare professionals to gain global exposure and clinical excellence.
               </p>
             </div>
 

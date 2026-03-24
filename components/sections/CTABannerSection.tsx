@@ -23,7 +23,7 @@ export default function CTABannerSection() {
               Ready To Transform Your Life?
             </h2>
             <p className="text-white/75 text-sm md:text-base mb-8 max-w-sm mx-auto">
-              Take the first step toward your international clinical career. 
+              Take the first step towards your international clinical career. 
               Apply for your China elective today.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">

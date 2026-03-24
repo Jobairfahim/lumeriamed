@@ -98,14 +98,14 @@ export default function BrowsePlacementsPage() {
              What We Offer
             </h2>
             <p className="text-brand-slate text-sm md:text-base max-w-md mx-auto leading-relaxed">
-              We don&apos;t show placement listings because every student&apos;s needs are unique. Instead, we personally match you with the ideal placement.
+              We offer a range of different specialties depending on your interests, providing you with the flexibility to gain experience in areas that align with your career goals. 
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {SPECIALTIES.map((s) => (
-              <div key={s.title} className="bg-white p-6 rounded-2xl border border-brand-border hover:bg-brand-light transition-colors shadow-sm">
-                <h3 className="font-semibold text-brand-navy text-base mb-2">{s.title}</h3>
-                <p className="text-brand-slate text-sm leading-relaxed">{s.desc}</p>
+              <div key={s.title} className="group bg-white p-6 rounded-2xl border border-brand-border hover:bg-brand-teal transition-colors shadow-sm cursor-pointer">
+                <h3 className="font-semibold text-brand-navy text-base mb-2 group-hover:text-white transition-colors">{s.title}</h3>
+                <p className="text-brand-slate text-sm leading-relaxed group-hover:text-white transition-colors">{s.desc}</p>
               </div>
             ))}
           </div>
@@ -133,19 +133,19 @@ export default function BrowsePlacementsPage() {
             <ul className="space-y-3 text-brand-slate text-sm md:text-base leading-relaxed mb-5">
               <li className="flex gap-3">
                 <span className="mt-2 h-2 w-2 rounded-full bg-brand-teal shrink-0" />
-                <span>Exams, cleanings, fluoride treatments, sealants</span>
+                <span>University-affiliated teaching hospitals with dedicated international departments</span>
               </li>
               <li className="flex gap-3">
                 <span className="mt-2 h-2 w-2 rounded-full bg-brand-teal shrink-0" />
-                <span>University-affiliated teaching hospitals with international departments</span>
+                <span>Specialist centres of excellence in various medical fields</span>
               </li>
               <li className="flex gap-3">
                 <span className="mt-2 h-2 w-2 rounded-full bg-brand-teal shrink-0" />
-                <span>Specialized centers of excellence in specific medical fields</span>
+                <span>Hospitals with English-speaking staff to ensure smooth communication</span>
               </li>
               <li className="flex gap-3">
                 <span className="mt-2 h-2 w-2 rounded-full bg-brand-teal shrink-0" />
-                <span>Hospitals with English-speaking staff</span>
+                <span>Traditional Chinese medicine clinics, offering a unique blend of Eastern and Western medical practices</span>
               </li>
             </ul>
             <p className="text-brand-slate text-sm md:text-base leading-relaxed">

@@ -46,7 +46,12 @@ export default function HowItWorksSection() {
                   {step.title}
                 </h3>
                 <p className="text-brand-slate text-sm leading-relaxed">
-                  {step.description}
+                  {step.description.split('\n').map((line, index) => (
+                    <span key={index}>
+                      {line}
+                      {index < step.description.split('\n').length - 1 && <br />}
+                    </span>
+                  ))}
                 </p>
               </div>
             </div>

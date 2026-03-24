@@ -10,44 +10,42 @@ export const FAQ_ITEMS = [
   {
     id: "eligibility",
     question: "Who is eligible for medical electives in China?",
-    answer:
-      "Medical students enrolled in accredited medical schools worldwide are eligible. You should be in your clinical years (typically 3rd year or above). Some placements may require completion of specific modules — your eligibility will be confirmed during the application review.",
+    answer: "Medical students enrolled in accredited medical schools worldwide are eligible for our electives. To ensure you gain the most from the experience, we typically recommend that you are in your clinical years (usually 3rd year or above). Some placements may require the completion of specific modules or coursework. Your eligibility will be reviewed and confirmed during the application process, ensuring a perfect match for your medical background.",
   },
   {
     id: "chinese",
     question: "Do I need to speak Chinese?",
-    answer:
-      "While speaking Chinese is not always required, it can significantly enhance your experience. Many of our partner hospitals have English-speaking supervisors and offer placements with English support. However, basic medical Chinese phrases are helpful and we can provide resources to help you prepare.",
+    answer: "While speaking Chinese is not required, it can enhance your experience. Many of our partner hospitals have English-speaking supervisors and offer placements with English support. However, learning basic Chinese phrases can be very helpful for communication in clinical settings. We provide resources to help you prepare and make your transition smoother.",
   },
   {
     id: "process",
     question: "How does the application process work?",
-    answer:
-      "Submit your enquiry form with your details and placement preferences. Our team will review your application and match you with suitable placements within 1–2 weeks. Once matched, we guide you through all documentation, payment, and pre-arrival logistics.",
+    answer: "To start, simply submit your enquiry form with your details and placement preferences. Our team will carefully review your application and match you with suitable placements within 1–2 weeks. Once a match is made, we'll guide you through the necessary documentation, payment process, and pre-arrival logistics, ensuring a smooth and easy preparation for your elective.",
+  },
+  {
+    id: "process-deposit",
+    question: "How does the application process work?",
+    answer: "To begin, submit your enquiry form with your details and placement preferences. After reviewing your application, we'll require a deposit to begin the matching process. Once matched, we'll guide you through the documentation, final payment, and pre-arrival logistics, ensuring everything is in place for your elective experience.",
   },
   {
     id: "documents",
     question: "What documents do I need?",
-    answer:
-      "Typically you will need: a valid passport, proof of medical student enrolment, an up-to-date CV/resume, a personal statement, and evidence of relevant vaccinations. Specific placements may require additional documents, which we will communicate clearly during the process.",
+    answer: "Typically, you will need a valid passport, proof of medical student enrolment, an up-to-date CV, a personal statement, and evidence of relevant vaccinations. Some placements may require additional documents, which we will provide details for during the application process.",
   },
   {
     id: "timing",
     question: "When can I start my elective?",
-    answer:
-      "Placements are available year-round, subject to availability at partner hospitals. We recommend applying at least 8–12 weeks in advance to allow sufficient time for documentation and arrangements. Specific dates can be discussed during the matching process.",
+    answer: "Placements are available year-round, subject to availability at partner hospitals. We recommend applying at least 8–12 weeks in advance to allow sufficient time for documentation and arrangements. Specific dates can be discussed during the matching process.",
   },
   {
     id: "financial",
     question: "Is financial assistance available?",
-    answer:
-      "We do not currently offer direct financial assistance, but we can provide documentation to support external funding applications. Many students secure elective bursaries through their medical school or national medical associations. Contact us for advice on available funding sources.",
+    answer: "We do not currently offer direct financial assistance, but we can provide documentation to support external funding applications. Many students secure elective bursaries through their medical school or national medical associations. Contact us for advice on available funding sources.",
   },
   {
     id: "accommodation",
     question: "What about accommodation?",
-    answer:
-      "Many of our partner hospitals offer on-site or nearby accommodation options. We can also assist with finding suitable housing close to your placement. Accommodation arrangements and costs will be discussed and confirmed during the placement matching process.",
+    answer: "While we do not offer accommodation directly, we can assist you in finding suitable housing close to your placement. We also offer a package to help with accommodation arrangements. Costs and options will be discussed and confirmed during the placement matching process.",
   },
 ] as const;
 
@@ -69,9 +67,9 @@ export const WHY_CHOOSE_FEATURES = [
   {
     id: 1,
     icon: "globe",
-    title: "World-Class Facilities",
-    description: "Access to state-of-the-art hospitals and medical centers with cutting-edge technology.",
-    highlight: false,
+    title: "World-Class Hospitals",
+    description: "Access to China's top-tier medical institutions with advanced technology and renowned medical professionals.",
+    highlight: true,
   },
   {
     id: 2,
@@ -84,7 +82,7 @@ export const WHY_CHOOSE_FEATURES = [
     id: 3,
     icon: "heart",
     title: "Cultural Immersion",
-    description: "Experience rich Chinese culture while developing a global perspective on healthcare.",
+    description: "Experience China's rich culture while building your medical career in one of the world's most dynamic countries.",
     highlight: false,
   },
 ] as const;
@@ -100,7 +98,7 @@ export const HOW_IT_WORKS_STEPS = [
   {
     id: 2,
     title: "Get Matched",
-    description: "Our team reviews your application and matches you with the perfect hospital placement within 1-2 weeks.",
+    description: "Our team reviews your application and matches you with \nthe perfect hospital placement within 1-2 weeks.",
     image: "/images/step-match.png",
     alt: "Hospital matching process",
   },

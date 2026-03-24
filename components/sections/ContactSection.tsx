@@ -91,8 +91,8 @@ export default function ContactSection() {
               </div>
               <div className="flex flex-col gap-2 text-sm">
                 {[
-                  { day: "Monday – Friday", hours: "9:00 AM – 6:00 PM (CST)" },
-                  { day: "Saturday",        hours: "10:00 AM – 4:00 PM (CST)" },
+                  { day: "Monday – Friday", hours: "9:00 AM – 5:00 PM (GMT)" },
+                  { day: "Saturday",        hours: "10:00 AM – 4:00 PM (GMT)" },
                   { day: "Sunday",          hours: "Closed", closed: true },
                 ].map((row) => (
                   <div key={row.day} className="flex justify-between">
@@ -112,7 +112,7 @@ export default function ContactSection() {
           {/* Enquiry Form */}
           <div className="bg-brand-light rounded-3xl p-6 md:p-8">
             <h3 className="font-display font-semibold text-brand-navy text-xl mb-6">
-              Request Information
+              Take the first step towards <br /> your international clinical career.  
             </h3>
 
             {submitted ? (
@@ -175,6 +175,7 @@ export default function ContactSection() {
                   placeholder="Describe your message..."
                   value={formData.message}
                   onChange={handleChange}
+                  required
                 />
                 <Button
                   onClick={handleSubmit}

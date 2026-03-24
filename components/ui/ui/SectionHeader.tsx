@@ -33,7 +33,7 @@ export default function SectionHeader({
     return (
       <>
         {parts[0]}
-        <em className="text-brand-teal not-italic font-normal font-display">{italicPart}</em>
+        <em className="text-brand-teal not-italic font-bold font-display">{italicPart}</em>
         {parts[1]}
       </>
     );

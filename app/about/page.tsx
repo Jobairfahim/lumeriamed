@@ -32,16 +32,10 @@ export default function AboutPage() {
               <h2 className="font-display text-2xl md:text-3xl font-bold text-brand-navy mb-5">Our Mission</h2>
               <div className="flex flex-col gap-4 text-brand-slate text-sm md:text-base leading-relaxed">
                 <p>
-                  LumieraMed is dedicated to empowering the next generation of medical
-                  professionals through exceptional international clinical experiences. We believe
-                  that meaningful exposure to diverse healthcare systems, medical practices, and
-                  emerging innovation is essential for developing well-rounded, culturally competent
-                  physicians.
+                  LumieraMed is dedicated to empowering the next generation of medical professionals through exceptional international clinical experiences. We believe that meaningful exposure to diverse healthcare systems is essential for developing well-rounded, culturally competent physicians.
                 </p>
                 <p>
-                  Our mission is to make world-class clinical electives in China accessible,
-                  well-structured, and genuinely transformative for medical students from around
-                  the globe.
+                  Our mission is to make world-class clinical electives in China easily accessible, well-structured, and genuinely transformative for medical students from around the globe.
                 </p>
                 <p className="font-medium text-brand-navy">
                   The future of medicine is global. We are preparing those who will define it.
@@ -89,12 +83,12 @@ export default function AboutPage() {
                 desc: "We're committed to continuous improvement, expanding our network and enhancing the elective experience for every student.",
               },
             ].map((v) => (
-              <div key={v.title} className="bg-white rounded-2xl p-6 shadow-soft">
-                <div className="w-10 h-10 rounded-xl bg-brand-tealLight flex items-center justify-center text-brand-teal mb-4">
+              <div key={v.title} className="group bg-white rounded-2xl p-6 shadow-soft hover:bg-brand-teal transition-colors cursor-pointer">
+                <div className="w-10 h-10 rounded-xl bg-brand-tealLight flex items-center justify-center text-brand-teal mb-4 group-hover:bg-white/20 group-hover:text-white transition-colors">
                   {v.icon}
                 </div>
-                <h3 className="font-semibold text-brand-navy text-base mb-2">{v.title}</h3>
-                <p className="text-brand-slate text-sm leading-relaxed">{v.desc}</p>
+                <h3 className="font-semibold text-brand-navy text-base mb-2 group-hover:text-white transition-colors">{v.title}</h3>
+                <p className="text-brand-slate text-sm leading-relaxed group-hover:text-white transition-colors">{v.desc}</p>
               </div>
             ))}
           </div>
@@ -109,22 +103,13 @@ export default function AboutPage() {
               <h2 className="font-display text-2xl md:text-3xl font-bold text-brand-navy mb-6">Why China?</h2>
               <div className="flex flex-col gap-4 text-brand-slate text-sm md:text-base leading-relaxed">
                 <p>
-                  China&apos;s healthcare system represents one of the most dynamic and rapidly
-                  evolving medical landscapes in the world. Unique in its integration of
-                  Traditional Chinese Medicine alongside modern hospital-based practice, it is
-                  one of the few countries where both systems are actively practised within the
-                  same clinical environment.
+                  China&apos;s healthcare system represents one of the most dynamic and rapidly evolving medical landscapes in the world. Unique in its integration of Traditional Chinese Medicine alongside modern hospital-based practice, it is one of the few countries where both systems are actively practised within the same clinical environment.
                 </p>
                 <p>
-                  Supported by advanced technology, high-volume tertiary centres, and a
-                  population of over one billion, students are exposed to an extraordinary
-                  variety and volume of clinical cases — encountering conditions, presentations,
-                  and treatment pathways across an exceptionally broad clinical spectrum.
+                  Supported by advanced technology, high-volume tertiary centres, and a population of over one billion, students are exposed to an extraordinary variety and volume of clinical cases — encountering conditions, presentations, and treatment pathways across an exceptionally broad clinical spectrum.
                 </p>
                 <p>
-                  Beyond clinical skills, students gain invaluable cross-cultural communication
-                  experience and a deeper understanding of global health systems —
-                  competencies that are increasingly vital in an interconnected world.
+                  Beyond clinical skills, students gain invaluable cross-cultural experiences and a deeper understanding of global health systems. These competencies are increasingly vital in an interconnected world.
                 </p>
                 <p className="font-medium text-brand-navy italic">Perspective changes practice.</p>
               </div>
@@ -150,36 +135,21 @@ export default function AboutPage() {
           <div className="flex flex-col gap-4 text-brand-slate text-sm md:text-base leading-relaxed">
             <p className="text-center">Hi, my name is Ding, and I am the founder of LumieraMed.</p>
             <p>
-              I was brought up in England and studied Medicine in the UK. I come from a Chinese
-              background, with both parents being Chinese. Growing up between two cultures shaped
-              how I see the world — and, over time, how I came to understand medicine.
+              I was brought up in England and studied Medicine in the UK. I come from a Chinese background, with both parents being Chinese. Growing up between two cultures shaped how I see the world and over time, how I came to understand medicine.
             </p>
             <p>
-              During my training, I recognised how rarely students are exposed to systems beyond
-              their own. We learn deeply within one framework, yet medicine globally looks very
-              different.
+              During my training, I recognised how rarely students are exposed to systems beyond their own. We learn deeply within one framework, yet medicine globally looks very different.
             </p>
             <p className="font-semibold text-brand-navy">China challenged my assumptions.</p>
             <p>
-              Hospitals operating at extraordinary scale. High-volume tertiary centres managing
-              complex cases daily. Yet within these same institutions, centuries-old traditions
-              sit alongside modern medical technology. Traditional Chinese Medicine is practised
-              within hospital settings — acupuncture clinics adjacent to surgical departments,
-              herbal prescriptions issued alongside pharmaceutical treatments. Concepts such as
-              balance and Qi are considered within a system also driven by imaging, laboratory
-              diagnostics, and advanced interventions. Experiencing this first-hand reshaped how
-              I understood healthcare.
+              Hospitals operating at extraordinary scale. High-volume tertiary centres managing complex cases daily. Yet within these same institutions, centuries-old traditions sit alongside modern medical technology. Traditional Chinese Medicine is practised within hospital settings. Acupuncture clinics adjacent to surgical departments. Herbal prescriptions issued alongside pharmaceutical treatments. Concepts such as balance and Qi are considered within a system also driven by imaging, laboratory diagnostics, and advanced interventions. Experiencing this first-hand reshaped how I understood healthcare.
             </p>
             <p>LumieraMed was built to make that perspective accessible to others.</p>
             <p>
-              I created it to give meaningful access to Chinese clinical environments — not as
-              observers from the outside, but as students embedded within real systems. The goal
-              is simple: to broaden perspective, strengthen cultural fluency, and develop doctors
-              who think beyond a single model of care.
+              I created it to give meaningful access to Chinese clinical environments — not as observers from the outside, but as students embedded within real systems. The goal is simple: to broaden perspective, strengthen cultural fluency, and develop doctors who think beyond a single model of care.
             </p>
             <p className="font-semibold text-brand-navy text-center">
-              Because in modern medicine, perspective is not optional — it shapes the kind of
-              doctor you become.
+              Because in modern medicine, perspective is not optional. It shapes the kind of doctor you become.
             </p>
           </div>
         </div>
