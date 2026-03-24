@@ -93,7 +93,7 @@ export default function ContactPage() {
           </div>
           <Input label="Email" name="email" type="email" placeholder="Enter your email address" value={form.email} onChange={handleChange} required />
           <Input label="Phone" name="phone" type="tel"   placeholder="Enter your phone number"  value={form.phone}  onChange={handleChange} />
-          <Textarea label="Message" name="message" placeholder="Describe your message..." value={form.message} onChange={handleChange} className="min-h-[140px]" />
+          <Textarea label="Message" name="message" placeholder="Describe your message..." value={form.message} onChange={handleChange} required className="min-h-[140px]" />
 
           {error && (
             <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">{error}</div>

@@ -98,7 +98,7 @@ export const HOW_IT_WORKS_STEPS = [
   {
     id: 2,
     title: "Get Matched",
-    description: "Our team reviews your application and matches you with \nthe perfect hospital placement within 1-2 weeks.",
+    description: "Our team reviews your application and matches you withthe perfect hospital placement within 1-2 weeks.",
     image: "/images/step-match.png",
     alt: "Hospital matching process",
   },
