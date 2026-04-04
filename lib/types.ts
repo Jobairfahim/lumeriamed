@@ -54,6 +54,14 @@ export interface LoginForm {
   password: string;
 }
 
+/** Signup form */
+export interface SignupForm {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
 // ─── Application ─────────────────────────────────────────────────────────────
 export type ApplicationStatus =
   | "pending"

@@ -115,6 +115,15 @@ export default function LoginPage() {
               </div>
             </div>
 
+            <div className="mb-5 text-right">
+              <Link
+                href="/forgot-password"
+                className="text-sm font-medium text-brand-teal transition-colors hover:underline"
+              >
+                Forgot Password?
+              </Link>
+            </div>
+
             {error && (
               <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm mb-4">
                 {error}
@@ -157,7 +166,7 @@ export default function LoginPage() {
 
             <p className="text-center text-brand-slate text-sm">
               Don&apos;t Have An Account?{" "}
-              <Link href="/contact" className="text-brand-teal font-semibold hover:underline">
+              <Link href="/signup" className="text-brand-teal font-semibold hover:underline">
                 Sign Up
               </Link>
             </p>
