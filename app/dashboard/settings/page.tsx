@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function SettingsPage() {
   const [form, setForm] = useState({
@@ -11,6 +12,9 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(null);
@@ -58,33 +62,30 @@ export default function SettingsPage() {
 
         <div className="max-w-[720px]">
           <div className="mb-5">
-            <label className="text-sm font-medium text-[#606970]">
-              Change Password
-            </label>
-            <input
-              type="password"
-              value="********"
-              readOnly
-              aria-label="Change Password"
-              className={inputClass}
-            />
-          </div>
-
-          <div className="mb-5">
             <label
               htmlFor="currentPassword"
               className="text-sm font-medium text-[#606970]"
             >
               Current Password
             </label>
-            <input
-              id="currentPassword"
-              name="currentPassword"
-              type="password"
-              value={form.currentPassword}
-              onChange={handleChange}
-              className={inputClass}
-            />
+            <div className="relative">
+              <input
+                id="currentPassword"
+                name="currentPassword"
+                type={showCurrentPassword ? "text" : "password"}
+                value={form.currentPassword}
+                onChange={handleChange}
+                className={`${inputClass} pr-12`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                className="absolute right-3 top-1/2 flex h-5 w-5 items-center justify-center text-brand-muted transition-colors hover:text-brand-navy"
+                aria-label={showCurrentPassword ? "Hide password" : "Show password"}
+              >
+                {showCurrentPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
           </div>
 
           <div className="mb-5">
@@ -94,14 +95,24 @@ export default function SettingsPage() {
             >
               New Password
             </label>
-            <input
-              id="newPassword"
-              name="newPassword"
-              type="password"
-              value={form.newPassword}
-              onChange={handleChange}
-              className={inputClass}
-            />
+            <div className="relative">
+              <input
+                id="newPassword"
+                name="newPassword"
+                type={showNewPassword ? "text" : "password"}
+                value={form.newPassword}
+                onChange={handleChange}
+                className={`${inputClass} pr-12`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className="absolute right-3 top-1/2 flex h-5 w-5 items-center justify-center text-brand-muted transition-colors hover:text-brand-navy"
+                aria-label={showNewPassword ? "Hide password" : "Show password"}
+              >
+                {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
           </div>
 
           <div className="mb-6">
@@ -111,14 +122,24 @@ export default function SettingsPage() {
             >
               Confirm New Password
             </label>
-            <input
-              id="confirmNewPassword"
-              name="confirmNewPassword"
-              type="password"
-              value={form.confirmNewPassword}
-              onChange={handleChange}
-              className={inputClass}
-            />
+            <div className="relative">
+              <input
+                id="confirmNewPassword"
+                name="confirmNewPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                value={form.confirmNewPassword}
+                onChange={handleChange}
+                className={`${inputClass} pr-12`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 flex h-5 w-5 items-center justify-center text-brand-muted transition-colors hover:text-brand-navy"
+                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+              >
+                {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
           </div>
 
           {error && (

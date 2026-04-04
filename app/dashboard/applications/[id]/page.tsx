@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Mail, GraduationCap, Phone, Clock, Calendar, Globe, MapPin, FileText, Download } from "lucide-react";
+import { ArrowLeft, Mail, GraduationCap, Phone, Clock, Calendar, Globe, MapPin, FileText, Download, Check } from "lucide-react";
 
 // Mock data — replace with API fetch by params.id
 const MOCK_APPLICATION = {
@@ -45,6 +45,61 @@ export default function ApplicationDetailPage() {
       <Link href="/dashboard/applications" className="mb-5 inline-flex items-center gap-1.5 text-sm text-brand-slate transition-colors hover:text-brand-navy sm:mb-6">
         <ArrowLeft size={16} /> Go to back
       </Link>
+
+      {/* Application Status Card */}
+      <div className="mb-6 rounded-2xl bg-white p-6 shadow-soft">
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h2 className="font-display text-[1.55rem] font-semibold tracking-[-0.03em] text-brand-navy sm:text-[1.8rem]">
+                Application Status
+              </h2>
+              <p className="mt-1 text-sm font-medium text-[#687179]">ID: {app.id}</p>
+              <p className="mt-1 text-sm text-[#afb6bc]">Applied {app.applicationDate}</p>
+            </div>
+
+            <div className="sm:text-right">
+              <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#c1c6ca]">
+                Status
+              </p>
+              <span className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${statusStyles[app.status]}`}>
+                {app.status}
+              </span>
+            </div>
+          </div>
+
+          <div className="relative pt-1">
+            <div className="absolute left-[18px] right-[18px] top-[19px] h-px bg-[#d8dddf] sm:left-[32px] sm:right-[32px]" />
+            <div
+              className="absolute left-[18px] top-[19px] h-px bg-brand-teal transition-all sm:left-[32px]"
+              style={{ width: app.status === "Pending" ? "0%" : app.status === "Processing" ? "50%" : "100%" }}
+            />
+
+            <div className="relative grid grid-cols-3 gap-3">
+              {[
+                { key: "pending", label: "Pending" },
+                { key: "matching", label: "Matching" },
+                { key: "approved", label: "Approved" },
+              ].map((step, index) => {
+                const done = app.status === "Approved" ? true : app.status === "Processing" ? index < 1 : false;
+
+                return (
+                  <div key={step.key} className="flex flex-col items-center text-center">
+                    <div
+                      className={`flex h-9 w-9 items-center justify-center rounded-full border-2 ${
+                        done ? "border-brand-teal bg-brand-teal text-white" : "border-[#d9dcdf] bg-white text-transparent"
+                      }`}
+                    >
+                      <Check size={16} strokeWidth={3} />
+                    </div>
+                    <p className="mt-3 text-sm font-medium text-[#3d454b]">{step.label}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-5">
 
