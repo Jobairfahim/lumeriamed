@@ -1,30 +1,77 @@
-/**
- * lib/api.ts
- * ─────────────────────────────────────────────────────────────────────────────
- * All backend calls live here. Set NEXT_PUBLIC_API_URL in .env.local.
- * Every function returns ApiResult<T> — no try/catch needed in components.
- * ─────────────────────────────────────────────────────────────────────────────
- */
 
 import type {
   ApiResult,
+  AuthTokens,
   EnquiryForm,
-  PlacementEnquiryForm,
+  ForgotPasswordRequest,
   LoginForm,
+  PlacementEnquiryForm,
   Placement,
+  ResetPasswordRequest,
+  SignupRequest,
+  VerifyOtpRequest,
 } from "./types";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+const DEFAULT_BASE_URL = "https://server.lumieramed.com/api/v1";
 
-async function request<T>(path: string, options?: RequestInit): Promise<ApiResult<T>> {
+function normalizeBaseUrl(rawUrl?: string) {
+  const trimmed = (rawUrl ?? DEFAULT_BASE_URL).trim().replace(/\/+$/, "");
+  return trimmed.endsWith("/api/v1") ? trimmed : `${trimmed}/api/v1`;
+}
+
+const BASE_URL = normalizeBaseUrl(
+  process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL
+);
+
+function getErrorMessage(data: unknown, fallback: string) {
+  if (typeof data === "string" && data) return data;
+  if (!data || typeof data !== "object") return fallback;
+
+  const record = data as Record<string, unknown>;
+  if (typeof record.message === "string" && record.message) return record.message;
+  if (typeof record.error === "string" && record.error) return record.error;
+
+  const issues = record.errorSources;
+  if (Array.isArray(issues) && issues.length > 0) {
+    const first = issues[0] as Record<string, unknown>;
+    if (typeof first?.message === "string" && first.message) return first.message;
+  }
+
+  return fallback;
+}
+
+function getPayload<T>(data: unknown): T {
+  if (data && typeof data === "object" && "data" in data) {
+    return (data as { data: T }).data;
+  }
+  return data as T;
+}
+
+async function request<T>(
+  path: string,
+  options?: RequestInit & { token?: string; json?: boolean }
+): Promise<ApiResult<T>> {
+  const { token, json = true, headers, ...rest } = options ?? {};
+
   try {
     const res = await fetch(`${BASE_URL}${path}`, {
-      headers: { "Content-Type": "application/json" },
-      ...options,
+      headers: {
+        ...(json ? { "Content-Type": "application/json" } : {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(headers ?? {}),
+      },
+      ...rest,
     });
-    const data = await res.json();
-    if (!res.ok) return { success: false, error: data?.message ?? "Something went wrong." };
-    return { success: true, data };
+    const contentType = res.headers.get("content-type") ?? "";
+    const data = contentType.includes("application/json")
+      ? await res.json()
+      : await res.text();
+
+    if (!res.ok) {
+      return { success: false, error: getErrorMessage(data, "Something went wrong.") };
+    }
+
+    return { success: true, data: getPayload<T>(data) };
   } catch {
     return { success: false, error: "Network error. Please try again." };
   }
@@ -33,15 +80,21 @@ async function request<T>(path: string, options?: RequestInit): Promise<ApiResul
 // ─── Enquiries ────────────────────────────────────────────────────────────────
 
 /**
- * POST /api/enquiries/contact
+ * POST /api/enquiries
  * Used by: SubmitEnquiryModal, ContactSection, contact/page.tsx
  */
 export async function submitContactEnquiry(
   form: EnquiryForm
 ): Promise<ApiResult<{ enquiryId: string }>> {
-  return request("/api/enquiries/contact", {
+  return request("/enquiries", {
     method: "POST",
-    body: JSON.stringify(form),
+    body: JSON.stringify({
+      email: form.email,
+      firstName: form.firstName,
+      lastName: form.lastName,
+      phoneNumber: form.phone ?? "",
+      message: form.message,
+    }),
   });
 }
 
@@ -60,13 +113,13 @@ export async function submitPlacementEnquiry(
   });
   files.forEach((file) => payload.append("documents", file));
   try {
-    const res = await fetch(`${BASE_URL}/api/enquiries/placement`, {
+    const res = await fetch(`${BASE_URL}/enquiries/placement`, {
       method: "POST",
       body: payload,
     });
     const data = await res.json();
-    if (!res.ok) return { success: false, error: data?.message ?? "Submission failed." };
-    return { success: true, data };
+    if (!res.ok) return { success: false, error: getErrorMessage(data, "Submission failed.") };
+    return { success: true, data: getPayload(data) };
   } catch {
     return { success: false, error: "Network error. Please try again." };
   }
@@ -75,15 +128,63 @@ export async function submitPlacementEnquiry(
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
 /**
- * POST /api/auth/login
+ * POST /auth/login
  * Used by: login/page.tsx
  */
 export async function login(
   form: LoginForm
-): Promise<ApiResult<{ token: string; role: string; redirectUrl: string }>> {
-  return request("/api/auth/login", {
+): Promise<ApiResult<AuthTokens & { role?: string; redirectUrl?: string }>> {
+  return request("/auth/login", {
     method: "POST",
     body: JSON.stringify(form),
+  });
+}
+
+export async function registerStudent(
+  form: SignupRequest
+): Promise<ApiResult<{ message?: string }>> {
+  return request("/users/student", {
+    method: "POST",
+    body: JSON.stringify(form),
+  });
+}
+
+export async function requestPasswordReset(
+  form: ForgotPasswordRequest
+): Promise<ApiResult<{ message?: string }>> {
+  return request("/auth/forget-password", {
+    method: "POST",
+    body: JSON.stringify(form),
+  });
+}
+
+export async function verifyEmail(
+  form: VerifyOtpRequest
+): Promise<ApiResult<{ message?: string; verifyToken?: string }>> {
+  return request("/auth/verify-email", {
+    method: "POST",
+    body: JSON.stringify({ email: form.email, oneTimeCode: parseInt(form.otp) }),
+  });
+}
+
+export async function resendOtp(
+  form: ForgotPasswordRequest
+): Promise<ApiResult<{ message?: string }>> {
+  return request("/auth/resend-otp", {
+    method: "POST",
+    body: JSON.stringify(form),
+  });
+}
+
+export async function resetPassword(
+  form: ResetPasswordRequest
+): Promise<ApiResult<{ message?: string }>> {
+  return request("/auth/reset-password", {
+    method: "POST",
+    headers: {
+      ...(form.verifyToken ? { resettoken: form.verifyToken } : {}),
+    },
+    body: JSON.stringify({ newPassword: form.newPassword ,confirmPassword: form.confirmPassword}),
   });
 }
 
@@ -101,5 +202,5 @@ export async function getPlacements(params?: {
   const query = new URLSearchParams(
     Object.fromEntries(Object.entries(params ?? {}).filter(([, v]) => Boolean(v)))
   ).toString();
-  return request(`/api/placements${query ? `?${query}` : ""}`);
+  return request(`/placements${query ? `?${query}` : ""}`);
 }

@@ -13,6 +13,7 @@ import {
   UserRound,
 } from "lucide-react";
 import Button from "@/components/ui/ui/Button";
+import { registerStudent } from "@/lib/api";
 import type { SignupForm } from "@/lib/types";
 
 export default function SignupPage() {
@@ -52,8 +53,20 @@ export default function SignupPage() {
     setLoading(true);
     setError(null);
 
+    const result = await registerStudent({
+      name: form.fullName,
+      email: form.email,
+      password: form.password,
+    });
+
+    if (!result.success) {
+      setError(result.error);
+      setLoading(false);
+      return;
+    }
+
     setLoading(false);
-    router.push("/signup/verify-otp");
+    router.push(`/signup/verify-otp?email=${encodeURIComponent(form.email)}`);
   };
 
   return (

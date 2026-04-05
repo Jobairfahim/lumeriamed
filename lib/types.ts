@@ -62,6 +62,32 @@ export interface SignupForm {
   confirmPassword: string;
 }
 
+export interface SignupRequest {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface VerifyOtpRequest {
+  email: string;
+  otp: string;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest extends VerifyOtpRequest {
+  verifyToken?: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 // ─── Application ─────────────────────────────────────────────────────────────
 export type ApplicationStatus =
   | "pending"

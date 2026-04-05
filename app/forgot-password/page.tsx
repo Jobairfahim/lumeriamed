@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Mail } from "lucide-react";
 import Button from "@/components/ui/ui/Button";
+import { requestPasswordReset } from "@/lib/api";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
@@ -22,8 +23,15 @@ export default function ForgotPasswordPage() {
     setLoading(true);
     setError(null);
 
+    const result = await requestPasswordReset({ email });
+    if (!result.success) {
+      setError(result.error);
+      setLoading(false);
+      return;
+    }
+
     setLoading(false);
-    router.push("/forgot-password/verify-otp");
+    router.push(`/forgot-password/verify-otp?email=${encodeURIComponent(email)}`);
   };
 
   return (

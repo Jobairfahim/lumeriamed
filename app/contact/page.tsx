@@ -2,32 +2,29 @@
 
 import { useState } from "react";
 import { Mail, Phone, Send } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Input, Textarea } from "@/components/ui/ui/Input";
 import Button from "@/components/ui/ui/Button";
+import { submitContactEnquiry } from "@/lib/api";
 import type { EnquiryForm } from "@/lib/types";
-import { useRouter } from "next/navigation";
 
-/**
- * ── INTEGRATION POINT ──────────────────────────────────────────────────────
- * import { submitContactEnquiry } from "@/lib/api";
- * Replace the stub in handleSubmit with:
- *   const result = await submitContactEnquiry(form);
- *   if (!result.success) { setError(result.error); setLoading(false); return; }
- *   router.push("/enquiry-success");
- * ───────────────────────────────────────────────────────────────────────────
- */
-
-const EMPTY: EnquiryForm = { firstName: "", lastName: "", email: "", phone: "", message: "" };
+const EMPTY: EnquiryForm = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  message: "",
+};
 
 export default function ContactPage() {
   const router = useRouter();
-  const [form, setForm]       = useState<EnquiryForm>(EMPTY);
+  const [form, setForm] = useState<EnquiryForm>(EMPTY);
   const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setError(null);
-    setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async () => {
@@ -35,81 +32,149 @@ export default function ContactPage() {
       setError("Please fill in all required fields.");
       return;
     }
+
     setLoading(true);
     setError(null);
-    /* ── Replace stub below with API call when backend is ready ── */
+
+    const result = await submitContactEnquiry(form);
     setLoading(false);
+
+    if (!result.success) {
+      setError(result.error);
+      return;
+    }
+
     router.push("/enquiry-success");
   };
 
   return (
-    <div className="min-h-screen pt-16 bg-white">
-
-      {/* ── Hero header ─────────────────────────────────────────────────── */}
-      <div className="bg-brand-light py-12 md:py-16 text-center px-4 border-b border-brand-border">
-        <h1 className="font-display text-3xl md:text-4xl font-bold text-brand-navy mb-3">
+    <div className="min-h-screen bg-white pt-16">
+      <div className="border-b border-brand-border bg-brand-light px-4 py-12 text-center md:py-16">
+        <h1 className="mb-3 font-display text-3xl font-bold text-brand-navy md:text-4xl">
           Contact <span className="text-brand-teal">Us</span>
         </h1>
-        <p className="text-brand-slate text-sm md:text-base max-w-sm mx-auto leading-relaxed">
+        <p className="mx-auto max-w-sm text-sm leading-relaxed text-brand-slate md:text-base">
           Have questions? We&apos;d love to hear from you. Send us a message and
           we&apos;ll respond as soon as possible.
         </p>
       </div>
 
-      {/* ── Form area ───────────────────────────────────────────────────── */}
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-12">
-
-        {/* Info cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-          <div className="flex items-center gap-3 px-5 py-4 rounded-xl border border-brand-border bg-brand-light">
-            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center flex-shrink-0 border border-brand-border">
+      <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
+        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="flex items-center gap-3 rounded-xl border border-brand-border bg-brand-light px-5 py-4">
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-brand-border bg-white">
               <Mail size={14} className="text-brand-teal" />
             </div>
             <div>
-              <p className="text-brand-muted text-xs font-medium uppercase tracking-widest mb-0.5">Email</p>
-              <a href="mailto:info@lumieramed.com" className="text-brand-navy text-sm font-medium hover:text-brand-teal transition-colors">
+              <p className="mb-0.5 text-xs font-medium uppercase tracking-widest text-brand-muted">
+                Email
+              </p>
+              <a
+                href="mailto:info@lumieramed.com"
+                className="text-sm font-medium text-brand-navy transition-colors hover:text-brand-teal"
+              >
                 info@lumieramed.com
               </a>
             </div>
           </div>
-          <div className="flex items-center gap-3 px-5 py-4 rounded-xl border border-brand-border bg-brand-light">
-            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center flex-shrink-0 border border-brand-border">
+
+          <div className="flex items-center gap-3 rounded-xl border border-brand-border bg-brand-light px-5 py-4">
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-brand-border bg-white">
               <Phone size={14} className="text-brand-teal" />
             </div>
             <div>
-              <p className="text-brand-muted text-xs font-medium uppercase tracking-widest mb-0.5">Phone</p>
-              <a href="tel:+8612345678900" className="text-brand-navy text-sm font-medium hover:text-brand-teal transition-colors">
+              <p className="mb-0.5 text-xs font-medium uppercase tracking-widest text-brand-muted">
+                Phone
+              </p>
+              <a
+                href="tel:+8612345678900"
+                className="text-sm font-medium text-brand-navy transition-colors hover:text-brand-teal"
+              >
                 +86 123 4567 8900
               </a>
             </div>
           </div>
         </div>
 
-        {/* Form */}
         <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input label="First Name" name="firstName" placeholder="Enter your first name" value={form.firstName} onChange={handleChange} required />
-            <Input label="Last Name"  name="lastName"  placeholder="Enter your last name"  value={form.lastName}  onChange={handleChange} required />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Input
+              label="First Name"
+              name="firstName"
+              placeholder="Enter your first name"
+              value={form.firstName}
+              onChange={handleChange}
+              required
+            />
+            <Input
+              label="Last Name"
+              name="lastName"
+              placeholder="Enter your last name"
+              value={form.lastName}
+              onChange={handleChange}
+              required
+            />
           </div>
-          <Input label="Email" name="email" type="email" placeholder="Enter your email address" value={form.email} onChange={handleChange} required />
-          <Input label="Phone" name="phone" type="tel"   placeholder="Enter your phone number"  value={form.phone}  onChange={handleChange} />
-          <Textarea label="Message" name="message" placeholder="Describe your message..." value={form.message} onChange={handleChange} required className="min-h-[140px]" />
+
+          <Input
+            label="Email"
+            name="email"
+            type="email"
+            placeholder="Enter your email address"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+
+          <Input
+            label="Phone"
+            name="phone"
+            type="tel"
+            placeholder="Enter your phone number"
+            value={form.phone}
+            onChange={handleChange}
+          />
+
+          <Textarea
+            label="Message"
+            name="message"
+            placeholder="Describe your message..."
+            value={form.message}
+            onChange={handleChange}
+            required
+            className="min-h-[140px]"
+          />
 
           {error && (
-            <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">{error}</div>
+            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+              {error}
+            </div>
           )}
 
-          <Button onClick={handleSubmit} className="w-full mt-1" size="lg" disabled={loading}>
+          <Button onClick={handleSubmit} className="mt-1 w-full" size="lg" disabled={loading}>
             {loading ? (
               <span className="flex items-center gap-2">
-                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+                <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  />
                 </svg>
                 Sending...
               </span>
             ) : (
-              <>Send Message <Send size={15} /></>
+              <>
+                Send Message <Send size={15} />
+              </>
             )}
           </Button>
         </div>

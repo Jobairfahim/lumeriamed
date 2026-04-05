@@ -1,32 +1,69 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import Button from "@/components/ui/ui/Button";
+import { resendOtp, verifyEmail } from "@/lib/api";
 
 export default function ForgotPasswordOtpPage() {
+  const otpLength = 4;
   const router = useRouter();
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email") ?? "";
+  const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const [otp, setOtp] = useState(() => Array.from({ length: otpLength }, () => ""));
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleDigitChange = (index: number, value: string) => {
-    if (!/^\d?$/.test(value)) {
-      return;
-    }
+  useEffect(() => {
+    inputRefs.current[0]?.focus();
+  }, []);
+
+  const handleChange = (index: number, value: string) => {
+    if (value && !/^\d$/.test(value)) return;
 
     setError(null);
-    setOtp((prev) => {
-      const next = [...prev];
-      next[index] = value;
-      return next;
+    const nextOtp = [...otp];
+    nextOtp[index] = value;
+    setOtp(nextOtp);
+
+    if (value && index < otpLength - 1) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text").slice(0, otpLength);
+    const digits = pastedData.match(/\d/g) || [];
+
+    setError(null);
+    const nextOtp = [...otp];
+    digits.forEach((digit, index) => {
+      if (index < otpLength) nextOtp[index] = digit;
     });
+    setOtp(nextOtp);
+
+    const nextIndex = Math.min(digits.length, otpLength - 1);
+    inputRefs.current[nextIndex]?.focus();
   };
 
   const handleSubmit = async () => {
+    if (!email) {
+      setError("Missing email address. Please request a new password reset.");
+      return;
+    }
+
     if (otp.some((digit) => !digit)) {
       setError("Please enter the full verification code.");
       return;
@@ -35,8 +72,43 @@ export default function ForgotPasswordOtpPage() {
     setLoading(true);
     setError(null);
 
+    const result = await verifyEmail({ email, otp: otp.join("") });
+    if (!result.success) {
+      setError(result.error);
+      setLoading(false);
+      return;
+    }
+
+    const verifyToken = result.data.verifyToken;
+    if (!verifyToken) {
+      setError("Verification succeeded, but no reset token was returned.");
+      setLoading(false);
+      return;
+    }
+
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("passwordResetVerifyToken", verifyToken);
+    }
+
     setLoading(false);
-    router.push("/login");
+    router.push(`/forgot-password/reset?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp.join(""))}`);
+  };
+
+  const handleResendOtp = async () => {
+    if (!email) {
+      setError("Missing email address. Please request a new password reset.");
+      return;
+    }
+
+    setResending(true);
+    setError(null);
+
+    const result = await resendOtp({ email });
+    if (!result.success) {
+      setError(result.error);
+    }
+
+    setResending(false);
   };
 
   return (
@@ -62,19 +134,25 @@ export default function ForgotPasswordOtpPage() {
               Verify Reset Code
             </h1>
             <p className="mb-7 text-sm leading-relaxed text-brand-slate">
-              Enter the 4-digit code sent to your email to continue resetting your
-              password.
+              Enter the 4-digit code sent to {email || "your email"} to continue
+              resetting your password.
             </p>
 
-            <div className="mb-5 flex items-center justify-between gap-3">
+            <div className="mb-6 flex justify-center gap-3">
               {otp.map((digit, index) => (
                 <input
                   key={index}
+                  ref={(el) => {
+                    inputRefs.current[index] = el;
+                  }}
+                  type="text"
                   inputMode="numeric"
                   maxLength={1}
                   value={digit}
-                  onChange={(e) => handleDigitChange(index, e.target.value)}
-                  className="h-14 w-14 rounded-2xl border border-brand-border bg-brand-light text-center text-lg font-semibold text-brand-navy transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-teal"
+                  onChange={(e) => handleChange(index, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  onPaste={handlePaste}
+                  className="h-14 w-14 rounded-lg bg-gray-100 text-center text-3xl font-medium text-brand-navy transition-all focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-teal"
                 />
               ))}
             </div>
@@ -103,7 +181,7 @@ export default function ForgotPasswordOtpPage() {
                       d="M4 12a8 8 0 018-8v8H4z"
                     />
                   </svg>
-                  Verifying...
+                  Continuing...
                 </span>
               ) : (
                 <>
@@ -116,9 +194,11 @@ export default function ForgotPasswordOtpPage() {
               Didn&apos;t receive the code?{" "}
               <button
                 type="button"
-                className="font-semibold text-brand-teal transition-colors hover:underline"
+                onClick={handleResendOtp}
+                disabled={resending}
+                className="font-semibold text-brand-teal transition-colors hover:underline disabled:opacity-70"
               >
-                Resend OTP
+                {resending ? "Resending..." : "Resend OTP"}
               </button>
             </p>
 

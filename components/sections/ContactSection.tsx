@@ -5,6 +5,7 @@ import { Mail, MessageCircle, Clock, Send } from "lucide-react";
 import SectionHeader from "@/components/ui/ui/SectionHeader";
 import { Input, Textarea } from "@/components/ui/ui/Input";
 import Button from "@/components/ui/ui/Button";
+import { submitContactEnquiry } from "@/lib/api";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -16,19 +17,32 @@ export default function ContactSection() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    setError(null);
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault();
+    if (!formData.firstName || !formData.email || !formData.message) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
     setLoading(true);
-    // TODO: connect to backend API
-    await new Promise((r) => setTimeout(r, 1000));
+    setError(null);
+    const result = await submitContactEnquiry(formData);
     setLoading(false);
+
+    if (!result.success) {
+      setError(result.error);
+      return;
+    }
+
     setSubmitted(true);
   };
 
@@ -177,6 +191,11 @@ export default function ContactSection() {
                   onChange={handleChange}
                   required
                 />
+                {error && (
+                  <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                    {error}
+                  </div>
+                )}
                 <Button
                   onClick={handleSubmit}
                   className="w-full mt-1"
