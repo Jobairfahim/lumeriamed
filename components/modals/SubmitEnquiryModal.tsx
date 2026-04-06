@@ -4,6 +4,7 @@ import { useState } from "react";
 import { X, Send } from "lucide-react";
 import { Input, Textarea } from "@/components/ui/ui/Input";
 import Button from "@/components/ui/ui/Button";
+import { submitContactEnquiry } from "@/lib/api";
 import type { EnquiryForm } from "@/lib/types";
 import { useRouter } from "next/navigation";
 
@@ -35,15 +36,13 @@ export default function SubmitEnquiryModal({ isOpen, onClose, onSubmit }: Submit
       setError("Please fill in all required fields.");
       return;
     }
-    if (!onSubmit) {
-      onClose();
-      router.push("/enquiry-success");
-      return;
-    }
+
     setLoading(true);
     setError(null);
-    const result = await onSubmit(form);
+    const submit = onSubmit ?? submitContactEnquiry;
+    const result = await submit(form);
     setLoading(false);
+
     if (result.success) {
       setForm(EMPTY);
       onClose();

@@ -40,10 +40,10 @@ export interface PlacementEnquiryForm {
   university: string;
   yearOfStudy: string;
   preferredSpecialty: string;
-  preferredCities?: string;
+  preferredCities: string;
   duration: string;
   preferredStartDate: string;
-  language?: string;
+  language: string;
   additionalInfo?: string;
   placementId?: string;
 }
@@ -84,6 +84,12 @@ export interface ForgotPasswordRequest {
 
 export interface ResetPasswordRequest extends VerifyOtpRequest {
   verifyToken?: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
   newPassword: string;
   confirmPassword: string;
 }

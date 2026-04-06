@@ -30,14 +30,14 @@ export default function HeroSection() {
             {/* Headline */}
             <h1 className="font-kefa text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
               Secure Your Clinical <br />
-              Elective Placement <br />
-              in {" "}
+              Elective Placement in <br />
+              {" "}
               <span className="text-white inline-flex items-center gap-2">
                 <Image 
                   src="/images/china.png" 
                   alt="China flag" 
-                  width={50} 
-                  height={40} 
+                  width={60} 
+                  height={50} 
                   className="inline-block"
                 />
                 China 

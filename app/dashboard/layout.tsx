@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, FileText, CheckCircle, MessageSquare,
+  LayoutDashboard, FileText, MessageSquare,
   User, Settings, LogOut, Bell, Search, Menu, X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -13,7 +13,6 @@ import Image from "next/image";
 const NAV = [
   { label: "Dashboard",          href: "/dashboard",                    icon: LayoutDashboard },
   { label: "All Applications",   href: "/dashboard/applications",       icon: FileText },
-  { label: "Application Status", href: "/dashboard/application-status", icon: CheckCircle },
   { label: "Messages",           href: "/dashboard/messages",           icon: MessageSquare },
   { label: "Profile",            href: "/dashboard/profile",            icon: User },
   { label: "Settings",           href: "/dashboard/settings",           icon: Settings },

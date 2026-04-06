@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { changePassword } from "@/lib/api";
 
 export default function SettingsPage() {
   const [form, setForm] = useState({
@@ -40,8 +41,33 @@ export default function SettingsPage() {
 
     setLoading(true);
     setError(null);
+    setSuccess(false);
+
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("accessToken") ?? "" : "";
+
+    if (!token) {
+      setLoading(false);
+      setError("You are not logged in. Please sign in again.");
+      return;
+    }
+
+    const result = await changePassword(
+      {
+        currentPassword: form.currentPassword,
+        newPassword: form.newPassword,
+        confirmPassword: form.confirmNewPassword,
+      },
+      token,
+    );
 
     setLoading(false);
+
+    if (!result.success) {
+      setError(result.error);
+      return;
+    }
+
     setSuccess(true);
     setForm({
       currentPassword: "",

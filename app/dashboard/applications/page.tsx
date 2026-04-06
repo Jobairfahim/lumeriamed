@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Search } from "lucide-react";
 
 const MOCK_APPLICATIONS = [
   { id: "APP1023", program: "Surgery", date: "Mar 10", status: "Processing" },
@@ -22,13 +23,18 @@ const statusStyles: Record<string, string> = {
   Rejected: "bg-red-100 text-red-600",
 };
 
+const STATUS_OPTIONS = ["All", "Processing", "Approved", "Pending", "Rejected"] as const;
+
 export default function AllApplicationsPage() {
-  const [search] = useState("");
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] =
+    useState<(typeof STATUS_OPTIONS)[number]>("All");
 
   const filtered = MOCK_APPLICATIONS.filter(
     (application) =>
-      application.id.toLowerCase().includes(search.toLowerCase()) ||
-      application.program.toLowerCase().includes(search.toLowerCase())
+      (application.id.toLowerCase().includes(search.toLowerCase()) ||
+        application.program.toLowerCase().includes(search.toLowerCase())) &&
+      (statusFilter === "All" || application.status === statusFilter)
   );
 
   return (
@@ -43,6 +49,32 @@ export default function AllApplicationsPage() {
         >
           Apply for Placement
         </Link>
+      </div>
+
+      <div className="mb-6 grid gap-3 rounded-2xl bg-white p-4 shadow-soft sm:grid-cols-[minmax(0,1fr)_220px] sm:p-5">
+        <div className="relative">
+          <Search
+            size={16}
+            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted"
+          />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search by application ID or program"
+            className="h-11 w-full rounded-xl border border-brand-border bg-[#F4F6F8] pl-11 pr-4 text-sm text-brand-navy placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-teal"
+          />
+        </div>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value as (typeof STATUS_OPTIONS)[number])}
+          className="h-11 rounded-xl border border-brand-border bg-[#F4F6F8] px-4 text-sm text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-teal"
+        >
+          {STATUS_OPTIONS.map((option) => (
+            <option key={option} value={option}>
+              {option === "All" ? "All Statuses" : option}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="space-y-3 md:hidden">
@@ -79,13 +111,18 @@ export default function AllApplicationsPage() {
               </div>
               <Link
                 href={`/dashboard/applications/${application.id}`}
-                className="inline-flex text-sm font-medium text-brand-teal hover:underline"
+                className="inline-flex items-center justify-center rounded-lg border border-brand-teal px-4 py-2 text-sm font-medium text-brand-teal transition-colors hover:bg-brand-teal hover:text-white"
               >
                 View
               </Link>
             </div>
           </div>
         ))}
+        {filtered.length === 0 && (
+          <div className="rounded-2xl bg-white p-6 text-center text-sm text-brand-muted shadow-soft">
+            No applications match the current filters.
+          </div>
+        )}
       </div>
 
       <div className="hidden overflow-hidden rounded-2xl bg-white shadow-soft md:block">
@@ -125,16 +162,26 @@ export default function AllApplicationsPage() {
                       {application.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-center">
                     <Link
                       href={`/dashboard/applications/${application.id}`}
-                      className="text-sm font-medium text-brand-teal hover:underline"
+                      className="inline-flex items-center justify-center rounded-lg border border-brand-teal px-4 py-2 text-sm font-medium text-brand-teal transition-colors hover:bg-brand-teal hover:text-white"
                     >
                       View
                     </Link>
                   </td>
                 </tr>
               ))}
+              {filtered.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="px-6 py-10 text-center text-sm text-brand-muted"
+                  >
+                    No applications match the current filters.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

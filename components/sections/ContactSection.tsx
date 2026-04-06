@@ -126,7 +126,7 @@ export default function ContactSection() {
           {/* Enquiry Form */}
           <div className="bg-brand-light rounded-3xl p-6 md:p-8">
             <h3 className="font-display font-semibold text-brand-navy text-xl mb-6">
-              Take the first step towards <br /> your international clinical career.  
+              Request Information
             </h3>
 
             {submitted ? (

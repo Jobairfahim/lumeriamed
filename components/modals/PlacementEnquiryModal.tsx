@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { ChevronDown, Paperclip, Send, Upload, X } from "lucide-react";
 import Button from "@/components/ui/ui/Button";
+import { submitPlacementEnquiry } from "@/lib/api";
 import type { PlacementEnquiryForm } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -177,25 +178,29 @@ export default function PlacementEnquiryModal({
       !form.firstName ||
       !form.lastName ||
       !form.email ||
+      !form.phone ||
+      !form.university ||
       !form.yearOfStudy ||
       !form.preferredSpecialty ||
+      !form.preferredCities ||
       !form.duration ||
       !form.preferredStartDate ||
+      !form.language ||
       !form.additionalInfo
     ) {
       setError("Please fill in all required fields.");
       return;
     }
 
-    if (!onSubmit) {
-      onClose();
-      router.push("/enquiry-success");
+    if (Number.isNaN(Number(form.yearOfStudy))) {
+      setError("Year of study must be a number.");
       return;
     }
 
     setLoading(true);
     setError(null);
-    const result = await onSubmit(form, files);
+    const submit = onSubmit ?? submitPlacementEnquiry;
+    const result = await submit(form, files);
     setLoading(false);
 
     if (result.success) {
@@ -279,6 +284,7 @@ export default function PlacementEnquiryModal({
               value={form.phone}
               type="tel"
               placeholder="+1 (555) 123-4567"
+              required
               onChange={handleChange}
             />
 
@@ -287,6 +293,7 @@ export default function PlacementEnquiryModal({
               name="university"
               value={form.university}
               placeholder="Your institution"
+              required
               onChange={handleChange}
             />
 
@@ -304,6 +311,7 @@ export default function PlacementEnquiryModal({
               name="preferredCities"
               value={form.preferredCities}
               placeholder="e.g., Beijing, Shanghai"
+              required
               onChange={handleChange}
             />
 
@@ -341,6 +349,7 @@ export default function PlacementEnquiryModal({
                 name="language"
                 value={form.language}
                 placeholder="Select Language"
+                required
                 options={LANGUAGES}
                 onChange={handleChange}
               />

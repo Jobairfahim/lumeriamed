@@ -1,7 +1,7 @@
-
 import type {
   ApiResult,
   AuthTokens,
+  ChangePasswordRequest,
   EnquiryForm,
   ForgotPasswordRequest,
   LoginForm,
@@ -20,7 +20,7 @@ function normalizeBaseUrl(rawUrl?: string) {
 }
 
 const BASE_URL = normalizeBaseUrl(
-  process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL
+  process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL,
 );
 
 function getErrorMessage(data: unknown, fallback: string) {
@@ -28,13 +28,20 @@ function getErrorMessage(data: unknown, fallback: string) {
   if (!data || typeof data !== "object") return fallback;
 
   const record = data as Record<string, unknown>;
-  if (typeof record.message === "string" && record.message) return record.message;
+  if (typeof record.message === "string" && record.message)
+    return record.message;
   if (typeof record.error === "string" && record.error) return record.error;
+  if (Array.isArray(record.error) && record.error.length > 0) {
+    const first = record.error[0] as Record<string, unknown>;
+    if (typeof first?.message === "string" && first.message)
+      return first.message;
+  }
 
   const issues = record.errorSources;
   if (Array.isArray(issues) && issues.length > 0) {
     const first = issues[0] as Record<string, unknown>;
-    if (typeof first?.message === "string" && first.message) return first.message;
+    if (typeof first?.message === "string" && first.message)
+      return first.message;
   }
 
   return fallback;
@@ -49,7 +56,7 @@ function getPayload<T>(data: unknown): T {
 
 async function request<T>(
   path: string,
-  options?: RequestInit & { token?: string; json?: boolean }
+  options?: RequestInit & { token?: string; json?: boolean },
 ): Promise<ApiResult<T>> {
   const { token, json = true, headers, ...rest } = options ?? {};
 
@@ -68,7 +75,10 @@ async function request<T>(
       : await res.text();
 
     if (!res.ok) {
-      return { success: false, error: getErrorMessage(data, "Something went wrong.") };
+      return {
+        success: false,
+        error: getErrorMessage(data, "Something went wrong."),
+      };
     }
 
     return { success: true, data: getPayload<T>(data) };
@@ -84,7 +94,7 @@ async function request<T>(
  * Used by: SubmitEnquiryModal, ContactSection, contact/page.tsx
  */
 export async function submitContactEnquiry(
-  form: EnquiryForm
+  form: EnquiryForm,
 ): Promise<ApiResult<{ enquiryId: string }>> {
   return request("/enquiries", {
     method: "POST",
@@ -99,26 +109,41 @@ export async function submitContactEnquiry(
 }
 
 /**
- * POST /api/enquiries/placement  (multipart/form-data)
+ * POST /api/placements-enquiries  (multipart/form-data)
  * Used by: PlacementEnquiryModal
  */
 export async function submitPlacementEnquiry(
   form: PlacementEnquiryForm,
-  files: File[]
+  files: File[],
 ): Promise<ApiResult<{ enquiryId: string }>> {
   const payload = new FormData();
-  (Object.keys(form) as (keyof PlacementEnquiryForm)[]).forEach((key) => {
-    const val = form[key];
-    if (val !== undefined && val !== null) payload.append(key, String(val));
-  });
+  const body = {
+    email: form.email,
+    firstName: form.firstName,
+    lastName: form.lastName,
+    phoneNumber: form.phone,
+    universityOrMedicalSchool: form.university,
+    yearOfStudy: Number(form.yearOfStudy),
+    preferredStartDate: form.preferredStartDate,
+    duration: form.duration,
+    preferredSpecialty: form.preferredSpecialty,
+    preferredCities: form.preferredCities,
+    language: form.language,
+    additionalInfo: form.additionalInfo,
+  };
+  payload.append("data", JSON.stringify(body));
   files.forEach((file) => payload.append("documents", file));
   try {
-    const res = await fetch(`${BASE_URL}/enquiries/placement`, {
+    const res = await fetch(`${BASE_URL}/placements-enquiries`, {
       method: "POST",
       body: payload,
     });
     const data = await res.json();
-    if (!res.ok) return { success: false, error: getErrorMessage(data, "Submission failed.") };
+    if (!res.ok)
+      return {
+        success: false,
+        error: getErrorMessage(data, "Submission failed."),
+      };
     return { success: true, data: getPayload(data) };
   } catch {
     return { success: false, error: "Network error. Please try again." };
@@ -132,7 +157,7 @@ export async function submitPlacementEnquiry(
  * Used by: login/page.tsx
  */
 export async function login(
-  form: LoginForm
+  form: LoginForm,
 ): Promise<ApiResult<AuthTokens & { role?: string; redirectUrl?: string }>> {
   return request("/auth/login", {
     method: "POST",
@@ -141,7 +166,7 @@ export async function login(
 }
 
 export async function registerStudent(
-  form: SignupRequest
+  form: SignupRequest,
 ): Promise<ApiResult<{ message?: string }>> {
   return request("/users/student", {
     method: "POST",
@@ -150,7 +175,7 @@ export async function registerStudent(
 }
 
 export async function requestPasswordReset(
-  form: ForgotPasswordRequest
+  form: ForgotPasswordRequest,
 ): Promise<ApiResult<{ message?: string }>> {
   return request("/auth/forget-password", {
     method: "POST",
@@ -159,16 +184,19 @@ export async function requestPasswordReset(
 }
 
 export async function verifyEmail(
-  form: VerifyOtpRequest
+  form: VerifyOtpRequest,
 ): Promise<ApiResult<{ message?: string; verifyToken?: string }>> {
   return request("/auth/verify-email", {
     method: "POST",
-    body: JSON.stringify({ email: form.email, oneTimeCode: parseInt(form.otp) }),
+    body: JSON.stringify({
+      email: form.email,
+      oneTimeCode: parseInt(form.otp),
+    }),
   });
 }
 
 export async function resendOtp(
-  form: ForgotPasswordRequest
+  form: ForgotPasswordRequest,
 ): Promise<ApiResult<{ message?: string }>> {
   return request("/auth/resend-otp", {
     method: "POST",
@@ -177,14 +205,20 @@ export async function resendOtp(
 }
 
 export async function resetPassword(
-  form: ResetPasswordRequest
+  form: ResetPasswordRequest,
 ): Promise<ApiResult<{ message?: string }>> {
+  const headers: Record<string, string> = {};
+  if (form.verifyToken) {
+    headers.resettoken = form.verifyToken;
+  }
+
   return request("/auth/reset-password", {
     method: "POST",
-    headers: {
-      ...(form.verifyToken ? { resettoken: form.verifyToken } : {}),
-    },
-    body: JSON.stringify({ newPassword: form.newPassword ,confirmPassword: form.confirmPassword}),
+    headers,
+    body: JSON.stringify({
+      newPassword: form.newPassword,
+      confirmPassword: form.confirmPassword,
+    }),
   });
 }
 
@@ -194,13 +228,26 @@ export async function resetPassword(
  * GET /api/placements
  * Used by: browse-placements/page.tsx (when ready)
  */
+export async function changePassword(
+  form: ChangePasswordRequest,
+  token: string,
+): Promise<ApiResult<{ message?: string }>> {
+  return request("/auth/change-password", {
+    method: "POST",
+    token,
+    body: JSON.stringify(form),
+  });
+}
+
 export async function getPlacements(params?: {
   specialty?: string;
   city?: string;
   search?: string;
 }): Promise<ApiResult<Placement[]>> {
   const query = new URLSearchParams(
-    Object.fromEntries(Object.entries(params ?? {}).filter(([, v]) => Boolean(v)))
+    Object.fromEntries(
+      Object.entries(params ?? {}).filter(([, v]) => Boolean(v)),
+    ),
   ).toString();
   return request(`/placements${query ? `?${query}` : ""}`);
 }

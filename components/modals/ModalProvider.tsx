@@ -50,7 +50,6 @@ export default function ModalProvider({ children }: { children: React.ReactNode 
         isOpen={modal === "placement"}
         onClose={close}
         placementTitle={placementTitle}
-        // onSubmit={submitPlacementEnquiry}
       />
     </ModalContext.Provider>
   );

@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 import { Globe, Heart, Stethoscope } from "lucide-react";
 import { WHY_CHOOSE_FEATURES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -14,10 +17,12 @@ const iconMap: Record<
 } as const;
 
 export default function WhyChooseSection() {
+  const [activeFeatureId, setActiveFeatureId] = useState<number | null>(null);
+
   return (
     <section className="bg-white py-16 md:py-24">
       <div className="mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8">
-        <div className="mb-10 grid grid-cols-1 items-start gap-8 lg:mb-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-16">
+        <div className="mb-10 grid grid-cols-1 items-center gap-8 lg:mb-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-16">
           <h2 className="max-w-[14ch] font-display text-[2rem] font-semibold leading-[1.04] tracking-[-0.05em] text-[#2f3437] md:text-[3rem]">
             Why Choose
             <br />
@@ -32,13 +37,15 @@ export default function WhyChooseSection() {
           <div className="space-y-4">
             {WHY_CHOOSE_FEATURES.map((feature: WhyChooseFeature) => {
               const Icon = iconMap[feature.icon];
+              const isActive = feature.id === activeFeatureId;
 
               return (
                 <div
                   key={feature.id}
+                  onClick={() => setActiveFeatureId(feature.id)}
                   className={cn(
-                    "group min-h-[140px] rounded-[4px] border border-[#f2f2f2] px-5 py-5 transition-all duration-300 ease-out md:px-6 md:py-6",
-                    feature.id === 1 
+                    "group min-h-[140px] rounded-[4px] border border-[#f2f2f2] px-5 py-5 transition-all duration-300 ease-out cursor-pointer md:px-6 md:py-6",
+                    isActive 
                       ? "bg-brand-teal text-white" 
                       : "bg-[#fcfcfb] hover:border-[#39b3ae] hover:bg-[#39b3ae]"
                   )}
@@ -46,7 +53,7 @@ export default function WhyChooseSection() {
                   <div
                     className={cn(
                       "mb-5 flex h-8 w-8 items-center justify-center rounded-[10px] transition-colors duration-300",
-                      feature.id === 1 
+                      isActive 
                         ? "bg-white/20" 
                         : "bg-[#e8f6f4] group-hover:bg-white/15"
                     )}
@@ -55,7 +62,7 @@ export default function WhyChooseSection() {
                       size={15}
                       className={cn(
                         "transition-colors duration-300",
-                        feature.id === 1 
+                        isActive 
                           ? "text-white" 
                           : "text-brand-teal group-hover:text-white"
                       )}
@@ -65,7 +72,7 @@ export default function WhyChooseSection() {
                     <h3
                       className={cn(
                         "mb-2 text-[1.05rem] font-semibold leading-tight transition-colors duration-300 md:text-[1.12rem]",
-                        feature.id === 1 
+                        isActive 
                           ? "text-white" 
                           : "text-[#313639] group-hover:text-white"
                       )}
@@ -75,7 +82,7 @@ export default function WhyChooseSection() {
                     <p
                       className={cn(
                         "max-w-[32ch] text-[14px] leading-[1.6] transition-colors duration-300",
-                        feature.id === 1 
+                        isActive 
                           ? "text-white/90" 
                           : "text-[#757c82] group-hover:text-white/90"
                       )}

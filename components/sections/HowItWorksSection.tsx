@@ -14,8 +14,8 @@ export default function HowItWorksSection() {
             subtitle="Simple Process"
           />
           <p className="text-brand-slate text-sm md:text-base max-w-xs leading-relaxed md:text-right">
-            Getting started with your medical elective in China is simple.
-            Follow these three easy steps.
+            Start your China medical elective easily.<br />
+            Follow these three simple steps.
           </p>
         </div>
 

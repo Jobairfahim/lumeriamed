@@ -17,11 +17,7 @@ export const FAQ_ITEMS = [
     question: "Do I need to speak Chinese?",
     answer: "While speaking Chinese is not required, it can enhance your experience. Many of our partner hospitals have English-speaking supervisors and offer placements with English support. However, learning basic Chinese phrases can be very helpful for communication in clinical settings. We provide resources to help you prepare and make your transition smoother.",
   },
-  {
-    id: "process",
-    question: "How does the application process work?",
-    answer: "To start, simply submit your enquiry form with your details and placement preferences. Our team will carefully review your application and match you with suitable placements within 1–2 weeks. Once a match is made, we'll guide you through the necessary documentation, payment process, and pre-arrival logistics, ensuring a smooth and easy preparation for your elective.",
-  },
+
   {
     id: "process-deposit",
     question: "How does the application process work?",
