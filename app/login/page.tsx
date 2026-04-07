@@ -40,6 +40,7 @@ export default function LoginPage() {
     if (typeof window !== "undefined") {
       localStorage.setItem("accessToken", result.data.accessToken);
       localStorage.setItem("refreshToken", result.data.refreshToken);
+      localStorage.setItem("userEmail", form.email);
     }
 
     setLoading(false);

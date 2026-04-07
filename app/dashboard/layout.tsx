@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, FileText, MessageSquare,
   User, Settings, LogOut, Bell, Search, Menu, X,
 } from "lucide-react";
+import { getStudentProfile } from "@/lib/api";
+import type { StudentProfile } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
@@ -19,13 +21,50 @@ const NAV = [
 ];
 
 // Mock user — replace with real auth context when backend ready
-const MOCK_USER = { name: "John Smith", studentId: "20394", avatar: "/images/avatar.png" };
+const EMPTY_USER: StudentProfile = {
+  fullName: "",
+  studentId: "",
+  avatar: "",
+  profileImage: "",
+};
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [user, setUser] = useState<StudentProfile>(EMPTY_USER);
 
+  useEffect(() => {
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("accessToken") ?? ""
+        : "";
+
+    if (!token) return;
+
+    const loadProfile = async () => {
+      const result = await getStudentProfile(token);
+      if (!result.success) return;
+
+      const profile = result.data;
+      const fullName =
+        profile.fullName ??
+        profile.name ??
+        [profile.firstName, profile.lastName].filter(Boolean).join(" ").trim();
+
+      setUser({
+        ...profile,
+        fullName,
+        name: fullName,
+      });
+    };
+
+    void loadProfile();
+  }, []);
+
+  const displayName = user.fullName || user.name || "Student";
+  const displayStudentId = user.studentId || "-";
+  const avatarSrc = user.avatar || user.profileImage || "";
   return (
     <div className="flex min-h-screen bg-[#F4F6F8]">
 
@@ -123,12 +162,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
               <div className="flex items-center gap-2">
                 <div className="hidden text-right sm:block">
-                  <p className="text-xs font-semibold text-brand-navy">{MOCK_USER.name}</p>
-                  <p className="text-[10px] text-brand-muted">Student ID: {MOCK_USER.studentId}</p>
+                  <p className="text-xs font-semibold text-brand-navy">{displayName}</p>
+                  <p className="text-[10px] text-brand-muted">Student ID: {displayStudentId}</p>
                 </div>
                 <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-teal">
-                  <Image src={MOCK_USER.avatar} alt="" fill className="object-cover" />
-                  <span className="absolute text-xs font-bold text-white">JS</span>
+                  {avatarSrc ? (
+                    <Image src={avatarSrc} alt={displayName} fill className="object-cover" />
+                  ) : null}
                 </div>
               </div>
             </div>

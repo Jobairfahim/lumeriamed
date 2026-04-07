@@ -1,60 +1,192 @@
-
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { GraduationCap, Mail, Pencil, Phone, X } from "lucide-react";
+import { GraduationCap, Mail, Pencil, Phone, Upload, X } from "lucide-react";
+import { getStudentProfile, updateStudentProfile } from "@/lib/api";
+import type { StudentProfile } from "@/lib/types";
 
-const MOCK_PROFILE = {
-  name: "Ahmed Rahmin",
-  studentId: "20394",
-  email: "ahmed.rahim@gmail.com",
-  phone: "+8898795467",
-  university: "Ab university",
-  avatar: "/images/avatar.png",
+const EMPTY_PROFILE: StudentProfile = {
+  fullName: "",
+  studentId: "",
+  email: "",
+  phoneNumber: "",
+  university: "",
+  
 };
 
-const PROFILE_FIELDS = [
-  { icon: Mail, label: "Email", value: MOCK_PROFILE.email },
-  { icon: Phone, label: "Phone Number", value: MOCK_PROFILE.phone },
-  {
-    icon: GraduationCap,
-    label: "University/Medical School",
-    value: MOCK_PROFILE.university,
-  },
-];
-
 export default function ProfilePage() {
+  const [profile, setProfile] = useState<StudentProfile>(EMPTY_PROFILE);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editImageFile, setEditImageFile] = useState<File | null>(null);
+  const [editImagePreview, setEditImagePreview] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({
-    name: MOCK_PROFILE.name,
-    email: MOCK_PROFILE.email,
-    phone: MOCK_PROFILE.phone,
-    university: MOCK_PROFILE.university,
+    fullName: "",
+    email: "",
+    phone: "",
+    university: "",
   });
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const applyProfileData = (data: StudentProfile) => {
+    const fullName =
+      data.fullName ??
+      data.name ??
+      [data.firstName, data.lastName].filter(Boolean).join(" ").trim();
+    const phone = data.phoneNumber ?? data.phone ?? "";
+    const university = data.university ?? data.universityOrMedicalSchool ?? "";
+    const email =
+      data.email ??
+      (typeof data.userId === "object" && data.userId
+        ? data.userId.email ?? ""
+        : "");
+
+    setProfile((prev) => ({
+      ...prev,
+      ...data,
+      fullName,
+      name: fullName,
+      email: email || prev.email || "",
+      phoneNumber: phone,
+      university,
+      universityOrMedicalSchool: university,
+    }));
+
+    setEditForm({
+      fullName,
+      email,
+      phone,
+      university,
+    });
+  };
+
+  useEffect(() => {
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("accessToken") ?? "" : "";
+
+    const loadProfile = async () => {
+      setLoadError(null);
+      const result = await getStudentProfile(token);
+      if (!result.success) {
+        setLoadError(result.error);
+        setLoading(false);
+        return;
+      }
+
+      applyProfileData(result.data);
+      setLoading(false);
+    };
+
+    void loadProfile();
+  }, []);
+
+  useEffect(() => {
+    if (!editImageFile) return;
+
+    const objectUrl = URL.createObjectURL(editImageFile);
+    setEditImagePreview(objectUrl);
+
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [editImageFile]);
+
+  const profileFields = [
+    { icon: Mail, label: "Email", value: profile?.email ?? "-" },
+    { icon: Phone, label: "Phone Number", value: profile?.phoneNumber ?? "-" },
+    {
+      icon: GraduationCap,
+      label: "University/Medical School",
+      value: profile?.university ?? profile?.universityOrMedicalSchool ?? "-",
+    },
+  ];
+
+  const displayName = profile.fullName || profile.name || "Student";
+  const displayStudentId = profile.studentId || "-";
+  const avatarSrc = profile.avatar ?? profile.profileImage ?? "";
+  const modalAvatarSrc = editImagePreview || avatarSrc;
 
   const handleEditProfile = () => {
+    setEditImageFile(null);
+    setEditImagePreview("");
+    setSaveError(null);
     setIsEditModalOpen(true);
   };
 
   const handleCloseModal = () => {
+    setEditImageFile(null);
+    setEditImagePreview("");
+    setSaveError(null);
+    setSaving(false);
     setIsEditModalOpen(false);
   };
 
-  const handleSaveProfile = () => {
-    // TODO: Save profile data to backend
-    console.log("Saving profile:", editForm);
-    // For now, just close the modal
-    setIsEditModalOpen(false);
-    alert("Profile updated successfully!");
+  const handleSaveProfile = async () => {
+    if (!editForm.fullName || !editForm.phone || !editForm.university) {
+      setSaveError("Please complete all profile fields.");
+      return;
+    }
+
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("accessToken") ?? "" : "";
+
+    setSaving(true);
+    setSaveError(null);
+    const result = await updateStudentProfile(
+      {
+        fullName: editForm.fullName,
+        phoneNumber: editForm.phone,
+        university: editForm.university,
+      },
+      token,
+      editImageFile,
+    );
+    setSaving(false);
+
+    if (!result.success) {
+      setSaveError(result.error);
+      return;
+    }
+
+    setProfile((prev) => ({
+      ...prev,
+      fullName: editForm.fullName,
+      name: editForm.fullName,
+      email: editForm.email,
+      phoneNumber: editForm.phone,
+      university: editForm.university,
+      universityOrMedicalSchool: editForm.university,
+    }));
+    applyProfileData({
+      ...result.data,
+      email: result.data.email ?? editForm.email,
+    });
+    handleCloseModal();
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setEditForm(prev => ({
+    setEditForm((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
+
+  if (loading) {
+    return (
+      <div className="mx-auto w-full max-w-[980px]">
+        <h1 className="mb-5 font-display text-[1.75rem] font-semibold tracking-[-0.03em] text-brand-navy sm:mb-6 sm:text-[2rem]">
+          Profile
+        </h1>
+        <section className="rounded-[24px] bg-white px-4 py-10 shadow-soft sm:px-6 md:px-10">
+          <p className="text-sm text-brand-muted">Loading profile...</p>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto w-full max-w-[980px]">
@@ -73,26 +205,26 @@ export default function ProfilePage() {
 
         <div className="flex flex-col items-center text-center">
           <div className="relative mb-4 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-brand-gray ring-2 ring-[#e8f6f4]">
-            <Image
-              src={MOCK_PROFILE.avatar}
-              alt={MOCK_PROFILE.name}
-              fill
-              className="object-cover"
-            />
-            <span className="absolute text-lg font-semibold text-brand-navy">AR</span>
+            {avatarSrc && (
+              <Image src={avatarSrc} alt={displayName} fill className="object-cover" />
+            )}
           </div>
           <h2 className="font-display text-[1.45rem] font-semibold tracking-[-0.03em] text-brand-navy sm:text-[1.75rem]">
-            {MOCK_PROFILE.name}
+            {displayName}
           </h2>
-          <p className="mt-1 text-sm text-brand-muted">
-            Student ID: {MOCK_PROFILE.studentId}
-          </p>
+          <p className="mt-1 text-sm text-brand-muted">Student ID: {displayStudentId}</p>
         </div>
 
         <div className="my-6 border-t border-dashed border-[#dbeff0]" />
 
+        {loadError && (
+          <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+            {loadError}
+          </div>
+        )}
+
         <div className="flex max-w-[420px] flex-col gap-5 sm:gap-6">
-          {PROFILE_FIELDS.map(({ icon: Icon, label, value }) => (
+          {profileFields.map(({ icon: Icon, label, value }) => (
             <div key={label} className="flex items-start gap-3">
               <div className="mt-0.5 text-[#a8afb5]">
                 <Icon size={16} strokeWidth={1.8} />
@@ -106,7 +238,6 @@ export default function ProfilePage() {
         </div>
       </section>
 
-      {/* Edit Profile Modal */}
       {isEditModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="mx-4 w-full max-w-md rounded-2xl bg-white p-6 shadow-soft">
@@ -123,11 +254,52 @@ export default function ProfilePage() {
 
             <div className="space-y-4">
               <div>
+                <label className="mb-2 block text-sm font-medium text-brand-navy">Profile Image</label>
+                <div className="flex items-center gap-4">
+                  <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-brand-gray ring-2 ring-[#e8f6f4]">
+                    {modalAvatarSrc && (
+                      <Image
+                        src={modalAvatarSrc}
+                        alt={editForm.fullName || displayName}
+                        fill
+                        className="object-cover"
+                      />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <button
+                      type="button"
+                      onClick={() => fileRef.current?.click()}
+                      className="inline-flex items-center gap-2 rounded-lg border border-brand-border px-4 py-2 text-sm font-medium text-brand-navy transition-colors hover:border-brand-teal hover:text-brand-teal"
+                    >
+                      <Upload size={15} />
+                      Upload Image
+                    </button>
+                    <p className="mt-2 text-xs text-brand-muted">JPG, PNG, or WebP</p>
+                    {editImageFile && (
+                      <p className="mt-1 text-xs text-brand-slate">{editImageFile.name}</p>
+                    )}
+                    <input
+                      ref={fileRef}
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0] ?? null;
+                        setSaveError(null);
+                        setEditImageFile(file);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
                 <label className="mb-2 block text-sm font-medium text-brand-navy">Full Name</label>
                 <input
                   type="text"
-                  value={editForm.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  value={editForm.fullName}
+                  onChange={(e) => handleInputChange("fullName", e.target.value)}
                   className="w-full rounded-lg border border-brand-border px-4 py-2 text-sm focus:border-brand-teal focus:outline-none"
                 />
               </div>
@@ -137,8 +309,9 @@ export default function ProfilePage() {
                 <input
                   type="email"
                   value={editForm.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  className="w-full rounded-lg border border-brand-border px-4 py-2 text-sm focus:border-brand-teal focus:outline-none"
+                  disabled
+                  readOnly
+                  className="w-full cursor-not-allowed rounded-lg border border-brand-border bg-brand-light px-4 py-2 text-sm text-brand-slate"
                 />
               </div>
 
@@ -147,7 +320,7 @@ export default function ProfilePage() {
                 <input
                   type="tel"
                   value={editForm.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
                   className="w-full rounded-lg border border-brand-border px-4 py-2 text-sm focus:border-brand-teal focus:outline-none"
                 />
               </div>
@@ -157,11 +330,17 @@ export default function ProfilePage() {
                 <input
                   type="text"
                   value={editForm.university}
-                  onChange={(e) => handleInputChange('university', e.target.value)}
+                  onChange={(e) => handleInputChange("university", e.target.value)}
                   className="w-full rounded-lg border border-brand-border px-4 py-2 text-sm focus:border-brand-teal focus:outline-none"
                 />
               </div>
             </div>
+
+            {saveError && (
+              <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                {saveError}
+              </div>
+            )}
 
             <div className="mt-6 flex gap-3">
               <button
@@ -172,9 +351,10 @@ export default function ProfilePage() {
               </button>
               <button
                 onClick={handleSaveProfile}
-                className="flex-1 rounded-lg bg-brand-teal px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-tealDark"
+                disabled={saving}
+                className="flex-1 rounded-lg bg-brand-teal px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-tealDark disabled:cursor-not-allowed disabled:opacity-70"
               >
-                Save Changes
+                {saving ? "Saving..." : "Save Changes"}
               </button>
             </div>
           </div>

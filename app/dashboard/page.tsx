@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   FileText,
@@ -9,20 +12,12 @@ import {
   Settings,
 } from "lucide-react";
 import Image from "next/image";
-
-const MOCK_APPLICATIONS = [
-  { id: "APP1023", program: "Surgery", date: "Mar 10", status: "Processing" },
-  { id: "APP1021", program: "Oncology", date: "Mar 10", status: "Approved" },
-  { id: "APP1019", program: "Psychiatry", date: "Mar 10", status: "Pending" },
-];
-
-const NOTIFICATIONS = [
-  { text: "Your application APP1023 is currently processing.", time: "3 min" },
-  { text: "Your Business Studies application fee has been approved.", time: "10 min" },
-  { text: "Your application APP1023 is currently processing.", time: "1 hr" },
-  { text: "You have received a new message.", time: "2 hr" },
-  { text: "Your Business Studies application has been approved.", time: "1 day" },
-];
+import { getStudentDashboardOverview, getStudentProfile } from "@/lib/api";
+import type {
+  DashboardOverview,
+  DashboardOverviewApplication,
+  DashboardOverviewNotification,
+} from "@/lib/types";
 
 const statusStyles: Record<string, string> = {
   Processing: "bg-orange-100 text-orange-600",
@@ -31,7 +26,138 @@ const statusStyles: Record<string, string> = {
   Rejected: "bg-red-100 text-red-600",
 };
 
+function formatStatus(application: DashboardOverviewApplication) {
+  const rawStatus =
+    application.status ??
+    application.stage ??
+    application.studentStatus ??
+    application.adminStatus ??
+    application.hospitalStatus ??
+    "Pending";
+
+  const normalized = rawStatus.toLowerCase();
+
+  if (normalized.includes("approve")) return "Approved";
+  if (normalized.includes("reject")) return "Rejected";
+  if (normalized.includes("process")) return "Processing";
+  if (normalized.includes("review")) return "Processing";
+  if (normalized.includes("payment")) return "Processing";
+  return "Pending";
+}
+
+function formatDate(value?: string) {
+  if (!value) return "-";
+
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return value;
+
+  return parsed.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function getApplicationId(application: DashboardOverviewApplication, index: number) {
+  return application.applicationId || application.id || `APP-${index + 1}`;
+}
+
+function getProgramName(application: DashboardOverviewApplication) {
+  return (
+    application.program ||
+    application.preferredSpecialty ||
+    application.specialty ||
+    "General Placement"
+  );
+}
+
+function getNotificationText(notification: DashboardOverviewNotification) {
+  return notification.text || notification.message || notification.title || "New update";
+}
+
+function getNotificationTime(notification: DashboardOverviewNotification) {
+  return notification.time || formatDate(notification.createdAt);
+}
+
 export default function DashboardPage() {
+  const [overview, setOverview] = useState<DashboardOverview | null>(null);
+  const [displayName, setDisplayName] = useState("Student");
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("accessToken") ?? "" : "";
+
+    const loadDashboard = async () => {
+      setLoadError(null);
+
+      const [overviewResult, profileResult] = await Promise.all([
+        getStudentDashboardOverview(token),
+        getStudentProfile(token),
+      ]);
+
+      if (!overviewResult.success) {
+        setLoadError(overviewResult.error);
+        setLoading(false);
+        return;
+      }
+
+      setOverview(overviewResult.data);
+
+      if (profileResult.success) {
+        const profile = profileResult.data;
+        const fullName =
+          profile.fullName ??
+          profile.name ??
+          [profile.firstName, profile.lastName].filter(Boolean).join(" ").trim();
+
+        if (fullName) {
+          setDisplayName(fullName.split(" ")[0] || fullName);
+        }
+      } else if (overviewResult.data.fullName || overviewResult.data.firstName) {
+        const fullName = overviewResult.data.fullName || overviewResult.data.firstName || "Student";
+        setDisplayName(fullName.split(" ")[0] || fullName);
+      }
+
+      setLoading(false);
+    };
+
+    void loadDashboard();
+  }, []);
+
+  const applications = useMemo(
+    () => overview?.allApplications ?? overview?.applications ?? [],
+    [overview],
+  );
+  const notifications = useMemo(() => overview?.notifications ?? [], [overview]);
+
+  const stats = [
+    {
+      label: "Total Applications",
+      value: overview?.total ?? 0,
+      icon: FileText,
+      color: "bg-brand-tealLight text-brand-teal",
+    },
+    {
+      label: "Approved",
+      value: overview?.approved ?? 0,
+      icon: CheckCircle,
+      color: "bg-green-100 text-green-600",
+    },
+    {
+      label: "Processing",
+      value: overview?.pending ?? 0,
+      icon: Clock,
+      color: "bg-orange-100 text-orange-500",
+    },
+    {
+      label: "Rejected",
+      value: overview?.rejected ?? 0,
+      icon: XCircle,
+      color: "bg-red-100 text-red-500",
+    },
+  ];
+
   return (
     <div className="flex flex-col gap-4 sm:gap-6">
       <div className="relative flex min-h-[130px] items-center overflow-hidden rounded-2xl bg-brand-teal px-4 py-6 sm:px-6 lg:px-8">
@@ -43,11 +169,10 @@ export default function DashboardPage() {
             width={1200}
             height={130}
           />
-
         </div>
         <div className="relative z-10 max-w-[620px]">
           <h1 className="mb-2 font-display text-2xl font-bold text-white sm:text-3xl">
-            Welcome back, John
+            Welcome back, {displayName}
           </h1>
           <p className="text-sm leading-relaxed text-white/80">
             This is your student dashboard where you can manage your applications
@@ -56,33 +181,14 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {loadError ? (
+        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+          {loadError}
+        </div>
+      ) : null}
+
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 sm:gap-4">
-        {[
-          {
-            label: "Total Applications",
-            value: "05",
-            icon: FileText,
-            color: "bg-brand-tealLight text-brand-teal",
-          },
-          {
-            label: "Approved",
-            value: "02",
-            icon: CheckCircle,
-            color: "bg-green-100 text-green-600",
-          },
-          {
-            label: "Processing",
-            value: "02",
-            icon: Clock,
-            color: "bg-orange-100 text-orange-500",
-          },
-          {
-            label: "Rejected",
-            value: "01",
-            icon: XCircle,
-            color: "bg-red-100 text-red-500",
-          },
-        ].map((stat) => (
+        {stats.map((stat) => (
           <div
             key={stat.label}
             className="flex items-center gap-4 rounded-2xl bg-white p-4 shadow-soft sm:p-5"
@@ -94,7 +200,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <p className="font-display text-2xl font-bold text-brand-navy">
-                {stat.value}
+                {loading ? "--" : String(stat.value).padStart(2, "0")}
               </p>
               <p className="text-xs leading-tight text-brand-muted">{stat.label}</p>
             </div>
@@ -111,41 +217,54 @@ export default function DashboardPage() {
           </div>
 
           <div className="space-y-3 p-4 sm:hidden">
-            {MOCK_APPLICATIONS.map((application) => (
-              <div
-                key={application.id}
-                className="rounded-xl border border-brand-border bg-brand-light p-4"
-              >
-                <div className="mb-3 flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wide text-brand-muted">
-                      Application ID
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-brand-navy">
-                      {application.id}
-                    </p>
-                  </div>
-                  <span
-                    className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusStyles[application.status]}`}
-                  >
-                    {application.status}
-                  </span>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-brand-slate">{application.program}</p>
-                  <p className="text-xs text-brand-muted">{application.date}</p>
-                  <Link
-                    href={`/dashboard/applications/${application.id}`}
-                    className="inline-flex text-sm font-medium text-brand-teal hover:underline"
-                  >
-                    View
-                  </Link>
-                </div>
+            {applications.length === 0 ? (
+              <div className="rounded-xl border border-brand-border bg-brand-light p-4 text-sm text-brand-muted">
+                No applications found.
               </div>
-            ))}
+            ) : (
+              applications.map((application, index) => {
+                const applicationId = getApplicationId(application, index);
+                const status = formatStatus(application);
+
+                return (
+                  <div
+                    key={applicationId}
+                    className="rounded-xl border border-brand-border bg-brand-light p-4"
+                  >
+                    <div className="mb-3 flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-xs font-medium uppercase tracking-wide text-brand-muted">
+                          Application ID
+                        </p>
+                        <p className="mt-1 text-sm font-semibold text-brand-navy">
+                          {applicationId}
+                        </p>
+                      </div>
+                      <span
+                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusStyles[status]}`}
+                      >
+                        {status}
+                      </span>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-sm text-brand-slate">{getProgramName(application)}</p>
+                      <p className="text-xs text-brand-muted">
+                        {formatDate(application.date || application.createdAt)}
+                      </p>
+                      <Link
+                        href={`/dashboard/applications/${applicationId}`}
+                        className="inline-flex text-sm font-medium text-brand-teal hover:underline"
+                      >
+                        View
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
 
-          <div className="hidden sm:block overflow-x-auto">
+          <div className="hidden overflow-x-auto sm:block">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-[#F4F6F8]">
@@ -157,42 +276,58 @@ export default function DashboardPage() {
                       >
                         {heading}
                       </th>
-                    )
+                    ),
                   )}
                 </tr>
               </thead>
               <tbody>
-                {MOCK_APPLICATIONS.map((application) => (
-                  <tr
-                    key={application.id}
-                    className="border-t border-brand-border transition-colors hover:bg-brand-light"
-                  >
-                    <td className="px-5 py-3.5 text-xs font-medium text-brand-navy">
-                      {application.id}
-                    </td>
-                    <td className="px-5 py-3.5 text-xs text-brand-slate">
-                      {application.program}
-                    </td>
-                    <td className="px-5 py-3.5 text-xs text-brand-slate">
-                      {application.date}
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <span
-                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusStyles[application.status]}`}
-                      >
-                        {application.status}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <Link
-                        href={`/dashboard/applications/${application.id}`}
-                        className="text-xs font-medium text-brand-teal hover:underline"
-                      >
-                        View
-                      </Link>
+                {applications.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="px-5 py-6 text-center text-sm text-brand-muted"
+                    >
+                      No applications found.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  applications.map((application, index) => {
+                    const applicationId = getApplicationId(application, index);
+                    const status = formatStatus(application);
+
+                    return (
+                      <tr
+                        key={applicationId}
+                        className="border-t border-brand-border transition-colors hover:bg-brand-light"
+                      >
+                        <td className="px-5 py-3.5 text-xs font-medium text-brand-navy">
+                          {applicationId}
+                        </td>
+                        <td className="px-5 py-3.5 text-xs text-brand-slate">
+                          {getProgramName(application)}
+                        </td>
+                        <td className="px-5 py-3.5 text-xs text-brand-slate">
+                          {formatDate(application.date || application.createdAt)}
+                        </td>
+                        <td className="px-5 py-3.5">
+                          <span
+                            className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusStyles[status]}`}
+                          >
+                            {status}
+                          </span>
+                        </td>
+                        <td className="px-5 py-3.5">
+                          <Link
+                            href={`/dashboard/applications/${applicationId}`}
+                            className="text-xs font-medium text-brand-teal hover:underline"
+                          >
+                            View
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
           </div>
@@ -203,16 +338,22 @@ export default function DashboardPage() {
             <h2 className="text-sm font-semibold text-brand-navy">Notifications</h2>
           </div>
           <div className="divide-y divide-brand-border">
-            {NOTIFICATIONS.map((notification, index) => (
-              <div key={index} className="px-5 py-3.5">
-                <p className="text-xs leading-relaxed text-brand-slate">
-                  {notification.text}
-                </p>
-                <p className="mt-1 text-[10px] text-brand-muted">
-                  {notification.time}
-                </p>
+            {notifications.length === 0 ? (
+              <div className="px-5 py-4 text-sm text-brand-muted">
+                No notifications available.
               </div>
-            ))}
+            ) : (
+              notifications.map((notification, index) => (
+                <div key={`${getNotificationText(notification)}-${index}`} className="px-5 py-3.5">
+                  <p className="text-xs leading-relaxed text-brand-slate">
+                    {getNotificationText(notification)}
+                  </p>
+                  <p className="mt-1 text-[10px] text-brand-muted">
+                    {getNotificationTime(notification)}
+                  </p>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

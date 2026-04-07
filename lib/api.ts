@@ -9,6 +9,9 @@ import type {
   Placement,
   ResetPasswordRequest,
   SignupRequest,
+  DashboardOverview,
+  StudentProfile,
+  UpdateStudentProfileRequest,
   VerifyOtpRequest,
 } from "./types";
 
@@ -156,6 +159,51 @@ export async function submitPlacementEnquiry(
  * POST /auth/login
  * Used by: login/page.tsx
  */
+export async function submitStudentPlacementEnquiry(
+  form: PlacementEnquiryForm,
+  files: File[],
+  token: string,
+): Promise<ApiResult<{ enquiryId: string }>> {
+  const payload = new FormData();
+  const body = {
+    email: form.email,
+    firstName: form.firstName,
+    lastName: form.lastName,
+    phoneNumber: form.phone,
+    universityOrMedicalSchool: form.university,
+    yearOfStudy: Number(form.yearOfStudy),
+    preferredStartDate: form.preferredStartDate,
+    duration: form.duration,
+    preferredSpecialty: form.preferredSpecialty,
+    preferredCities: form.preferredCities,
+    language: form.language,
+    additionalInformation: form.additionalInfo ?? "",
+  };
+  payload.append("data", JSON.stringify(body));
+  files.forEach((file) => payload.append("documents", file));
+  try {
+    const res = await fetch(`${BASE_URL}/student-placement-enquiries`, {
+      method: "POST",
+      headers: token
+        ? {
+            Authorization: `Bearer ${token}`,
+          }
+        : undefined,
+      body: payload,
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      return {
+        success: false,
+        error: getErrorMessage(data, "Submission failed."),
+      };
+    }
+    return { success: true, data: getPayload(data) };
+  } catch {
+    return { success: false, error: "Network error. Please try again." };
+  }
+}
+
 export async function login(
   form: LoginForm,
 ): Promise<ApiResult<AuthTokens & { role?: string; redirectUrl?: string }>> {
@@ -237,6 +285,57 @@ export async function changePassword(
     token,
     body: JSON.stringify(form),
   });
+}
+
+export async function getStudentProfile(
+  token: string,
+): Promise<ApiResult<StudentProfile>> {
+  return request("/students/profile", {
+    token,
+  });
+}
+
+export async function getStudentDashboardOverview(
+  token: string,
+): Promise<ApiResult<DashboardOverview>> {
+  return request("/students/dashboard/overview", {
+    token,
+  });
+}
+
+export async function updateStudentProfile(
+  form: UpdateStudentProfileRequest,
+  token: string,
+  image?: File | null,
+): Promise<ApiResult<StudentProfile>> {
+  const payload = new FormData();
+  payload.append("data", JSON.stringify(form));
+
+  if (image) {
+    payload.append("image", image);
+  }
+
+  try {
+    const res = await fetch(`${BASE_URL}/students`, {
+      method: "PATCH",
+      headers: token
+        ? {
+            Authorization: `Bearer ${token}`,
+          }
+        : undefined,
+      body: payload,
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      return {
+        success: false,
+        error: getErrorMessage(data, "Profile update failed."),
+      };
+    }
+    return { success: true, data: getPayload(data) };
+  } catch {
+    return { success: false, error: "Network error. Please try again." };
+  }
 }
 
 export async function getPlacements(params?: {

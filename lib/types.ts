@@ -123,6 +123,80 @@ export interface User {
   createdAt: string;
 }
 
+export interface StudentProfile {
+  id?: string;
+  studentId?: string;
+  fullName?: string;
+  userId?: {
+    _id?: string;
+    email?: string;
+  } | string;
+  firstName?: string;
+  lastName?: string;
+  name?: string;
+  email?: string;
+  phoneNumber?: string;
+  phone?: string;
+  universityOrMedicalSchool?: string;
+  university?: string;
+  yearOfStudy?: number | string;
+  preferredSpecialty?: string;
+  preferredCities?: string;
+  languages?: string;
+  avatar?: string;
+  profileImage?: string;
+}
+
+export interface UpdateStudentProfileRequest {
+  fullName: string;
+  phoneNumber: string;
+  university: string;
+}
+
+export interface DashboardOverviewStat {
+  totalApplications?: number;
+  approved?: number;
+  processing?: number;
+  rejected?: number;
+}
+
+export interface DashboardOverviewApplication {
+  id?: string;
+  applicationId?: string;
+  program?: string;
+  specialty?: string;
+  preferredSpecialty?: string;
+  date?: string;
+  createdAt?: string;
+  status?: string;
+  stage?: string;
+  studentStatus?: string;
+  adminStatus?: string;
+  hospitalStatus?: string;
+}
+
+export interface DashboardOverviewNotification {
+  text?: string;
+  message?: string;
+  title?: string;
+  time?: string;
+  createdAt?: string;
+}
+
+export interface DashboardOverview {
+  fullName?: string;
+  firstName?: string;
+  total?: number;
+  pending?: number;
+  approved?: number;
+  rejected?: number;
+  stats?: DashboardOverviewStat;
+  allApplications?: DashboardOverviewApplication[];
+  recentApplications?: DashboardOverviewApplication[];
+  applications?: DashboardOverviewApplication[];
+  notifications?: DashboardOverviewNotification[];
+}
+
 // ─── Navigation ──────────────────────────────────────────────────────────────
 export interface NavLink {
   label: string;
