@@ -11,6 +11,8 @@ import type {
   SignupRequest,
   DashboardOverview,
   StudentProfile,
+  StudentPlacementEnquiry,
+  StudentPlacementEnquiryDetail,
   UpdateStudentProfileRequest,
   VerifyOtpRequest,
 } from "./types";
@@ -135,7 +137,7 @@ export async function submitPlacementEnquiry(
     additionalInfo: form.additionalInfo,
   };
   payload.append("data", JSON.stringify(body));
-  files.forEach((file) => payload.append("documents", file));
+  files.forEach((file) => payload.append("document", file));
   try {
     const res = await fetch(`${BASE_URL}/placements-enquiries`, {
       method: "POST",
@@ -177,10 +179,11 @@ export async function submitStudentPlacementEnquiry(
     preferredSpecialty: form.preferredSpecialty,
     preferredCities: form.preferredCities,
     language: form.language,
-    additionalInformation: form.additionalInfo ?? "",
+    additionalInformation: form.additionalInfo,
   };
   payload.append("data", JSON.stringify(body));
-  files.forEach((file) => payload.append("documents", file));
+
+  files.forEach((file) => payload.append("document", file));
   try {
     const res = await fetch(`${BASE_URL}/student-placement-enquiries`, {
       method: "POST",
@@ -201,6 +204,99 @@ export async function submitStudentPlacementEnquiry(
     return { success: true, data: getPayload(data) };
   } catch {
     return { success: false, error: "Network error. Please try again." };
+  }
+}
+
+export async function getStudentPlacementEnquiries(token: string): Promise<ApiResult<StudentPlacementEnquiry[]>> {
+  try {
+    const res = await fetch(`${BASE_URL}/student-placement-enquiries`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+    if (!res.ok)
+      return {
+        success: false,
+        error: getErrorMessage(data, "Failed to fetch enquiries."),
+      };
+    return { success: true, data: getPayload(data) };
+  } catch {
+    return { success: false, error: "Network error. Please try again." };
+  }
+}
+
+export async function getStudentPlacementEnquiryById(
+  id: string,
+  token: string,
+): Promise<ApiResult<StudentPlacementEnquiryDetail>> {
+  try {
+    const res = await fetch(`${BASE_URL}/student-placement-enquiries/${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+    if (!res.ok)
+      return {
+        success: false,
+        error: getErrorMessage(data, "Failed to fetch enquiry."),
+      };
+    return { success: true, data: getPayload(data) };
+  } catch {
+    return { success: false, error: "Network error. Please try again." };
+  }
+}
+
+export async function downloadDocument(
+  documentUrl: string,
+  filename: string,
+  token: string,
+): Promise<void> {
+  try {
+    // Use the document URL directly as provided
+    const res = await fetch(documentUrl, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to download document: ${res.status} ${res.statusText}`);
+    }
+
+    const blob = await res.blob();
+    
+    if (blob.size === 0) {
+      throw new Error("Downloaded file is empty");
+    }
+
+    // Try to get filename from response headers if available
+    const contentDisposition = res.headers.get('content-disposition');
+    let downloadFilename = filename;
+    if (contentDisposition) {
+      const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+      if (filenameMatch) {
+        downloadFilename = filenameMatch[1];
+      }
+    }
+
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = downloadUrl;
+    a.download = downloadFilename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(downloadUrl);
+    document.body.removeChild(a);
+  } catch (error) {
+    console.error("Download error:", error);
+    throw error;
   }
 }
 

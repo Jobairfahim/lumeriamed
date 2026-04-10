@@ -46,6 +46,77 @@ export interface PlacementEnquiryForm {
   language: string;
   additionalInfo?: string;
   placementId?: string;
+  documents?: string[];
+}
+
+export interface StudentPlacementEnquiry {
+  _id: string;
+  id?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  university: string;
+  yearOfStudy: string;
+  preferredSpecialty: string;
+  preferredCities: string;
+  duration: string;
+  preferredStartDate: string;
+  language: string;
+  additionalInfo?: string;
+  placementId?: string;
+  documents?: string[];
+  status?: string;
+  studentStatus?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface StudentPlacementEnquiryDetail {
+  _id: string;
+  studentId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  universityOrMedicalSchool: string;
+  yearOfStudy: number;
+  preferredStartDate: string;
+  duration: string;
+  preferredSpecialty: string;
+  preferredCities: string;
+  language: string;
+  documents: string[];
+  additionalInformation: string;
+  stage: string;
+  hospitalStatus: string;
+  studentStatus: string;
+  adminStatus: string;
+  firstPayment: string;
+  finalPayment: string;
+  isVisibleToHospitals: boolean;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+  studentUser: {
+    _id: string;
+    email: string;
+    role: string;
+  };
+  studentData: {
+    _id: string;
+    userId: string;
+    fullName: string;
+    createdAt: string;
+    updatedAt: string;
+    languages: string;
+    phoneNumber: string;
+    preferredCities: string;
+    preferredSpecialty: string;
+    university: string;
+    yearOfStudy: number;
+  };
+  matchingPlacements: Placement[];
 }
 
 /** Login form */
@@ -161,6 +232,7 @@ export interface DashboardOverviewStat {
 }
 
 export interface DashboardOverviewApplication {
+  _id?: string;
   id?: string;
   applicationId?: string;
   program?: string;

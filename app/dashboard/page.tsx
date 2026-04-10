@@ -61,6 +61,10 @@ function getApplicationId(application: DashboardOverviewApplication, index: numb
   return application.applicationId || application.id || `APP-${index + 1}`;
 }
 
+function getApplicationMongoId(application: DashboardOverviewApplication) {
+  return application._id || application.id || '';
+}
+
 function getProgramName(application: DashboardOverviewApplication) {
   return (
     application.program ||
@@ -224,6 +228,7 @@ export default function DashboardPage() {
             ) : (
               applications.map((application, index) => {
                 const applicationId = getApplicationId(application, index);
+                const applicationMongoId = getApplicationMongoId(application);
                 const status = formatStatus(application);
 
                 return (
@@ -252,8 +257,8 @@ export default function DashboardPage() {
                         {formatDate(application.date || application.createdAt)}
                       </p>
                       <Link
-                        href={`/dashboard/applications/${applicationId}`}
-                        className="inline-flex text-sm font-medium text-brand-teal hover:underline"
+                        href={`/dashboard/applications/${applicationMongoId}`}
+                        className="inline-flex items-center justify-center rounded-lg border border-brand-teal px-3 py-1.5 text-xs font-medium text-brand-teal transition-colors hover:bg-brand-teal hover:text-white"
                       >
                         View
                       </Link>
@@ -293,6 +298,7 @@ export default function DashboardPage() {
                 ) : (
                   applications.map((application, index) => {
                     const applicationId = getApplicationId(application, index);
+                    const applicationMongoId = getApplicationMongoId(application);
                     const status = formatStatus(application);
 
                     return (
@@ -318,7 +324,7 @@ export default function DashboardPage() {
                         </td>
                         <td className="px-5 py-3.5">
                           <Link
-                            href={`/dashboard/applications/${applicationId}`}
+                            href={`/dashboard/applications/${applicationMongoId}`}
                             className="text-xs font-medium text-brand-teal hover:underline"
                           >
                             View

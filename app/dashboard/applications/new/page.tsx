@@ -51,7 +51,8 @@ export default function NewApplicationPage() {
       !form.duration ||
       !form.preferredSpecialty ||
       !form.preferredCities ||
-      !form.language
+      !form.language 
+      
     ) {
       setError("Please fill in all required fields.");
       return;
