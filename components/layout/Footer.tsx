@@ -27,7 +27,7 @@ export default function Footer() {
           </div>
 
           {/* Quick links */}
-          <div>
+          <div className="ml-8 md:ml-16">
             <h4 className="text-xs font-semibold text-brand-navy uppercase tracking-widest mb-4">
               Quick Links
             </h4>

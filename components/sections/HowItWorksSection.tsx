@@ -13,7 +13,7 @@ export default function HowItWorksSection() {
             title="How It Works"
             subtitle="Simple Process"
           />
-          <p className="text-brand-slate text-sm md:text-base max-w-xs leading-relaxed md:text-right">
+          <p className="text-brand-slate text-sm md:text-base max-w-xs leading-relaxed">
             Start your China medical elective easily.<br />
             Follow these three simple steps.
           </p>

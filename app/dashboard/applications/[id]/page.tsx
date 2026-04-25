@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Mail, GraduationCap, Phone, Clock, Calendar, Globe, MapPin, FileText, Eye, Check } from "lucide-react";
 import { getStudentPlacementEnquiryById } from "@/lib/api";
@@ -25,6 +25,7 @@ export default function ApplicationDetailPage() {
   const [application, setApplication] = useState<StudentPlacementEnquiryDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchApplication = async () => {
@@ -248,7 +249,7 @@ export default function ApplicationDetailPage() {
        * ── INTEGRATION POINT ──
        * Wire to payment gateway (Stripe, etc.)
        */}
-      <div className="mt-6 flex justify-stretch sm:justify-end">
+      <div onClick={()=>router.push(`/payment/${application?._id}`)} className="mt-6 flex justify-stretch sm:justify-end">
         <button className="w-full rounded-xl bg-brand-teal px-8 py-3 text-sm font-medium text-white transition-all hover:bg-brand-tealDark sm:w-auto">
           Payment Now
         </button>
