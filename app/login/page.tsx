@@ -6,7 +6,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
 import Button from "@/components/ui/ui/Button";
-import { login } from "@/lib/api";
+import { login, loginWithGoogle } from "@/lib/api";
+import { firebaseAuth } from "@/lib/firebase";
 import type { LoginForm } from "@/lib/types";
 
 export default function LoginPage() {
@@ -45,6 +46,50 @@ export default function LoginPage() {
 
     setLoading(false);
     router.push(result.data.redirectUrl ?? "/dashboard");
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // First authenticate with Firebase to get Google user data
+      const user = await firebaseAuth.signInWithGoogle();
+      
+      // Prepare data for your backend API
+      const googleData = {
+        googleId: user.uid,
+        email: user.email || "",
+        email_verified: user.emailVerified || false,
+        name: user.displayName || "",
+        picture: user.photoURL || "",
+      };
+
+      // Call your backend API to authenticate and get tokens
+      const result = await loginWithGoogle(googleData);
+      
+      if (!result.success) {
+        setError(result.error);
+        setLoading(false);
+        return;
+      }
+
+      // Store tokens and user info in localStorage
+      if (typeof window !== "undefined") {
+        localStorage.setItem("accessToken", result.data.accessToken);
+        localStorage.setItem("refreshToken", result.data.refreshToken);
+        localStorage.setItem("userEmail", user.email || "");
+        localStorage.setItem("userName", user.displayName || "");
+        localStorage.setItem("userPhoto", user.photoURL || "");
+      }
+
+      setLoading(false);
+      router.push(result.data.redirectUrl ?? "/dashboard");
+    } catch (error: unknown) {
+      const errorMessage = error as { message?: string };
+      setError(errorMessage.message || "Google sign-in failed. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -170,8 +215,10 @@ export default function LoginPage() {
 
             <div className="mb-7 flex items-center justify-center">
               <button
+                onClick={handleGoogleSignIn}
+                disabled={loading}
                 aria-label="Continue with Google"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border transition-all hover:border-brand-teal hover:bg-brand-tealLight"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border transition-all hover:border-brand-teal hover:bg-brand-tealLight disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none">
                   <path

@@ -125,6 +125,14 @@ export interface LoginForm {
   password: string;
 }
 
+export interface GoogleAuthRequest {
+  googleId: string;
+  email: string;
+  email_verified: boolean;
+  name: string;
+  picture: string;
+}
+
 /** Signup form */
 export interface SignupForm {
   fullName: string;
@@ -216,6 +224,59 @@ export interface StudentProfile {
   languages?: string;
   avatar?: string;
   profileImage?: string;
+}
+
+export interface ConversationParticipant {
+  _id?: string;
+  id?: string;
+  fullName?: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
+  avatar?: string;
+  profileImage?: string;
+  email?: string;
+  role?: string;
+}
+
+export interface ConversationSummary {
+  _id?: string;
+  id?: string;
+  conversationId?: string;
+  title?: string;
+  name?: string;
+  participants?: ConversationParticipant[];
+  lastMessage?: {
+    _id?: string;
+    id?: string;
+    content?: string;
+    createdAt?: string;
+    senderId?: string | { _id?: string; id?: string };
+  };
+  updatedAt?: string;
+  createdAt?: string;
+}
+
+export interface ConversationMessage {
+  _id?: string;
+  id?: string;
+  conversationId?: string;
+  content?: string;
+  attachments?: unknown[];
+  createdAt?: string;
+  updatedAt?: string;
+  senderId?:
+    | string
+    | {
+        _id?: string;
+        id?: string;
+        fullName?: string;
+        name?: string;
+        firstName?: string;
+        lastName?: string;
+        avatar?: string;
+        profileImage?: string;
+      };
 }
 
 export interface UpdateStudentProfileRequest {

@@ -105,9 +105,45 @@ export default function ProfilePage() {
     },
   ];
 
-  const displayName = profile.fullName || profile.name || "Student";
+  const getDisplayName = () => {
+    // Check backend name first
+    if (profile.fullName || profile.name) {
+      return profile.fullName || profile.name || "Student";
+    }
+    
+    // Fallback to Google name from localStorage
+    if (typeof window !== "undefined") {
+      const googleName = localStorage.getItem("userName");
+      if (googleName) {
+        return googleName;
+      }
+    }
+    
+    return "Student";
+  };
+  
+  const displayName = getDisplayName();
   const displayStudentId = profile.studentId || "-";
-  const avatarSrc = profile.avatar ?? profile.profileImage ?? "";
+  
+  // Get profile image from backend first, then fallback to Google image from localStorage
+  const getProfileImage = () => {
+    // Check backend profile image first
+    if (profile.avatar || profile.profileImage) {
+      return profile.avatar ?? profile.profileImage ?? "";
+    }
+    
+    // Fallback to Google profile image from localStorage
+    if (typeof window !== "undefined") {
+      const googlePhoto = localStorage.getItem("userPhoto");
+      if (googlePhoto) {
+        return googlePhoto;
+      }
+    }
+    
+    return "";
+  };
+  
+  const avatarSrc = getProfileImage();
   const modalAvatarSrc = editImagePreview || avatarSrc;
 
   const handleEditProfile = () => {

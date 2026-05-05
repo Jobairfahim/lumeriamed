@@ -10,11 +10,14 @@ import type {
   ResetPasswordRequest,
   SignupRequest,
   DashboardOverview,
+  ConversationMessage,
+  ConversationSummary,
   StudentProfile,
   StudentPlacementEnquiry,
   StudentPlacementEnquiryDetail,
   UpdateStudentProfileRequest,
   VerifyOtpRequest,
+  GoogleAuthRequest,
 } from "./types";
 
 const DEFAULT_BASE_URL = "https://server.lumieramed.com/api/v1";
@@ -309,6 +312,15 @@ export async function login(
   });
 }
 
+export async function loginWithGoogle(
+  googleData: GoogleAuthRequest,
+): Promise<ApiResult<AuthTokens & { role?: string; redirectUrl?: string }>> {
+  return request("/users/google", {
+    method: "POST",
+    body: JSON.stringify(googleData),
+  });
+}
+
 export async function registerStudent(
   form: SignupRequest,
 ): Promise<ApiResult<{ message?: string }>> {
@@ -395,6 +407,23 @@ export async function getStudentDashboardOverview(
   token: string,
 ): Promise<ApiResult<DashboardOverview>> {
   return request("/students/dashboard/overview", {
+    token,
+  });
+}
+
+export async function getUserConversations(
+  token: string,
+): Promise<ApiResult<ConversationSummary[]>> {
+  return request("/conversations/user", {
+    token,
+  });
+}
+
+export async function getConversationMessages(
+  conversationId: string,
+  token: string,
+): Promise<ApiResult<ConversationMessage[]>> {
+  return request(`/conversations/${conversationId}/messages`, {
     token,
   });
 }

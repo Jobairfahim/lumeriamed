@@ -62,9 +62,43 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     void loadProfile();
   }, []);
 
-  const displayName = user.fullName || user.name || "Student";
+  const getDisplayName = () => {
+    // Check backend name first
+    if (user.fullName || user.name) {
+      return user.fullName || user.name || "Student";
+    }
+    
+    // Fallback to Google name from localStorage
+    if (typeof window !== "undefined") {
+      const googleName = localStorage.getItem("userName");
+      if (googleName) {
+        return googleName;
+      }
+    }
+    
+    return "Student";
+  };
+  
+  const getProfileImage = () => {
+    // Check backend profile image first
+    if (user.avatar || user.profileImage) {
+      return user.avatar || user.profileImage || "";
+    }
+    
+    // Fallback to Google profile image from localStorage
+    if (typeof window !== "undefined") {
+      const googlePhoto = localStorage.getItem("userPhoto");
+      if (googlePhoto) {
+        return googlePhoto;
+      }
+    }
+    
+    return "";
+  };
+
+  const displayName = getDisplayName();
   const displayStudentId = user.studentId || "-";
-  const avatarSrc = user.avatar || user.profileImage || "";
+  const avatarSrc = getProfileImage();
   return (
     <div className="flex min-h-screen bg-[#F4F6F8]">
 
