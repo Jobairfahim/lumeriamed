@@ -52,6 +52,34 @@ export default function ApplicationDetailPage() {
     void fetchApplication();
   }, [params.id]);
 
+  // Refetch data when returning from payment page
+  useEffect(() => {
+    const handlePaymentReturn = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const paymentStatus = urlParams.get('payment');
+      
+      if (paymentStatus === 'success' || paymentStatus === 'completed') {
+        // Refetch application data to get updated payment status
+        const token = typeof window !== "undefined" 
+          ? localStorage.getItem("accessToken") ?? ""
+          : "";
+        
+        if (token && params.id) {
+          getStudentPlacementEnquiryById(params.id as string, token)
+            .then(result => {
+              if (result.success) {
+                setApplication(result.data);
+                // Clean URL parameters
+                window.history.replaceState({}, '', window.location.pathname);
+              }
+            });
+        }
+      }
+    };
+
+    handlePaymentReturn();
+  }, [params.id]);
+
   const handleViewDocument = (documentUrl: string) => {
     // Open document in new tab
     window.open(documentUrl, '_blank', 'noopener,noreferrer');
