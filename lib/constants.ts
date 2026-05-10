@@ -54,8 +54,8 @@ export const FOOTER_QUICK_LINKS = [
 ] as const;
 
 export const FOOTER_LEGAL_LINKS = [
-  { label: "For Consultants", href: "/consultants" },
-  { label: "Privacy Policy",  href: "/privacy" },
+  { label: "For Consultants", href: "/contact" },
+  { label: "Privacy Policy",  href: "/privacy-policy" },
   { label: "Terms of Service",href: "/terms" },
 ] as const;
 

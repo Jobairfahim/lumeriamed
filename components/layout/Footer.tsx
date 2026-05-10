@@ -7,10 +7,10 @@ export default function Footer() {
   return (
     <footer className="bg-white border-t border-brand-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-14">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
 
           {/* Brand */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 items-start">
             <Link href="/" className="flex items-center gap-2 w-fit">
               <Image 
                 src="/images/logo.png" 
@@ -27,11 +27,11 @@ export default function Footer() {
           </div>
 
           {/* Quick links */}
-          <div className="ml-8 md:ml-16">
-            <h4 className="text-xs font-semibold text-brand-navy uppercase tracking-widest mb-4">
+          <div className="ml-0 md:ml-16 text-left">
+            <h4 className="text-xs font-semibold text-brand-navy uppercase tracking-widest mb-4 text-left">
               Quick Links
             </h4>
-            <ul className="flex flex-col gap-2.5">
+            <ul className="flex flex-col gap-2.5 items-start">
               {FOOTER_QUICK_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="text-brand-slate text-sm hover:text-brand-teal transition-colors">
@@ -43,11 +43,11 @@ export default function Footer() {
           </div>
 
           {/* Contact */}
-          <div>
-            <h4 className="text-xs font-semibold text-brand-navy uppercase tracking-widest mb-4">
+          <div className="text-left">
+            <h4 className="text-xs font-semibold text-brand-navy uppercase tracking-widest mb-4 text-left">
               Contact
             </h4>
-            <ul className="flex flex-col gap-3">
+            <ul className="flex flex-col gap-3 items-start">
               <li>
                 <a href="tel:+15551234567" className="flex items-center gap-2.5 text-brand-slate text-sm hover:text-brand-teal transition-colors">
                   <Phone size={14} className="text-brand-teal flex-shrink-0" />
@@ -55,9 +55,9 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="mailto:info@lumieramed.com" className="flex items-center gap-2.5 text-brand-slate text-sm hover:text-brand-teal transition-colors">
+                <a href="mailto:support@lumieramed.com" className="flex items-center gap-2.5 text-brand-slate text-sm hover:text-brand-teal transition-colors">
                   <Mail size={14} className="text-brand-teal flex-shrink-0" />
-                  info@lumieramed.com
+                  support@lumieramed.com
                 </a>
               </li>
             </ul>
@@ -67,9 +67,9 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-brand-border">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-brand-muted text-xs">© 2026 LumieraMed. All rights reserved.</p>
-          <div className="flex items-center gap-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-start sm:items-center sm:justify-between gap-3 text-left">
+          <p className="text-brand-muted text-xs text-left">© 2026 LumieraMed. All rights reserved.</p>
+          <div className="flex items-center gap-4 sm:text-left">
             {FOOTER_LEGAL_LINKS.map((link) => (
               <Link key={link.href} href={link.href} className="text-brand-muted text-xs hover:text-brand-teal transition-colors">
                 {link.label}

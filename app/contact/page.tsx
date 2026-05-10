@@ -70,10 +70,10 @@ export default function ContactPage() {
                 Email
               </p>
               <a
-                href="mailto:info@lumieramed.com"
+                href="mailto:support@lumieramed.com"
                 className="text-sm font-medium text-brand-navy transition-colors hover:text-brand-teal"
               >
-                info@lumieramed.com
+                support@lumieramed.com
               </a>
             </div>
           </div>

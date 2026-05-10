@@ -66,10 +66,10 @@ export default function ContactSection() {
                 <div>
                   <div className="font-medium text-brand-navy text-sm">Email</div>
                   <a
-                    href="mailto:contact@lumieramed.com"
+                    href="mailto:support@lumieramed.com"
                     className="text-brand-slate text-sm hover:text-brand-teal transition-colors"
                   >
-                    contact@lumieramed.com
+                    support@lumieramed.com
                   </a>
                   <p className="text-brand-muted text-xs mt-0.5">
                     We typically respond within 24 hours
