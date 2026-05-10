@@ -475,3 +475,24 @@ export async function getPlacements(params?: {
   ).toString();
   return request(`/placements${query ? `?${query}` : ""}`);
 }
+
+export interface Notification {
+  _id: string;
+  message: string;
+  isRead: boolean;
+  createdAt: string;
+}
+
+export async function getUnreadNotifications(token: string): Promise<ApiResult<Notification[]>> {
+  return request("/notifications", {
+    method: "GET",
+    token,
+  });
+}
+
+export async function readAllNotifications(token: string): Promise<ApiResult<{ message: string }>> {
+  return request("/notifications", {
+    method: "PATCH",
+    token,
+  });
+}

@@ -93,7 +93,9 @@ export interface StudentPlacementEnquiryDetail {
   studentStatus: string;
   adminStatus: string;
   firstPayment: string;
+  firstPaymentAmount?: number;
   finalPayment: string;
+  finalPaymentAmount?: number;
   isVisibleToHospitals: boolean;
   isDeleted: boolean;
   createdAt: string;

@@ -7,34 +7,20 @@ import { getStudentPlacementEnquiries } from "@/lib/api";
 import type { StudentPlacementEnquiry } from "@/lib/types";
 
 const statusStyles: Record<string, string> = {
-  Processing: "bg-orange-100 text-orange-600",
-  Approved: "bg-teal-100 text-teal-700",
-  Pending: "bg-gray-100 text-gray-500",
-  Rejected: "bg-red-100 text-red-600",
-  under_review: "bg-orange-100 text-orange-600",
-  matched: "bg-blue-100 text-blue-700",
-  confirmed: "bg-teal-100 text-teal-700",
-  completed: "bg-green-100 text-green-700",
+  pending: "bg-gray-100 text-gray-600",
+  matching: "bg-blue-100 text-blue-700",
+  approved: "bg-teal-100 text-teal-700",
   rejected: "bg-red-100 text-red-600",
-  pending: "bg-gray-100 text-gray-500",
 };
 
-const STATUS_OPTIONS = ["All", "pending", "under_review", "matched", "confirmed", "rejected", "completed"] as const;
+const STATUS_OPTIONS = ["All", "pending", "matching", "approved", "rejected"] as const;
 
 function formatStatus(application: StudentPlacementEnquiry) {
-  const rawStatus =
-    application.status ??
-    application.studentStatus ??
-    "Pending";
-
-  const normalized = rawStatus.toLowerCase();
-
-  if (normalized.includes("approve")) return "Approved";
-  if (normalized.includes("reject")) return "Rejected";
-  if (normalized.includes("process")) return "Processing";
-  if (normalized.includes("review")) return "Processing";
-  if (normalized.includes("payment")) return "Processing";
-  return "Pending";
+  const status = application.studentStatus?.toLowerCase() || "pending";
+  if (status === "approved" || status === "rejected" || status === "matching") {
+    return status;
+  }
+  return "pending";
 }
 
 function getApplicationId(application: StudentPlacementEnquiry, index: number) {
@@ -81,7 +67,7 @@ export default function AllApplicationsPage() {
     (application) =>
       ((application._id?.toLowerCase().includes(search.toLowerCase()) || false) ||
         (application.preferredSpecialty?.toLowerCase().includes(search.toLowerCase()) || false)) &&
-      (statusFilter === "All" || application.status === statusFilter)
+      (statusFilter === "All" || formatStatus(application) === statusFilter)
   );
 
   return (

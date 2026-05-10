@@ -7,7 +7,7 @@ import {
   LayoutDashboard, FileText, MessageSquare,
   User, Settings, LogOut, Bell, Search, Menu, X,
 } from "lucide-react";
-import { getStudentProfile } from "@/lib/api";
+import { getStudentProfile, getUnreadNotifications, readAllNotifications, type Notification } from "@/lib/api";
 import type { StudentProfile } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -33,6 +33,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [user, setUser] = useState<StudentProfile>(EMPTY_USER);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   useEffect(() => {
     const token =
@@ -59,8 +62,33 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       });
     };
 
+    const loadNotifications = async () => {
+      const result = await getUnreadNotifications(token);
+      if (result.success) {
+        const data = result.data as Notification[] | { notifications?: Notification[] };
+        const notifs = Array.isArray(data) ? data : ((data as { notifications?: Notification[] }).notifications || []);
+        setNotifications(notifs);
+      }
+    };
+
     void loadProfile();
+    void loadNotifications();
   }, []);
+
+  const handleBellClick = async () => {
+    setShowNotifications(!showNotifications);
+    if (!showNotifications && notifications.length > 0) {
+      const currentToken = typeof window !== "undefined" ? localStorage.getItem("accessToken") ?? "" : "";
+      if (currentToken) {
+        try {
+          await readAllNotifications(currentToken);
+          setNotifications([]);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+  };
 
   const getDisplayName = () => {
     // Check backend name first
@@ -189,12 +217,30 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
 
             <div className="ml-auto flex items-center gap-2 sm:gap-3">
-              <button className="relative rounded-xl p-2 transition-all hover:bg-brand-tealLight">
-                <Bell size={18} className="text-brand-slate" />
-                <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-brand-teal" />
-              </button>
+              <div className="relative">
+                <button onClick={handleBellClick} className="relative rounded-xl p-2 transition-all hover:bg-brand-tealLight">
+                  <Bell size={18} className="text-brand-slate" />
+                  {notifications.length > 0 && <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-brand-teal" />}
+                </button>
+                {showNotifications && (
+                  <div className="absolute right-0 mt-2 w-80 bg-white border border-brand-border rounded-xl shadow-soft z-50 p-4">
+                    <h3 className="text-sm font-semibold text-brand-navy mb-3">Notifications</h3>
+                    {(!Array.isArray(notifications) || notifications.length === 0) ? (
+                      <p className="text-xs text-brand-muted">No new notifications.</p>
+                    ) : (
+                      <ul className="space-y-3 max-h-64 overflow-y-auto pr-1">
+                        {notifications.map(n => (
+                          <li key={n._id} className="text-xs text-brand-slate border-b border-brand-light pb-2">
+                            {n.message}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )}
+              </div>
 
-              <div className="flex items-center gap-2">
+              <div className="relative flex items-center gap-2 cursor-pointer" onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}>
                 <div className="hidden text-right sm:block">
                   <p className="text-xs font-semibold text-brand-navy">{displayName}</p>
                   <p className="text-[10px] text-brand-muted">Student ID: {displayStudentId}</p>
@@ -204,6 +250,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <Image src={avatarSrc} alt={displayName} fill className="object-cover" />
                   ) : null}
                 </div>
+                {profileDropdownOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-brand-border rounded-xl shadow-soft z-50 py-2 overflow-hidden">
+                    <Link href="/dashboard/profile" className="flex items-center gap-2 px-4 py-2 text-sm text-brand-slate hover:bg-brand-tealLight hover:text-brand-teal transition-colors w-full text-left">
+                      <User size={16} />
+                      Profile
+                    </Link>
+                    <Link href="/login" onClick={() => {
+                      if (typeof window !== "undefined") {
+                        localStorage.removeItem("accessToken");
+                        localStorage.removeItem("userName");
+                        localStorage.removeItem("userPhoto");
+                      }
+                    }} className="flex items-center gap-2 px-4 py-2 text-sm text-brand-slate hover:bg-red-50 hover:text-red-500 transition-colors w-full text-left">
+                      <LogOut size={16} />
+                      Log Out
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           </div>

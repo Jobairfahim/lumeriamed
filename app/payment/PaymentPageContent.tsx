@@ -9,7 +9,7 @@ interface PaymentPageContentProps {
 export default function PaymentPageContent({ children }: PaymentPageContentProps) {
   const searchParams = useSearchParams();
   const type = searchParams.get("type") || "deposit";
-  const returnTo = searchParams.get("returnTo") || "/dashboard/application-status";
+  const returnTo = searchParams.get("returnTo") || "/dashboard/applications/${id}";
 
   return <>{children({ type, returnTo })}</>;
 }

@@ -20,29 +20,18 @@ import type {
 } from "@/lib/types";
 
 const statusStyles: Record<string, string> = {
-  Processing: "bg-orange-100 text-orange-600",
-  Approved: "bg-teal-100 text-teal-700",
-  Pending: "bg-gray-100 text-gray-500",
-  Rejected: "bg-red-100 text-red-600",
+  pending: "bg-gray-100 text-gray-600",
+  matching: "bg-blue-100 text-blue-700",
+  approved: "bg-teal-100 text-teal-700",
+  rejected: "bg-red-100 text-red-600",
 };
 
 function formatStatus(application: DashboardOverviewApplication) {
-  const rawStatus =
-    application.status ??
-    application.stage ??
-    application.studentStatus ??
-    application.adminStatus ??
-    application.hospitalStatus ??
-    "Pending";
-
-  const normalized = rawStatus.toLowerCase();
-
-  if (normalized.includes("approve")) return "Approved";
-  if (normalized.includes("reject")) return "Rejected";
-  if (normalized.includes("process")) return "Processing";
-  if (normalized.includes("review")) return "Processing";
-  if (normalized.includes("payment")) return "Processing";
-  return "Pending";
+  const status = application.studentStatus?.toLowerCase() || "pending";
+  if (status === "approved" || status === "rejected" || status === "matching") {
+    return status;
+  }
+  return "pending";
 }
 
 function formatDate(value?: string) {
@@ -149,7 +138,7 @@ export default function DashboardPage() {
       color: "bg-green-100 text-green-600",
     },
     {
-      label: "Processing",
+      label: "Pending",
       value: overview?.pending ?? 0,
       icon: Clock,
       color: "bg-orange-100 text-orange-500",

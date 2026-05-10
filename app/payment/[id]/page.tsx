@@ -30,24 +30,6 @@ const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
 type PaymentType = "deposit" | "final";
 
-const PAYMENT_COPY: Record<
-  PaymentType,
-  { title: string; amount: string; cta: string; success: string }
-> = {
-  deposit: {
-    title: "Placement Deposit",
-    amount: "£250", // Changed to GBP
-    cta: "Pay £250",
-    success: "Your £250 deposit payment has been successful.",
-  },
-  final: {
-    title: "Placement Payment",
-    amount: "£250.00", // Changed to GBP
-    cta: "Pay £250.00",
-    success: "Your placement payment has been successful.",
-  },
-};
-
 const COUNTRIES = [
   { code: "BD", name: "Bangladesh" },
   { code: "GB", name: "United Kingdom" },
@@ -88,10 +70,17 @@ function CheckoutIllustration() {
   );
 }
 
+interface PaymentInfo {
+  title: string;
+  amount: string;
+  cta: string;
+  success: string;
+}
+
 // ─── Stripe Checkout Form ─────────────────────────────────────────────────────
 
 interface StripeCheckoutFormProps {
-  payment: (typeof PAYMENT_COPY)[PaymentType];
+  payment: PaymentInfo;
   returnTo: string;
   onSuccess: () => void;
 }
@@ -291,11 +280,45 @@ function PaymentPageInner({
   id: string;
 }) {
   const router = useRouter();
-  const payment = PAYMENT_COPY[type] ?? PAYMENT_COPY.deposit;
-  console.log(id);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [enquiryAmount, setEnquiryAmount] = useState<number | null>(null);
+
+  // Only fetch from API for the final payment; first payment is always £250
+  useEffect(() => {
+    if (type !== "final") return;
+    const fetchEnquiry = async () => {
+      try {
+        const token = localStorage.getItem("accessToken") ?? "";
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/student-placement-enquiries/${id}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        const json = await res.json();
+        const data = json.data ?? json;
+        if (data.finalPaymentAmount != null) {
+          setEnquiryAmount(data.finalPaymentAmount);
+        }
+      } catch {
+        // amount remains null — will show £… until resolved
+      }
+    };
+    fetchEnquiry();
+  }, [id, type]);
+
+  // First payment is always £250; final is dynamically set by admin
+  const amountDisplay =
+    type === "deposit" ? "£250.00" : enquiryAmount != null ? `£${enquiryAmount.toFixed(2)}` : "£…";
+  const payment: PaymentInfo = {
+    title: type === "final" ? "Placement Payment" : "Placement Deposit",
+    amount: amountDisplay,
+    cta: `Pay ${amountDisplay}`,
+    success:
+      type === "final"
+        ? `Your placement payment of ${amountDisplay} has been successful.`
+        : `Your deposit payment of ${amountDisplay} has been successful.`,
+  };
 
   // Fetch client secret from your backend
   useEffect(() => {
@@ -312,8 +335,6 @@ function PaymentPageInner({
           },
         );
         const json = await res.json();
-
-        console.log(json)
         if (json.success && json.data?.clientSecret) {
           setClientSecret(json.data.clientSecret);
         } else {
@@ -323,10 +344,8 @@ function PaymentPageInner({
         setFetchError("Network error. Please check your connection.");
       }
     };
-
     fetchClientSecret();
-  }, []);
-console.log(clientSecret)
+  }, [id]);
   return (
     <div className="min-h-screen bg-[#f4f4f4]">
       <div className="grid min-h-screen lg:grid-cols-[minmax(320px,1fr)_minmax(360px,1.05fr)]">
@@ -467,7 +486,7 @@ function PaymentPageContent({ id }: { id: string }) {
   const searchParams = useSearchParams();
   const type = (searchParams.get("type") || "deposit") as PaymentType;
   const returnTo =
-    searchParams.get("returnTo") || "/dashboard/application-status";
+    searchParams.get("returnTo") || `/dashboard/applications/${id}`;
   return <PaymentPageInner type={type} returnTo={returnTo} id={id} />;
 }
 
