@@ -8,7 +8,7 @@ export default function StructuredData() {
     "logo": "https://lumieramed.com/images/logo.png",
     "contactPoint": {
       "@type": "ContactPoint",
-      "telephone": "+1-555-123-4567",
+      "telephone": "+44 7786 236891",
       "contactType": "customer service",
       "email": "info@lumieramed.com"
     },
@@ -19,8 +19,8 @@ export default function StructuredData() {
     ],
     "address": {
       "@type": "PostalAddress",
-      "addressCountry": "CN",
-      "addressLocality": "Beijing"
+      "addressCountry": "GB",
+      "addressLocality": "London"
     },
     "services": [
       {
