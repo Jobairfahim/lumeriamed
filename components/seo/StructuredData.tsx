@@ -10,7 +10,7 @@ export default function StructuredData() {
       "@type": "ContactPoint",
       "telephone": "+44 7786 236891",
       "contactType": "customer service",
-      "email": "info@lumieramed.com"
+      "email": "support@lumieramed.com"
     },
     "sameAs": [
       "https://twitter.com/lumieramed",

@@ -1,9 +1,23 @@
 import CTABannerSection from '@/components/sections/CTABannerSection';
 import Image from 'next/image';
+import PageMetadata from '@/components/seo/PageMetadata';
 
 export default function AboutPage() {
   return (
-    <div className="pt-16">
+    <>
+      <PageMetadata
+        title="About LumieraMed - Clinical Elective Placement Platform"
+        description="Learn about LumieraMed's mission to connect medical students with accredited clinical elective placements in China's leading hospitals."
+        keywords={[
+          "about lumieramed",
+          "clinical elective platform",
+          "medical education china",
+          "healthcare placements",
+          "medical student opportunities"
+        ]}
+        canonical="/about"
+      />
+      <div className="pt-16">
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <div className="bg-brand-light py-14 md:py-20 text-center px-4 border-b border-brand-border">
@@ -157,5 +171,6 @@ export default function AboutPage() {
       <CTABannerSection />
 
     </div>
+    </>
   );
 }

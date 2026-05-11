@@ -1,5 +1,6 @@
 import CTABannerSection from "@/components/sections/CTABannerSection";
 import AccordionItem from "@/components/ui/AccordionItem";
+import PageMetadata from "@/components/seo/PageMetadata";
 
 const FAQ_GROUPS = [
   {
@@ -109,7 +110,20 @@ const FAQ_GROUPS = [
 
 export default function FAQPage() {
   return (
-    <div className="pt-16 bg-white">
+    <>
+      <PageMetadata
+        title="FAQ - LumieraMed Clinical Elective Placements"
+        description="Find answers to frequently asked questions about clinical electives in China, eligibility, application process, and placement details."
+        keywords={[
+          "medical elective faq",
+          "clinical placement questions",
+          "china elective requirements",
+          "medical student eligibility",
+          "application process"
+        ]}
+        canonical="/faq"
+      />
+      <div className="pt-16 bg-white">
       <div className="bg-brand-light py-14 md:py-20 text-center px-4 border-b border-brand-border">
         <h1 className="font-display text-3xl md:text-4xl font-bold text-brand-navy mb-3">
           Frequently Asked <span className="text-brand-teal">Questions</span>
@@ -145,5 +159,6 @@ export default function FAQPage() {
 
       <CTABannerSection />
     </div>
+    </>
   );
 }

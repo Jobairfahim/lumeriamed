@@ -48,9 +48,9 @@ export const metadata: Metadata = {
     siteName: "LumieraMed",
     images: [
       {
-        url: "/images/og-image.jpg",
-        width: 1200,
-        height: 630,
+        url: "/images/logo.png",
+        width: 400,
+        height: 133,
         alt: "LumieraMed - Clinical Elective Placements in China",
       },
     ],
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "LumieraMed – Clinical Elective Placements in China",
     description: "Connect with accredited clinical elective placements across China's leading hospitals.",
-    images: ["/images/og-image.jpg"],
+    images: ["/images/logo.png"],
     creator: "@lumieramed",
   },
   robots: {
@@ -78,14 +78,7 @@ export const metadata: Metadata = {
     yandex: "your-yandex-verification-code",
   },
   icons: {
-    icon: [
-      { url: "/images/favicon.ico", sizes: "any" },
-      { url: "/images/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/images/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-    ],
-    apple: [
-      { url: "/images/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
+    icon: "/images/logo.ico",
   },
   manifest: "/manifest.json",
 };
