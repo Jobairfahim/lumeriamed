@@ -54,7 +54,7 @@ export default function SignupPage() {
     setError(null);
 
     const result = await registerStudent({
-      name: form.fullName,
+      fullName: form.fullName,
       email: form.email,
       password: form.password,
     });
@@ -84,9 +84,9 @@ export default function SignupPage() {
           </div>
 
           <div className="flex flex-col justify-center px-8 py-10">
-            <div className="mb-5 inline-flex w-fit items-center gap-1.5 rounded-full bg-brand-tealLight px-3 py-1.5 text-xs font-medium text-brand-teal">
+            {/* <div className="mb-5 inline-flex w-fit items-center gap-1.5 rounded-full bg-brand-tealLight px-3 py-1.5 text-xs font-medium text-brand-teal">
               🎉 Student Portal Coming Soon
-            </div>
+            </div> */}
 
             <h1 className="mb-1.5 font-display text-3xl font-bold text-brand-navy">
               Create Account

@@ -85,10 +85,10 @@ export default function ContactSection() {
                 <div>
                   <div className="font-medium text-brand-navy text-sm">WhatsApp</div>
                   <a
-                    href="https://wa.me/86XXXXXXXXXX"
+                    href="https://wa.me/447786236891"
                     className="text-brand-slate text-sm hover:text-brand-teal transition-colors"
                   >
-                    +86 XXX XXXX XXXX
+                    +44 7786 236891
                   </a>
                   <p className="text-brand-muted text-xs mt-0.5">
                     Available for quick inquiries
