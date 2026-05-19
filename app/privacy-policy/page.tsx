@@ -44,7 +44,7 @@ const sections = [
           <li>
             Maintain and enhance website performance and user experience
           </li>
-          <li>Analyze usage trends and visitor behavior</li>
+          <li>Analyse usage trends and visitor behaviour</li>
           <li>Meet legal and regulatory obligations</li>
         </ul>
         <p>
@@ -81,7 +81,7 @@ const sections = [
         We may use trusted third-party tools such as analytics providers to
         better understand website usage and performance. These third parties may
         collect information in accordance with their own privacy policies.
-        Lumireamed does not control how third-party services handle your data.
+        LumireaMed does not control how third-party services handle your data.
       </p>
     ),
   },
@@ -97,7 +97,7 @@ const sections = [
         <ul>
           <li>Comply with legal obligations or lawful requests</li>
           <li>
-            Protect the rights, safety, or property of Lumireamed or others
+            Protect the rights, safety, or property of LumireaMed or others
           </li>
           <li>
             Support business operations such as mergers or asset transfers
@@ -113,9 +113,9 @@ const sections = [
     content: (
       <p>
         We retain personal information only for as long as it is necessary to
-        fulfill the purposes outlined in this policy, or as required by law.
+        fulfil the purposes outlined in this policy, or as required by law.
         Once information is no longer needed, we take reasonable steps to
-        securely delete or anonymize it.
+        securely delete or anonymise it.
       </p>
     ),
   },
@@ -201,7 +201,7 @@ function Section({ number, title, content, index }: {
 export default function PrivacyPolicyPage() {
   return (
     <>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -229,7 +229,7 @@ export default function PrivacyPolicyPage() {
         /* HERO */
         .hero {
           background: var(--teal);
-          padding: 72px 64px 64px;
+          padding: 160px 64px 64px;
           position: relative;
           overflow: hidden;
         }
@@ -431,14 +431,14 @@ export default function PrivacyPolicyPage() {
         .contact-btn:hover { background: var(--teal-dark); }
 
         @media (max-width: 640px) {
-          .hero { padding: 48px 24px 52px; }
+          .hero { padding: 130px 24px 52px; }
           .intro { padding: 40px 24px 36px; }
           .sections { padding: 16px 24px 60px; }
           .section-row { grid-template-columns: 1fr; gap: 6px; padding: 32px 0; }
           .section-num { padding-top: 0; }
           .contact-callout { margin: 0 24px 48px; }
         }
-      `}</style>
+      ` }} />
 
       <div className="privacy-page">
 
@@ -457,7 +457,7 @@ export default function PrivacyPolicyPage() {
             </div>
             <div className="hero-chip">
               <span className="hero-chip-label">Applies To</span>
-              <span className="hero-chip-value">All Lumireamed Services</span>
+              <span className="hero-chip-value">All LumireaMed Services</span>
             </div>
             <div className="hero-chip">
               <span className="hero-chip-label">Sections</span>
@@ -470,9 +470,9 @@ export default function PrivacyPolicyPage() {
         <div className="intro">
           <div className="intro-inner">
             <p>
-              At <strong>Lumireamed</strong>, we value your trust and are
+              At <strong>LumireaMed</strong>, we value your trust and are
               committed to protecting your privacy. This Privacy Policy explains
-              how Lumireamed collects, uses, stores, and safeguards your
+              how LumireaMed collects, uses, stores, and safeguards your
               information when you visit our website or interact with our
               services. By using our website, you agree to the practices
               described in this policy.

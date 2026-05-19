@@ -28,7 +28,7 @@ export default function CTABannerSection() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button href="/browse-placements" size="lg">
-                Enquire Now
+                Browse Placements
               </Button>
               <Button href="/contact" size="lg" variant="transparent">
                 Contact Us

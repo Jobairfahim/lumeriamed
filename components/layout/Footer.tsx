@@ -15,14 +15,14 @@ export default function Footer() {
               <Image 
                 src="/images/logo.png" 
                 alt="LumieraMed Logo" 
-                width={96} 
-                height={32} 
-                className="w-16 h-11"
+                width={130} 
+                height={90} 
+                className="w-20 h-14"
               />
             </Link>
             <p className="text-brand-slate text-sm leading-relaxed max-w-xs">
-              Empowering medical students with exceptional clinical elective experiences
-              in China&apos;s leading healthcare institutions.
+              Matching medical students with exceptional electives in China, offering unique experiences and exposure to a whole new healthcare system and culture.
+
             </p>
           </div>
 

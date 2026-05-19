@@ -32,7 +32,7 @@ export default function EnquirySuccessPage() {
           </h1>
           <p className="text-brand-slate text-sm md:text-base max-w-md mx-auto leading-relaxed">
             We&apos;ve received your submission and our team will review your information
-            carefully. You can expect to hear back from us within 24 hours.
+            carefully. You can expect to hear back from us within 48 hours.
           </p>
         </div>
 
@@ -61,8 +61,8 @@ export default function EnquirySuccessPage() {
           <p className="text-brand-slate text-sm leading-relaxed">
             <strong className="text-brand-navy">Note:</strong> Please check your spam/junk folder
             if you don&apos;t see our email. Add{" "}
-            <a href="mailto:info@lumieramed.com" className="text-brand-teal hover:underline font-medium">
-              info@lumieramed.com
+            <a href="mailto:support@lumieramed.com" className="text-brand-teal hover:underline font-medium">
+              support@lumieramed.com
             </a>{" "}
             to your contacts to ensure you receive our messages.
           </p>

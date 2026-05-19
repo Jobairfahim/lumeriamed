@@ -11,11 +11,11 @@ const sections = [
         <p>For the purpose of these Terms and Conditions:</p>
         <ul>
           <li><strong>&quot;Client&quot;, &quot;You&quot;, &quot;Your&quot;</strong> refers to any individual or entity accessing this Website.</li>
-          <li><strong>&quot;Company&quot;, &quot;We&quot;, &quot;Us&quot;, &quot;Our&quot;</strong> refers to Lumireamed.</li>
-          <li><strong>&quot;Services&quot;</strong> refers to software development, consulting, digital solutions, and any other services offered by Lumireamed.</li>
+          <li><strong>&quot;Company&quot;, &quot;We&quot;, &quot;Us&quot;, &quot;Our&quot;</strong> refers toLumireaMed.</li>
+          <li><strong>&quot;Services&quot;</strong> refers to software development, consulting, digital solutions, and any other services offered byLumireaMed.</li>
           <li><strong>&quot;Party&quot;</strong> refers to either the Client or the Company individually, and &quot;Parties&quot; refers to both collectively.</li>
         </ul>
-        <p>These terms govern the relationship between the Client and Lumireamed in accordance with applicable laws.</p>
+        <p>These terms govern the relationship between the Client andLumireaMed in accordance with applicable laws.</p>
       </>
     ),
   },
@@ -24,7 +24,7 @@ const sections = [
     title: "Cookies",
     content: (
       <p>
-        We use cookies and similar technologies to enhance user experience and analyze website performance. By using our Website, you consent to our use of cookies in accordance with our Privacy Policy.
+        We use cookies and similar technologies to enhance user experience and analyse website performance. By using our Website, you consent to our use of cookies in accordance with our Privacy Policy.
       </p>
     ),
   },
@@ -34,7 +34,7 @@ const sections = [
     content: (
       <>
         <p>
-          Unless otherwise stated, Lumireamed and/or its licensors own all intellectual property rights for all content, materials, and functionality on this Website. All rights are reserved.
+          Unless otherwise stated,LumireaMed and/or its licensors own all intellectual property rights for all content, materials, and functionality on this Website. All rights are reserved.
         </p>
         <p>You may access the Website for personal or internal business use only. You must not:</p>
         <ul>
@@ -60,7 +60,7 @@ const sections = [
           <li>The content is not unlawful, offensive, or misleading</li>
         </ul>
         <p>
-          You grant Lumireamed a non-exclusive, royalty-free, worldwide license to use, reproduce, and distribute such content. We reserve the right to remove any User Content at our discretion.
+          You grantLumireaMed a non-exclusive, royalty-free, worldwide licence to use, reproduce, and distribute such content. We reserve the right to remove any User Content at our discretion.
         </p>
       </>
     ),
@@ -70,15 +70,15 @@ const sections = [
     title: "Hyperlinking to Our Website",
     content: (
       <>
-        <p>The following organizations may link to our Website without prior written approval:</p>
+        <p>The following organisations may link to our Website without prior written approval:</p>
         <ul>
           <li>Government agencies</li>
           <li>Search engines</li>
-          <li>News organizations</li>
+          <li>News organisations</li>
           <li>Online directories</li>
         </ul>
         <p>
-          Other organizations may request approval to link to our Website. Approved links must not be misleading, must not imply endorsement, and must be contextually relevant.
+          Other organisations may request approval to link to our Website. Approved links must not be misleading, must not imply endorsement, and must be contextually relevant.
         </p>
       </>
     ),
@@ -97,7 +97,7 @@ const sections = [
     title: "Content Liability",
     content: (
       <p>
-        We are not responsible for any content that appears on external websites linking to our Website. You agree to indemnify and defend Lumireamed against any claims arising from content on your website that links to ours.
+        We are not responsible for any content that appears on external websites linking to our Website. You agree to indemnify and defendLumireaMed against any claims arising from content on your website that links to ours.
       </p>
     ),
   },
@@ -139,7 +139,7 @@ const sections = [
     title: "Governing Law",
     content: (
       <p>
-        These Terms and Conditions shall be governed by and interpreted in accordance with the laws applicable to Lumireamed jurisdiction. Any disputes shall be subject to the exclusive jurisdiction of the relevant courts.
+        These Terms and Conditions shall be governed by and interpreted in accordance with the laws applicable toLumireaMed jurisdiction. Any disputes shall be subject to the exclusive jurisdiction of the relevant courts.
       </p>
     ),
   },
@@ -149,7 +149,7 @@ const sections = [
     content: (
       <p>
         If you have any questions about these Terms and Conditions, please contact us:{" "}
-        <a href="mailto:info@lumireamed.com">info@lumireamed.com</a>
+        <a href="mailto:support@lumieramed.com">support@lumieramed.com</a>
       </p>
     ),
   },
@@ -200,7 +200,7 @@ function Section({ number, title, content, index }: {
 export default function TermsPage() {
   return (
     <>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -228,7 +228,7 @@ export default function TermsPage() {
         /* HERO */
         .hero {
           background: var(--teal);
-          padding: 72px 64px 64px;
+          padding: 160px 64px 64px;
           position: relative;
           overflow: hidden;
         }
@@ -436,14 +436,14 @@ export default function TermsPage() {
         .contact-btn:hover { background: var(--teal-dark); }
 
         @media (max-width: 640px) {
-          .hero { padding: 48px 24px 52px; }
+          .hero { padding: 130px 24px 52px; }
           .intro { padding: 40px 24px 36px; }
           .sections { padding: 16px 24px 60px; }
           .section-row { grid-template-columns: 1fr; gap: 6px; padding: 32px 0; }
           .section-num { padding-top: 0; }
           .contact-callout { margin: 0 24px 48px; }
         }
-      `}</style>
+      ` }} />
 
       <div className="terms-page">
 
@@ -452,7 +452,7 @@ export default function TermsPage() {
           <div className="hero-badge">Legal Document</div>
           <h1 className="hero-title">Terms &amp; Conditions</h1>
           <p className="hero-subtitle">
-            Please read these terms carefully before using the Lumireamed website or any of our services.
+            Please read these terms carefully before using theLumireaMed website or any of our services.
           </p>
           <div className="hero-meta">
             <div className="hero-chip">
@@ -474,7 +474,7 @@ export default function TermsPage() {
         <div className="intro">
           <div className="intro-inner">
             <p>
-              Welcome to <strong>Lumireamed</strong>. These Terms and Conditions govern your use of the Lumireamed website and any services provided by us. By accessing or using our website at{" "}
+              Welcome to <strong>Lumireamed</strong>. These Terms and Conditions govern your use of theLumireaMed website and any services provided by us. By accessing or using our website at{" "}
               <a href="https://lumireamed.com">https://lumireamed.com</a>, you agree to comply with and be bound by these Terms and Conditions. If you do not agree with any part of these terms, please discontinue use of the Website.
             </p>
           </div>

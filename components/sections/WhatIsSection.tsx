@@ -1,4 +1,3 @@
-import Button from "@/components/ui/ui/Button";
 import SectionHeader from "@/components/ui/ui/SectionHeader";
 
 export default function WhatIsSection() {
@@ -13,17 +12,6 @@ export default function WhatIsSection() {
               italicPart="LumieraMed?"
               description=""
             />
-            <br />
-            <br />
-            <br />
-
-
-
-            <div className="pt-2">
-              <Button href="/contact" variant="primary">
-                Contact Us
-              </Button>
-            </div>
           </div>
 
           {/* Image side */}
