@@ -98,8 +98,7 @@ async function request<T>(
 // ─── Enquiries ────────────────────────────────────────────────────────────────
 
 /**
- * POST /api/enquiries
- * Used by: SubmitEnquiryModal, ContactSection, contact/page.tsx
+
  */
 export async function submitContactEnquiry(
   form: EnquiryForm,
@@ -116,10 +115,7 @@ export async function submitContactEnquiry(
   });
 }
 
-/**
- * POST /api/placements-enquiries  (multipart/form-data)
- * Used by: PlacementEnquiryModal
- */
+
 export async function submitPlacementEnquiry(
   form: PlacementEnquiryForm,
   files: File[],
@@ -158,12 +154,9 @@ export async function submitPlacementEnquiry(
   }
 }
 
-// ─── Auth ─────────────────────────────────────────────────────────────────────
 
-/**
- * POST /auth/login
- * Used by: login/page.tsx
- */
+
+
 export async function submitStudentPlacementEnquiry(
   form: PlacementEnquiryForm,
   files: File[],
@@ -261,7 +254,7 @@ export async function downloadDocument(
   token: string,
 ): Promise<void> {
   try {
-    // Use the document URL directly as provided
+    
     const res = await fetch(documentUrl, {
       method: "GET",
       headers: {
@@ -279,7 +272,7 @@ export async function downloadDocument(
       throw new Error("Downloaded file is empty");
     }
 
-    // Try to get filename from response headers if available
+    
     const contentDisposition = res.headers.get('content-disposition');
     let downloadFilename = filename;
     if (contentDisposition) {
@@ -380,10 +373,6 @@ export async function resetPassword(
 
 // ─── Placements ───────────────────────────────────────────────────────────────
 
-/**
- * GET /api/placements
- * Used by: browse-placements/page.tsx (when ready)
- */
 export async function changePassword(
   form: ChangePasswordRequest,
   token: string,

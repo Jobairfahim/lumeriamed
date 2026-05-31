@@ -95,14 +95,14 @@ export const HOW_IT_WORKS_STEPS = [
     id: 2,
     title: "Get Matched",
     description: "Our team reviews your application and matches you withthe perfect hospital placement within 1-2 weeks.",
-    image: "/images/step-match.png",
+    image: "/images/step-match.jpg",
     alt: "Hospital matching process",
   },
   {
     id: 3,
     title: "Start Your Journey",
     description: "Complete documentation, arrive in China, and begin your transformative medical elective experience.",
-    image: "/images/step-begin.png",
+    image: "/images/step-begin.jpg",
     alt: "Student starting medical placement",
   },
 ] as const;
