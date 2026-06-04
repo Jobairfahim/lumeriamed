@@ -10,7 +10,7 @@ const instrumentSans = Instrument_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "LumieraMed – Find Your Medical Elective in China | Medical Student Opportunities",
+  title: "LumieraMed – Find Your Medical Elective in China ",
   description:
     "LumieraMed connects international medical students with accredited clinical elective placements across China's leading hospitals. Gain hands-on experience in world-class healthcare facilities.",
   keywords: [
@@ -78,7 +78,7 @@ export const metadata: Metadata = {
     yandex: "your-yandex-verification-code",
   },
   icons: {
-    icon: "/images/logo.ico",
+    icon: "/images/logo-2.ico",
   },
   manifest: "/manifest.json",
 };

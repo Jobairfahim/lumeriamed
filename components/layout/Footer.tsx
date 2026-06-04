@@ -13,7 +13,7 @@ export default function Footer() {
           <div className="flex flex-col gap-4 items-start">
             <Link href="/" className="flex items-center gap-2 w-fit">
               <Image 
-                src="/images/logo.png" 
+                src="/images/logo-2.png" 
                 alt="LumieraMed Logo" 
                 width={130} 
                 height={90} 

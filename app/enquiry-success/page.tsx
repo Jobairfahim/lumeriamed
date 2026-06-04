@@ -15,7 +15,7 @@ const NEXT_STEPS = [
   {
     number: "03",
     title: "Personal Response",
-    desc: "A member of our team will reach out within 24 hours to discuss next steps and answer any questions.",
+    desc: "A member of our team will reach out within 48 hours to discuss next steps and answer any questions.",
   },
 ];
 
@@ -81,12 +81,13 @@ export default function EnquirySuccessPage() {
         {/* ── Support line ────────────────────────────────────────────────── */}
         <p className="text-center text-brand-muted text-xs">
           Need immediate assistance? Contact us at{" "}
-          <a href="mailto:info@lumieramed.com" className="text-brand-teal hover:underline">
-            info@lumieramed.com
+          <a href="mailto:support@lumieramed.com" className="text-brand-teal hover:underline">
+            support@lumieramed.com
           </a>{" "}
           or call{" "}
-          <a href="tel:+8612345678900" className="text-brand-teal hover:underline">
-            +86 123 4567 8900
+          <a href="tel:+447786236891" className="text-brand-teal hover:underline">
+            (+44) 7786 236891
+
           </a>
         </p>
 

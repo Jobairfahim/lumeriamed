@@ -11,7 +11,7 @@ export default function HomePage() {
   return (
     <>
       <PageMetadata
-        title="LumieraMed – Clinical Elective Placements in China | Medical Students"
+        title="LumieraMed – Clinical Elective Placements in China"
         description="Connect with accredited clinical elective placements across China's leading hospitals. Gain hands-on medical experience in world-class healthcare facilities."
         keywords={[
           "medical elective china",

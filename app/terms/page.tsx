@@ -474,7 +474,7 @@ export default function TermsPage() {
         <div className="intro">
           <div className="intro-inner">
             <p>
-              Welcome to <strong>Lumireamed</strong>. These Terms and Conditions govern your use of theLumireaMed website and any services provided by us. By accessing or using our website at{" "}
+              Welcome to <strong>Lumireamed</strong>. These Terms and Conditions govern your use of the LumireaMed website and any services provided by us. By accessing or using our website at{" "}
               <a href="https://lumireamed.com">https://lumireamed.com</a>, you agree to comply with and be bound by these Terms and Conditions. If you do not agree with any part of these terms, please discontinue use of the Website.
             </p>
           </div>
