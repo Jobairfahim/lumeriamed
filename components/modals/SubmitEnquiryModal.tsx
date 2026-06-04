@@ -41,6 +41,7 @@ export default function SubmitEnquiryModal({ isOpen, onClose, onSubmit }: Submit
     setError(null);
     const submit = onSubmit ?? submitContactEnquiry;
     const result = await submit(form);
+
     setLoading(false);
 
     if (result.success) {

@@ -203,6 +203,7 @@ export async function submitStudentPlacementEnquiry(
   }
 }
 
+
 export async function getStudentPlacementEnquiries(token: string): Promise<ApiResult<StudentPlacementEnquiry[]>> {
   try {
     const res = await fetch(`${BASE_URL}/student-placement-enquiries`, {

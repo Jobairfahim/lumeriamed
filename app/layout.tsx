@@ -3,7 +3,6 @@ import { Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import ConditionalShell from "@/components/layout/ConditionalShell";
 import StructuredData from "@/components/seo/StructuredData";
-
 const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
   variable: "--font-instrument-sans",
@@ -78,9 +77,10 @@ export const metadata: Metadata = {
     yandex: "your-yandex-verification-code",
   },
   icons: {
-    icon: "/images/logo-2.ico",
+    icon: "/images/logo-2.png",
   },
   manifest: "/manifest.json",
+
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

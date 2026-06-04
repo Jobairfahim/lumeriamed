@@ -201,6 +201,7 @@ export default function PlacementEnquiryModal({
     setError(null);
     const submit = onSubmit ?? submitPlacementEnquiry;
     const result = await submit(form, files);
+    console.log("Submission result:", result);
     setLoading(false);
 
     if (result.success) {
