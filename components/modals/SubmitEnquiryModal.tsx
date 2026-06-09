@@ -76,7 +76,7 @@ export default function SubmitEnquiryModal({ isOpen, onClose, onSubmit }: Submit
         <div className="px-7 py-6 flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-4">
             <Input label="First Name" name="firstName" placeholder="Enter your first name" value={form.firstName} onChange={handleChange} required />
-            <Input label="Last Name"  name="lastName"  placeholder="Enter your last name"  value={form.lastName}  onChange={handleChange} />
+            <Input label="Last Name"  name="lastName"  placeholder="Enter your last name"  value={form.lastName}  onChange={handleChange} required/>
           </div>
           <div className="grid gap-4">
             <Input label="Email" name="email" type="email" placeholder="Enter your email address" value={form.email} onChange={handleChange} required />
