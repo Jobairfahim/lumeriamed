@@ -8,7 +8,7 @@ const FAQ_GROUPS = [
     items: [
       {
         id: "eligibility",
-        question: "Who is eligible for clinical electives through LumieriaMed?",
+        question: "Who is eligible for clinical electives through LumieraMed?",
         answer:
           "Medical students enrolled in accredited medical schools worldwide are eligible for our electives. To ensure you gain the most from the experience, we typically recommend that you are in your clinical years (usually 3rd year or above). Some placements may require the completion of specific modules or coursework. Your eligibility will be reviewed and confirmed during the application process, ensuring a perfect match for your medical background.",
       },

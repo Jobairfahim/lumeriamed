@@ -18,7 +18,7 @@ export default function AccordionItem({ question, answer, defaultOpen = false }:
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
-        className="w-full flex items-center justify-between px-6 py-4 text-left cursor-pointer"
+        className="w-full flex items-center justify-between px-4 py-4 text-left cursor-pointer"
       >
         <span className="font-medium text-brand-navy text-sm md:text-base pr-4">
           {question}
@@ -35,7 +35,7 @@ export default function AccordionItem({ question, answer, defaultOpen = false }:
         "overflow-hidden transition-all duration-300 ease-in-out",
         isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
       )}>
-        <div className="px-6 pb-5">
+        <div className="px-4 pb-5">
           <p className="text-brand-slate text-sm md:text-base leading-relaxed">{answer}</p>
         </div>
       </div>
