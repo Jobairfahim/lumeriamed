@@ -2,19 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 
-type SectionData = {
-  number: string;
-  title: string;
-  content: React.ReactNode;
-  group?: string;
-};
-
-const sections: SectionData[] = [
-  // ─── Introduction & Definitions ───────────────────────────────
+const sections = [
   {
     number: "01",
     title: "About Us",
-    group: "Introduction & Definitions",
     content: (
       <p>
         LumieraMed Ltd is a company registered in England and Wales under company number 16668686. Wherever these
@@ -119,11 +110,9 @@ const sections: SectionData[] = [
     ),
   },
 
-  // ─── Our Service ───────────────────────────────────────────────
   {
     number: "06",
     title: "Scope of Service",
-    group: "Our Service",
     content: (
       <>
         <p>
@@ -197,11 +186,9 @@ const sections: SectionData[] = [
     ),
   },
 
-  // ─── Your Obligations ──────────────────────────────────────────
   {
     number: "09",
     title: "Information & Documentation",
-    group: "Your Obligations",
     content: (
       <>
         <p>
@@ -319,11 +306,9 @@ const sections: SectionData[] = [
     ),
   },
 
-  // ─── Fees, Payment & Refunds ───────────────────────────────────
   {
     number: "16",
     title: "Fees",
-    group: "Fees, Payment & Refunds",
     content: (
       <>
         <p>
@@ -480,11 +465,9 @@ const sections: SectionData[] = [
     ),
   },
 
-  // ─── Risk, Liability & Third Parties ───────────────────────────
   {
     number: "23",
     title: "Assumption of Risk",
-    group: "Risk, Liability & Third Parties",
     content: (
       <p>
         You acknowledge that international travel and participation in a clinical environment carry inherent
@@ -591,11 +574,9 @@ const sections: SectionData[] = [
     ),
   },
 
-  // ─── Website & Content ──────────────────────────────────────────
   {
     number: "29",
     title: "Intellectual Property Rights",
-    group: "Website & Content",
     content: (
       <>
         <p>
@@ -671,11 +652,9 @@ const sections: SectionData[] = [
     ),
   },
 
-  // ─── Data, Disputes & General ───────────────────────────────────
   {
     number: "33",
     title: "Data Protection & Privacy",
-    group: "Data, Disputes & General",
     content: (
       <p>
         In providing our Services, LumieraMed collects and processes personal information including your name,
@@ -800,7 +779,7 @@ function Section({ number, title, content, index }: {
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(24px)",
-        transition: `opacity 0.55s ease ${Math.min(index, 6) * 0.05}s, transform 0.55s ease ${Math.min(index, 6) * 0.05}s`,
+        transition: `opacity 0.55s ease ${index * 0.05}s, transform 0.55s ease ${index * 0.05}s`,
       }}
     >
       <span className="section-num">{number}</span>
@@ -882,7 +861,7 @@ export default function TermsPage() {
           font-size: 1rem;
           color: rgba(255,255,255,0.72);
           font-weight: 300;
-          max-width: 560px;
+          max-width: 520px;
           line-height: 1.7;
           margin-bottom: 36px;
         }
@@ -922,71 +901,15 @@ export default function TermsPage() {
           line-height: 1.8;
           color: var(--text);
         }
-        .intro p + p {
-          margin-top: 14px;
-        }
         .intro a {
           color: var(--teal);
           text-decoration: underline;
           text-underline-offset: 3px;
         }
 
-        /* TABLE OF CONTENTS */
-        .toc {
-          padding: 48px 64px;
-          border-bottom: 1px solid var(--border);
-        }
-        .toc-label {
-          font-size: 0.7rem;
-          font-weight: 600;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          color: var(--teal);
-          margin-bottom: 20px;
-          display: block;
-        }
-        .toc-groups {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-          gap: 28px 32px;
-        }
-        .toc-group-title {
-          font-size: 0.8rem;
-          font-weight: 600;
-          color: var(--ink);
-          margin-bottom: 10px;
-        }
-        .toc-group a {
-          display: block;
-          font-size: 0.85rem;
-          color: var(--muted);
-          text-decoration: none;
-          line-height: 1.9;
-        }
-        .toc-group a:hover {
-          color: var(--teal-dark);
-        }
-        .toc-group a span {
-          color: var(--teal);
-          font-weight: 600;
-          margin-right: 8px;
-        }
-
         /* SECTIONS */
         .sections {
           padding: 24px 64px 80px;
-        }
-        .section-group-label {
-          font-size: 0.7rem;
-          font-weight: 600;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          color: var(--teal);
-          padding-top: 56px;
-          margin-bottom: -8px;
-        }
-        .section-group-label:first-child {
-          padding-top: 0;
         }
         .section-row {
           display: grid;
@@ -994,7 +917,6 @@ export default function TermsPage() {
           gap: 0 32px;
           padding: 44px 0;
           border-bottom: 1px solid var(--border);
-          scroll-margin-top: 32px;
         }
         .section-row:last-child { border-bottom: none; }
         .section-num {
@@ -1058,9 +980,6 @@ export default function TermsPage() {
           border-radius: 50%;
           background: var(--teal);
         }
-        .section-content li strong {
-          color: var(--ink);
-        }
         .section-content a {
           color: var(--teal);
           text-decoration: underline;
@@ -1113,7 +1032,6 @@ export default function TermsPage() {
         @media (max-width: 640px) {
           .hero { padding: 130px 24px 52px; }
           .intro { padding: 40px 24px 36px; }
-          .toc { padding: 36px 24px; }
           .sections { padding: 16px 24px 60px; }
           .section-row { grid-template-columns: 1fr; gap: 6px; padding: 32px 0; }
           .section-num { padding-top: 0; }
@@ -1156,54 +1074,18 @@ export default function TermsPage() {
               your access to and use of the LumieraMed website at{" "}
               <a href="https://lumieramed.com">https://lumieramed.com</a> (the &quot;Website&quot;) and the
               placement and related services we provide. Please read them carefully and keep a copy for your
-              records.
-            </p>
-            <p>
-              By accessing the Website, submitting an enquiry, paying any fee, or otherwise engaging our Services,
-              you confirm that you have read, understood and agree to be bound by these Terms. If you do not agree
-              with any part of them, you must not use the Website or our Services.
+              records. By accessing the Website, submitting an enquiry, paying any fee, or otherwise engaging our
+              Services, you confirm that you have read, understood and agree to be bound by these Terms. If you do
+              not agree with any part of them, you must not use the Website or our Services.
             </p>
           </div>
         </div>
 
-        {/* TABLE OF CONTENTS */}
-        <nav className="toc">
-          <span className="toc-label">On This Page</span>
-          <div className="toc-groups">
-            {(() => {
-              const groups: { name: string; items: SectionData[] }[] = [];
-              sections.forEach((s) => {
-                if (s.group) groups.push({ name: s.group, items: [s] });
-                else groups[groups.length - 1].items.push(s);
-              });
-              return groups.map((g) => (
-                <div className="toc-group" key={g.name}>
-                  <div className="toc-group-title">{g.name}</div>
-                  {g.items.map((item) => (
-                    <a key={item.number} href={`#section-${item.number}`}>
-                      <span>{item.number}</span>{item.title}
-                    </a>
-                  ))}
-                </div>
-              ));
-            })()}
-          </div>
-        </nav>
-
         {/* SECTIONS */}
         <main className="sections">
-          {(() => {
-            let renderIndex = 0;
-            return sections.map((s) => {
-              const idx = renderIndex++;
-              return (
-                <div key={s.number} id={`section-${s.number}`}>
-                  {s.group && <div className="section-group-label">{s.group}</div>}
-                  <Section {...s} index={idx} />
-                </div>
-              );
-            });
-          })()}
+          {sections.map((s, i) => (
+            <Section key={s.number} {...s} index={i} />
+          ))}
         </main>
 
         {/* CONTACT CALLOUT */}
