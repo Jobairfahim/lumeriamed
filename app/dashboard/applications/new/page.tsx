@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Send, Upload, X } from "lucide-react";
 import { submitStudentPlacementEnquiry } from "@/lib/api";
 import type { PlacementEnquiryForm } from "@/lib/types";
+import { jwtDecode } from "jwt-decode";
 
 const LANGUAGES = ["English", "Chinese (Mandarin)", "Bilingual (Both)"];
 
@@ -33,7 +34,9 @@ export default function NewApplicationPage() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     setError(null);
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -51,8 +54,7 @@ export default function NewApplicationPage() {
       !form.duration ||
       !form.preferredSpecialty ||
       !form.preferredCities ||
-      !form.language 
-      
+      !form.language
     ) {
       setError("Please fill in all required fields.");
       return;
@@ -64,8 +66,29 @@ export default function NewApplicationPage() {
     }
 
     const token =
-      typeof window !== "undefined" ? localStorage.getItem("accessToken") ?? "" : "";
-
+      typeof window !== "undefined"
+        ? (localStorage.getItem("accessToken") ?? "")
+        : "";
+    if (!token) return router.push("/login");
+    const decoded: {
+      exp?: number;
+      role?: string;
+      email: string;
+      id: string;
+      iat: number;
+    } = jwtDecode(token);
+    if (decoded && typeof decoded === "object" && "exp" in decoded) {
+      const exp = decoded.exp as number;
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (currentTime >= exp) {
+        localStorage.removeItem("accessToken");
+        return router.push("/login");
+      }
+      if (decoded.role !== "student") {
+        localStorage.removeItem("accessToken");
+        return router.push("/login");
+      }
+    }
     setLoading(true);
     setError(null);
     const result = await submitStudentPlacementEnquiry(form, files, token);
@@ -96,8 +119,8 @@ export default function NewApplicationPage() {
         </Link>
       </div>
       <p className="mb-6 text-xs leading-relaxed text-brand-slate sm:mb-7">
-        Please Provide The Following Information So We Can Match You With The Best
-        Placement Options. Fields Marked With{" "}
+        Please Provide The Following Information So We Can Match You With The
+        Best Placement Options. Fields Marked With{" "}
         <span className="text-red-500">*</span> Are Required.
       </p>
 
@@ -265,7 +288,9 @@ export default function NewApplicationPage() {
           >
             <Upload size={15} className="text-brand-teal" />
             <span className="text-sm text-brand-slate">
-              {files.length > 0 ? files.map((file) => file.name).join(", ") : "Upload files"}
+              {files.length > 0
+                ? files.map((file) => file.name).join(", ")
+                : "Upload files"}
             </span>
           </div>
           <input
@@ -307,7 +332,11 @@ export default function NewApplicationPage() {
         >
           {loading ? (
             <>
-              <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+              <svg
+                className="h-4 w-4 animate-spin"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
                 <circle
                   className="opacity-25"
                   cx="12"

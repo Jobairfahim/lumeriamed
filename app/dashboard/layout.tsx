@@ -2,22 +2,40 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
-  LayoutDashboard, FileText, MessageSquare,
-  User, Settings, LogOut, Bell, Search, Menu, X,
+  LayoutDashboard,
+  FileText,
+  MessageSquare,
+  User,
+  Settings,
+  LogOut,
+  Bell,
+  Search,
+  Menu,
+  X,
 } from "lucide-react";
-import { getStudentProfile, getUnreadNotifications, readAllNotifications, type Notification } from "@/lib/api";
+import {
+  getStudentProfile,
+  getUnreadNotifications,
+  readAllNotifications,
+  type Notification,
+} from "@/lib/api";
 import type { StudentProfile } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { jwtDecode } from "jwt-decode";
 
 const NAV = [
-  { label: "Dashboard",          href: "/dashboard",                    icon: LayoutDashboard },
-  { label: "All Applications",   href: "/dashboard/applications",       icon: FileText },
-  { label: "Messages",           href: "/dashboard/messages",           icon: MessageSquare },
-  { label: "Profile",            href: "/dashboard/profile",            icon: User },
-  { label: "Settings",           href: "/dashboard/settings",           icon: Settings },
+  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  {
+    label: "All Applications",
+    href: "/dashboard/applications",
+    icon: FileText,
+  },
+  { label: "Messages", href: "/dashboard/messages", icon: MessageSquare },
+  { label: "Profile", href: "/dashboard/profile", icon: User },
+  { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
 // Mock user — replace with real auth context when backend ready
@@ -28,8 +46,13 @@ const EMPTY_USER: StudentProfile = {
   profileImage: "",
 };
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
+  const navigate = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [user, setUser] = useState<StudentProfile>(EMPTY_USER);
@@ -40,11 +63,29 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   useEffect(() => {
     const token =
       typeof window !== "undefined"
-        ? localStorage.getItem("accessToken") ?? ""
+        ? (localStorage.getItem("accessToken") ?? "")
         : "";
 
-    if (!token) return;
-
+    if (!token) return navigate.push("/login");
+    const decoded: {
+      exp?: number;
+      role?: string;
+      email: string;
+      id: string;
+      iat: number;
+    } = jwtDecode(token);
+    if (decoded && typeof decoded === "object" && "exp" in decoded) {
+      const exp = decoded.exp as number;
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (currentTime >= exp) {
+        localStorage.removeItem("accessToken");
+        return navigate.push("/login");
+      }
+      if (decoded.role !== "student") {
+        localStorage.removeItem("accessToken");
+        return navigate.push("/login");
+      }
+    }
     const loadProfile = async () => {
       const result = await getStudentProfile(token);
       if (!result.success) return;
@@ -65,8 +106,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const loadNotifications = async () => {
       const result = await getUnreadNotifications(token);
       if (result.success) {
-        const data = result.data as Notification[] | { notifications?: Notification[] };
-        const notifs = Array.isArray(data) ? data : ((data as { notifications?: Notification[] }).notifications || []);
+        const data = result.data as
+          | Notification[]
+          | { notifications?: Notification[] };
+        const notifs = Array.isArray(data)
+          ? data
+          : (data as { notifications?: Notification[] }).notifications || [];
         setNotifications(notifs);
       }
     };
@@ -78,7 +123,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const handleBellClick = async () => {
     setShowNotifications(!showNotifications);
     if (!showNotifications && notifications.length > 0) {
-      const currentToken = typeof window !== "undefined" ? localStorage.getItem("accessToken") ?? "" : "";
+      const currentToken =
+        typeof window !== "undefined"
+          ? (localStorage.getItem("accessToken") ?? "")
+          : "";
       if (currentToken) {
         try {
           await readAllNotifications(currentToken);
@@ -95,7 +143,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (user.fullName || user.name) {
       return user.fullName || user.name || "Student";
     }
-    
+
     // Fallback to Google name from localStorage
     if (typeof window !== "undefined") {
       const googleName = localStorage.getItem("userName");
@@ -103,16 +151,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         return googleName;
       }
     }
-    
+
     return "Student";
   };
-  
+
   const getProfileImage = () => {
     // Check backend profile image first
     if (user.avatar || user.profileImage) {
       return user.avatar || user.profileImage || "";
     }
-    
+
     // Fallback to Google profile image from localStorage
     if (typeof window !== "undefined") {
       const googlePhoto = localStorage.getItem("userPhoto");
@@ -120,7 +168,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         return googlePhoto;
       }
     }
-    
+
     return "";
   };
 
@@ -129,25 +177,33 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const avatarSrc = getProfileImage();
   return (
     <div className="flex min-h-screen bg-[#F4F6F8]">
-
       {/* ── Sidebar ─────────────────────────────────────────────────────── */}
-      <aside className={cn(
-        "fixed inset-y-0 left-0 z-40 w-[200px] bg-white border-r border-brand-border flex flex-col transition-transform duration-300",
-        "md:translate-x-0",
-        mobileOpen ? "translate-x-0" : "-translate-x-full"
-      )}>
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-40 w-[200px] bg-white border-r border-brand-border flex flex-col transition-transform duration-300",
+          "md:translate-x-0",
+          mobileOpen ? "translate-x-0" : "-translate-x-full",
+        )}
+      >
         {/* Logo */}
         <div className="px-4 py-5 border-b border-brand-border">
           <Link href="/" className="flex items-center gap-2">
-          <Image src="/images/logo.png" alt="LumieraMed" width={82} height={42} className="w-30 h-30" />
-
+            <Image
+              src="/images/logo.png"
+              alt="LumieraMed"
+              width={82}
+              height={42}
+              className="w-30 h-30"
+            />
           </Link>
         </div>
 
         {/* Nav links */}
         <nav className="flex-1 px-2 py-4 flex flex-col gap-0.5 overflow-y-auto">
           {NAV.map(({ label, href, icon: Icon }) => {
-            const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
+            const active =
+              pathname === href ||
+              (href !== "/dashboard" && pathname.startsWith(href));
             return (
               <Link
                 key={href}
@@ -157,7 +213,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   "flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-medium transition-all",
                   active
                     ? "bg-brand-teal text-white"
-                    : "text-brand-slate hover:bg-brand-tealLight hover:text-brand-teal"
+                    : "text-brand-slate hover:bg-brand-tealLight hover:text-brand-teal",
                 )}
               >
                 <Icon size={15} className="flex-shrink-0" />
@@ -181,16 +237,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* Mobile overlay */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-30 bg-black/30 md:hidden" onClick={() => setMobileOpen(false)} />
+        <div
+          className="fixed inset-0 z-30 bg-black/30 md:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
       )}
 
       {/* ── Main area ───────────────────────────────────────────────────── */}
       <div className="flex min-h-screen flex-1 flex-col md:ml-[200px]">
-
         {/* Topbar */}
         <header className="sticky top-0 z-20 border-b border-brand-border bg-white px-3 py-3 sm:px-4 md:px-6">
           <div className="flex items-center justify-between gap-3">
-
             <div className="flex items-center gap-2">
               <button
                 className="rounded-lg p-1.5 text-brand-slate hover:bg-brand-tealLight md:hidden"
@@ -209,7 +266,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
 
             <div className="relative hidden max-w-sm flex-1 sm:block">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted" />
+              <Search
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted"
+              />
               <input
                 placeholder="Search applications, messages..."
                 className="w-full rounded-xl border border-brand-border bg-[#F4F6F8] py-2 pl-9 pr-4 text-xs text-brand-navy placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-teal"
@@ -218,19 +278,32 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             <div className="ml-auto flex items-center gap-2 sm:gap-3">
               <div className="relative">
-                <button onClick={handleBellClick} className="relative rounded-xl p-2 transition-all hover:bg-brand-tealLight">
+                <button
+                  onClick={handleBellClick}
+                  className="relative rounded-xl p-2 transition-all hover:bg-brand-tealLight"
+                >
                   <Bell size={18} className="text-brand-slate" />
-                  {notifications.length > 0 && <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-brand-teal" />}
+                  {notifications.length > 0 && (
+                    <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-brand-teal" />
+                  )}
                 </button>
                 {showNotifications && (
                   <div className="absolute right-0 mt-2 w-80 bg-white border border-brand-border rounded-xl shadow-soft z-50 p-4">
-                    <h3 className="text-sm font-semibold text-brand-navy mb-3">Notifications</h3>
-                    {(!Array.isArray(notifications) || notifications.length === 0) ? (
-                      <p className="text-xs text-brand-muted">No new notifications.</p>
+                    <h3 className="text-sm font-semibold text-brand-navy mb-3">
+                      Notifications
+                    </h3>
+                    {!Array.isArray(notifications) ||
+                    notifications.length === 0 ? (
+                      <p className="text-xs text-brand-muted">
+                        No new notifications.
+                      </p>
                     ) : (
                       <ul className="space-y-3 max-h-64 overflow-y-auto pr-1">
-                        {notifications.map(n => (
-                          <li key={n._id} className="text-xs text-brand-slate border-b border-brand-light pb-2">
+                        {notifications.map((n) => (
+                          <li
+                            key={n._id}
+                            className="text-xs text-brand-slate border-b border-brand-light pb-2"
+                          >
                             {n.message}
                           </li>
                         ))}
@@ -240,29 +313,48 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 )}
               </div>
 
-              <div className="relative flex items-center gap-2 cursor-pointer" onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}>
+              <div
+                className="relative flex items-center gap-2 cursor-pointer"
+                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+              >
                 <div className="hidden text-right sm:block">
-                  <p className="text-xs font-semibold text-brand-navy">{displayName}</p>
-                  <p className="text-[10px] text-brand-muted">Student ID: {displayStudentId}</p>
+                  <p className="text-xs font-semibold text-brand-navy">
+                    {displayName}
+                  </p>
+                  <p className="text-[10px] text-brand-muted">
+                    Student ID: {displayStudentId}
+                  </p>
                 </div>
                 <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-teal">
                   {avatarSrc ? (
-                    <Image src={avatarSrc} alt={displayName} fill className="object-cover" />
+                    <Image
+                      src={avatarSrc}
+                      alt={displayName}
+                      fill
+                      className="object-cover"
+                    />
                   ) : null}
                 </div>
                 {profileDropdownOpen && (
                   <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-brand-border rounded-xl shadow-soft z-50 py-2 overflow-hidden">
-                    <Link href="/dashboard/profile" className="flex items-center gap-2 px-4 py-2 text-sm text-brand-slate hover:bg-brand-tealLight hover:text-brand-teal transition-colors w-full text-left">
+                    <Link
+                      href="/dashboard/profile"
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-brand-slate hover:bg-brand-tealLight hover:text-brand-teal transition-colors w-full text-left"
+                    >
                       <User size={16} />
                       Profile
                     </Link>
-                    <Link href="/login" onClick={() => {
-                      if (typeof window !== "undefined") {
-                        localStorage.removeItem("accessToken");
-                        localStorage.removeItem("userName");
-                        localStorage.removeItem("userPhoto");
-                      }
-                    }} className="flex items-center gap-2 px-4 py-2 text-sm text-brand-slate hover:bg-red-50 hover:text-red-500 transition-colors w-full text-left">
+                    <Link
+                      href="/login"
+                      onClick={() => {
+                        if (typeof window !== "undefined") {
+                          localStorage.removeItem("accessToken");
+                          localStorage.removeItem("userName");
+                          localStorage.removeItem("userPhoto");
+                        }
+                      }}
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-brand-slate hover:bg-red-50 hover:text-red-500 transition-colors w-full text-left"
+                    >
                       <LogOut size={16} />
                       Log Out
                     </Link>
@@ -274,7 +366,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           {mobileSearchOpen && (
             <div className="relative mt-3 sm:hidden">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted" />
+              <Search
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted"
+              />
               <input
                 placeholder="Search applications, messages..."
                 className="w-full rounded-xl border border-brand-border bg-[#F4F6F8] py-2 pl-9 pr-4 text-xs text-brand-navy placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-teal"
@@ -284,9 +379,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8">
-          {children}
-        </main>
+        <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8">{children}</main>
       </div>
     </div>
   );

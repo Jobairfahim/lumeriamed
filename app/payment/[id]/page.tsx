@@ -18,6 +18,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+import { jwtDecode } from "jwt-decode";
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
@@ -116,7 +117,7 @@ function StripeCheckoutForm({
     setLoading(true);
     setErrorMessage(null);
 
-const result = await stripe.confirmPayment({
+    const result = await stripe.confirmPayment({
       elements,
       confirmParams: {
         return_url: `${window.location.origin}${returnTo}`,
@@ -291,6 +292,26 @@ function PaymentPageInner({
     const fetchEnquiry = async () => {
       try {
         const token = localStorage.getItem("accessToken") ?? "";
+        if (!token) return router.push("/login");
+        const decoded: {
+          exp?: number;
+          role?: string;
+          email: string;
+          id: string;
+          iat: number;
+        } = jwtDecode(token);
+        if (decoded && typeof decoded === "object" && "exp" in decoded) {
+          const exp = decoded.exp as number;
+          const currentTime = Math.floor(Date.now() / 1000);
+          if (currentTime >= exp) {
+            localStorage.removeItem("accessToken");
+            return router.push("/login");
+          }
+          if (decoded.role !== "student") {
+            localStorage.removeItem("accessToken");
+            return router.push("/login");
+          }
+        }
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/v1/student-placement-enquiries/${id}`,
           { headers: { Authorization: `Bearer ${token}` } },
@@ -309,7 +330,11 @@ function PaymentPageInner({
 
   // First payment is always £250; final is dynamically set by admin
   const amountDisplay =
-    type === "deposit" ? "£250.00" : enquiryAmount != null ? `£${enquiryAmount.toFixed(2)}` : "£…";
+    type === "deposit"
+      ? "£250.00"
+      : enquiryAmount != null
+        ? `£${enquiryAmount.toFixed(2)}`
+        : "£…";
   const payment: PaymentInfo = {
     title: type === "final" ? "Placement Payment" : "Placement Deposit",
     amount: amountDisplay,

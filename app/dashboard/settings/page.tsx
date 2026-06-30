@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { changePassword } from "@/lib/api";
+import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
 export default function SettingsPage() {
   const [form, setForm] = useState({
@@ -16,7 +18,7 @@ export default function SettingsPage() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const navigate = useRouter();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(null);
     setSuccess(false);
@@ -24,7 +26,11 @@ export default function SettingsPage() {
   };
 
   const handleSubmit = async () => {
-    if (!form.currentPassword || !form.newPassword || !form.confirmNewPassword) {
+    if (
+      !form.currentPassword ||
+      !form.newPassword ||
+      !form.confirmNewPassword
+    ) {
       setError("Please fill in all fields.");
       return;
     }
@@ -44,8 +50,29 @@ export default function SettingsPage() {
     setSuccess(false);
 
     const token =
-      typeof window !== "undefined" ? localStorage.getItem("accessToken") ?? "" : "";
-
+      typeof window !== "undefined"
+        ? (localStorage.getItem("accessToken") ?? "")
+        : "";
+    if (!token) return navigate.push("/login");
+    const decoded: {
+      exp?: number;
+      role?: string;
+      email: string;
+      id: string;
+      iat: number;
+    } = jwtDecode(token);
+    if (decoded && typeof decoded === "object" && "exp" in decoded) {
+      const exp = decoded.exp as number;
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (currentTime >= exp) {
+        localStorage.removeItem("accessToken");
+        return navigate.push("/login");
+      }
+      if (decoded.role !== "student") {
+        localStorage.removeItem("accessToken");
+        return navigate.push("/login");
+      }
+    }
     if (!token) {
       setLoading(false);
       setError("You are not logged in. Please sign in again.");
@@ -107,7 +134,9 @@ export default function SettingsPage() {
                 type="button"
                 onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                 className="absolute right-3 top-1/2 flex h-5 w-5 items-center justify-center text-brand-muted transition-colors hover:text-brand-navy"
-                aria-label={showCurrentPassword ? "Hide password" : "Show password"}
+                aria-label={
+                  showCurrentPassword ? "Hide password" : "Show password"
+                }
               >
                 {showCurrentPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -161,7 +190,9 @@ export default function SettingsPage() {
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="absolute right-3 top-1/2 flex h-5 w-5 items-center justify-center text-brand-muted transition-colors hover:text-brand-navy"
-                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                aria-label={
+                  showConfirmPassword ? "Hide password" : "Show password"
+                }
               >
                 {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>

@@ -5,6 +5,8 @@ import Image from "next/image";
 import { GraduationCap, Mail, Pencil, Phone, Upload, X } from "lucide-react";
 import { getStudentProfile, updateStudentProfile } from "@/lib/api";
 import type { StudentProfile } from "@/lib/types";
+import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
 const EMPTY_PROFILE: StudentProfile = {
   fullName: "",
@@ -16,6 +18,7 @@ const EMPTY_PROFILE: StudentProfile = {
 };
 
 export default function ProfilePage() {
+    const navigate = useRouter();
   const [profile, setProfile] = useState<StudentProfile>(EMPTY_PROFILE);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -67,7 +70,26 @@ export default function ProfilePage() {
   useEffect(() => {
     const token =
       typeof window !== "undefined" ? localStorage.getItem("accessToken") ?? "" : "";
-
+    if (!token) return navigate.push("/login");
+    const decoded: {
+      exp?: number;
+      role?: string;
+      email: string;
+      id: string;
+      iat: number;
+    } = jwtDecode(token);
+    if (decoded && typeof decoded === "object" && "exp" in decoded) {
+      const exp = decoded.exp as number;
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (currentTime >= exp) {
+        localStorage.removeItem("accessToken");
+        return navigate.push("/login");
+      }
+      if (decoded.role !== "student") {
+        localStorage.removeItem("accessToken");
+        return navigate.push("/login");
+      }
+    }
     const loadProfile = async () => {
       setLoadError(null);
       const result = await getStudentProfile(token);

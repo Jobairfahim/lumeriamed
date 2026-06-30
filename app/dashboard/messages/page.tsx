@@ -2,7 +2,15 @@
 
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import Image from "next/image";
-import { Mic, Search, SendHorizontal, ArrowLeft, Wifi, WifiOff, Loader2 } from "lucide-react";
+import {
+  Mic,
+  Search,
+  SendHorizontal,
+  ArrowLeft,
+  Wifi,
+  WifiOff,
+  Loader2,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   getConversationMessages,
@@ -15,6 +23,8 @@ import type {
   ConversationParticipant,
   ConversationSummary,
 } from "@/lib/types";
+import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -172,9 +182,7 @@ function ConnectionBadge({
       )}
     >
       {state === "connected" && <Wifi size={11} />}
-      {state === "connecting" && (
-        <Loader2 size={11} className="animate-spin" />
-      )}
+      {state === "connecting" && <Loader2 size={11} className="animate-spin" />}
       {state === "disconnected" && <WifiOff size={11} />}
       <span>
         {state === "connected"
@@ -190,6 +198,7 @@ function ConnectionBadge({
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function MessagesPage() {
+  const navigate = useRouter();
   const [conversations, setConversations] = useState<UiConversation[]>([]);
   const [messagesByConversation, setMessagesByConversation] = useState<
     Record<string, UiMessage[]>
@@ -230,7 +239,26 @@ export default function MessagesPage() {
         ? (localStorage.getItem("accessToken") ?? "")
         : "";
     tokenRef.current = token;
-
+    if (!token) return navigate.push("/login");
+    const decoded: {
+      exp?: number;
+      role?: string;
+      email: string;
+      id: string;
+      iat: number;
+    } = jwtDecode(token);
+    if (decoded && typeof decoded === "object" && "exp" in decoded) {
+      const exp = decoded.exp as number;
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (currentTime >= exp) {
+        localStorage.removeItem("accessToken");
+        return navigate.push("/login");
+      }
+      if (decoded.role !== "student") {
+        localStorage.removeItem("accessToken");
+        return navigate.push("/login");
+      }
+    }
     if (!token) {
       setLoadingConversations(false);
       setConnectionState("disconnected");
@@ -431,7 +459,7 @@ export default function MessagesPage() {
     return () => {
       socketManager.leaveConversation(activeConversationId);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeConversationId]);
 
   // ── Derived state ────────────────────────────────────────────────────────
@@ -521,7 +549,6 @@ export default function MessagesPage() {
 
   return (
     <div className="mx-auto flex h-auto min-h-[calc(100vh-10rem)] w-full max-w-[1120px] flex-col gap-4 lg:h-[calc(100vh-10rem)] lg:flex-row">
-
       {/* ── Sidebar: Conversation List ───────────────────────────────────── */}
       <section
         className={cn(
@@ -696,9 +723,7 @@ export default function MessagesPage() {
                   <p
                     className={cn(
                       "mt-1.5 text-right text-[10px]",
-                      item.sender === "me"
-                        ? "text-white/50"
-                        : "text-[#9ba6a3]",
+                      item.sender === "me" ? "text-white/50" : "text-[#9ba6a3]",
                     )}
                   >
                     {item.pending ? "Sending…" : item.time}
@@ -706,11 +731,7 @@ export default function MessagesPage() {
                 </div>
 
                 {item.sender === "me" && (
-                  <Avatar
-                    src="/images/avatar.png"
-                    name="Me"
-                    size={32}
-                  />
+                  <Avatar src="/images/avatar.png" name="Me" size={32} />
                 )}
               </div>
             ))}
@@ -733,7 +754,9 @@ export default function MessagesPage() {
                   ? "Type a message… (Enter to send)"
                   : "Select a conversation to start messaging"
               }
-              disabled={!activeConversationId || connectionState === "disconnected"}
+              disabled={
+                !activeConversationId || connectionState === "disconnected"
+              }
               className="flex-1 bg-transparent text-sm text-[#1e2b28] outline-none placeholder:text-[#b1b8be] disabled:cursor-not-allowed disabled:opacity-50"
             />
 

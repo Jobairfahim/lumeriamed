@@ -18,6 +18,8 @@ import type {
   DashboardOverviewApplication,
   DashboardOverviewNotification,
 } from "@/lib/types";
+import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
 const statusStyles: Record<string, string> = {
   pending: "bg-gray-100 text-gray-600",
@@ -46,12 +48,15 @@ function formatDate(value?: string) {
   });
 }
 
-function getApplicationId(application: DashboardOverviewApplication, index: number) {
+function getApplicationId(
+  application: DashboardOverviewApplication,
+  index: number,
+) {
   return application.applicationId || application.id || `APP-${index + 1}`;
 }
 
 function getApplicationMongoId(application: DashboardOverviewApplication) {
-  return application._id || application.id || '';
+  return application._id || application.id || "";
 }
 
 function getProgramName(application: DashboardOverviewApplication) {
@@ -64,7 +69,12 @@ function getProgramName(application: DashboardOverviewApplication) {
 }
 
 function getNotificationText(notification: DashboardOverviewNotification) {
-  return notification.text || notification.message || notification.title || "New update";
+  return (
+    notification.text ||
+    notification.message ||
+    notification.title ||
+    "New update"
+  );
 }
 
 function getNotificationTime(notification: DashboardOverviewNotification) {
@@ -76,11 +86,32 @@ export default function DashboardPage() {
   const [displayName, setDisplayName] = useState("Student");
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-
+  const navigate = useRouter();
   useEffect(() => {
     const token =
-      typeof window !== "undefined" ? localStorage.getItem("accessToken") ?? "" : "";
-
+      typeof window !== "undefined"
+        ? (localStorage.getItem("accessToken") ?? "")
+        : "";
+    if (!token) return navigate.push("/login");
+    const decoded: {
+      exp?: number;
+      role?: string;
+      email: string;
+      id: string;
+      iat: number;
+    } = jwtDecode(token);
+    if (decoded && typeof decoded === "object" && "exp" in decoded) {
+      const exp = decoded.exp as number;
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (currentTime >= exp) {
+        localStorage.removeItem("accessToken");
+        return navigate.push("/login");
+      }
+      if (decoded.role !== "student") {
+        localStorage.removeItem("accessToken");
+        return navigate.push("/login");
+      }
+    }
     const loadDashboard = async () => {
       setLoadError(null);
 
@@ -102,13 +133,22 @@ export default function DashboardPage() {
         const fullName =
           profile.fullName ??
           profile.name ??
-          [profile.firstName, profile.lastName].filter(Boolean).join(" ").trim();
+          [profile.firstName, profile.lastName]
+            .filter(Boolean)
+            .join(" ")
+            .trim();
 
         if (fullName) {
           setDisplayName(fullName.split(" ")[0] || fullName);
         }
-      } else if (overviewResult.data.fullName || overviewResult.data.firstName) {
-        const fullName = overviewResult.data.fullName || overviewResult.data.firstName || "Student";
+      } else if (
+        overviewResult.data.fullName ||
+        overviewResult.data.firstName
+      ) {
+        const fullName =
+          overviewResult.data.fullName ||
+          overviewResult.data.firstName ||
+          "Student";
         setDisplayName(fullName.split(" ")[0] || fullName);
       }
 
@@ -122,7 +162,10 @@ export default function DashboardPage() {
     () => overview?.allApplications ?? overview?.applications ?? [],
     [overview],
   );
-  const notifications = useMemo(() => overview?.notifications ?? [], [overview]);
+  const notifications = useMemo(
+    () => overview?.notifications ?? [],
+    [overview],
+  );
 
   const stats = [
     {
@@ -168,8 +211,8 @@ export default function DashboardPage() {
             Welcome back, {displayName}
           </h1>
           <p className="text-sm leading-relaxed text-white/80">
-            This is your student dashboard where you can manage your applications
-            and account information.
+            This is your student dashboard where you can manage your
+            applications and account information.
           </p>
         </div>
       </div>
@@ -195,7 +238,9 @@ export default function DashboardPage() {
               <p className="font-display text-2xl font-bold text-brand-navy">
                 {loading ? "--" : String(stat.value).padStart(2, "0")}
               </p>
-              <p className="text-xs leading-tight text-brand-muted">{stat.label}</p>
+              <p className="text-xs leading-tight text-brand-muted">
+                {stat.label}
+              </p>
             </div>
           </div>
         ))}
@@ -205,7 +250,8 @@ export default function DashboardPage() {
         <div className="overflow-hidden rounded-2xl bg-white shadow-soft lg:col-span-2">
           <div className="flex items-center justify-between border-b border-brand-border px-4 py-4 sm:px-6">
             <h2 className="flex items-center gap-2 font-semibold text-brand-navy">
-              <FileText size={16} className="text-brand-teal" /> All Applications
+              <FileText size={16} className="text-brand-teal" /> All
+              Applications
             </h2>
           </div>
 
@@ -241,7 +287,9 @@ export default function DashboardPage() {
                       </span>
                     </div>
                     <div className="space-y-2">
-                      <p className="text-sm text-brand-slate">{getProgramName(application)}</p>
+                      <p className="text-sm text-brand-slate">
+                        {getProgramName(application)}
+                      </p>
                       <p className="text-xs text-brand-muted">
                         {formatDate(application.date || application.createdAt)}
                       </p>
@@ -262,16 +310,20 @@ export default function DashboardPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-[#F4F6F8]">
-                  {["Application ID", "Program", "Date", "Status", "Action"].map(
-                    (heading) => (
-                      <th
-                        key={heading}
-                        className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-brand-muted"
-                      >
-                        {heading}
-                      </th>
-                    ),
-                  )}
+                  {[
+                    "Application ID",
+                    "Program",
+                    "Date",
+                    "Status",
+                    "Action",
+                  ].map((heading) => (
+                    <th
+                      key={heading}
+                      className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-brand-muted"
+                    >
+                      {heading}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
@@ -287,7 +339,8 @@ export default function DashboardPage() {
                 ) : (
                   applications.map((application, index) => {
                     const applicationId = getApplicationId(application, index);
-                    const applicationMongoId = getApplicationMongoId(application);
+                    const applicationMongoId =
+                      getApplicationMongoId(application);
                     const status = formatStatus(application);
 
                     return (
@@ -302,7 +355,9 @@ export default function DashboardPage() {
                           {getProgramName(application)}
                         </td>
                         <td className="px-5 py-3.5 text-xs text-brand-slate">
-                          {formatDate(application.date || application.createdAt)}
+                          {formatDate(
+                            application.date || application.createdAt,
+                          )}
                         </td>
                         <td className="px-5 py-3.5">
                           <span
@@ -330,7 +385,9 @@ export default function DashboardPage() {
 
         <div className="overflow-hidden rounded-2xl bg-white shadow-soft">
           <div className="border-b border-brand-border px-5 py-4">
-            <h2 className="text-sm font-semibold text-brand-navy">Notifications</h2>
+            <h2 className="text-sm font-semibold text-brand-navy">
+              Notifications
+            </h2>
           </div>
           <div className="divide-y divide-brand-border">
             {notifications.length === 0 ? (
@@ -339,7 +396,10 @@ export default function DashboardPage() {
               </div>
             ) : (
               notifications.map((notification, index) => (
-                <div key={`${getNotificationText(notification)}-${index}`} className="px-5 py-3.5">
+                <div
+                  key={`${getNotificationText(notification)}-${index}`}
+                  className="px-5 py-3.5"
+                >
                   <p className="text-xs leading-relaxed text-brand-slate">
                     {getNotificationText(notification)}
                   </p>

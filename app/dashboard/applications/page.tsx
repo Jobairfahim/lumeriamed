@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Search } from "lucide-react";
 import { getStudentPlacementEnquiries } from "@/lib/api";
 import type { StudentPlacementEnquiry } from "@/lib/types";
+import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
 const statusStyles: Record<string, string> = {
   pending: "bg-gray-100 text-gray-600",
@@ -13,7 +15,13 @@ const statusStyles: Record<string, string> = {
   rejected: "bg-red-100 text-red-600",
 };
 
-const STATUS_OPTIONS = ["All", "pending", "matching", "approved", "rejected"] as const;
+const STATUS_OPTIONS = [
+  "All",
+  "pending",
+  "matching",
+  "approved",
+  "rejected",
+] as const;
 
 function formatStatus(application: StudentPlacementEnquiry) {
   const status = application.studentStatus?.toLowerCase() || "pending";
@@ -28,26 +36,45 @@ function getApplicationId(application: StudentPlacementEnquiry, index: number) {
 }
 
 function getProgramName(application: StudentPlacementEnquiry) {
-  return (
-    application.preferredSpecialty ||
-    "General Placement"
-  );
+  return application.preferredSpecialty || "General Placement";
 }
 
 export default function AllApplicationsPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] =
     useState<(typeof STATUS_OPTIONS)[number]>("All");
-  const [applications, setApplications] = useState<StudentPlacementEnquiry[]>([]);
+  const navigate = useRouter();
+  const [applications, setApplications] = useState<StudentPlacementEnquiry[]>(
+    [],
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchApplications = async () => {
       const token =
         typeof window !== "undefined"
-          ? localStorage.getItem("accessToken") ?? ""
+          ? (localStorage.getItem("accessToken") ?? "")
           : "";
-
+      if (!token) return navigate.push("/login");
+      const decoded: {
+        exp?: number;
+        role?: string;
+        email: string;
+        id: string;
+        iat: number;
+      } = jwtDecode(token);
+      if (decoded && typeof decoded === "object" && "exp" in decoded) {
+        const exp = decoded.exp as number;
+        const currentTime = Math.floor(Date.now() / 1000);
+        if (currentTime >= exp) {
+          localStorage.removeItem("accessToken");
+          return navigate.push("/login");
+        }
+        if (decoded.role !== "student") {
+          localStorage.removeItem("accessToken");
+          return navigate.push("/login");
+        }
+      }
       if (!token) {
         setLoading(false);
         return;
@@ -65,9 +92,13 @@ export default function AllApplicationsPage() {
 
   const filtered = applications.filter(
     (application) =>
-      ((application._id?.toLowerCase().includes(search.toLowerCase()) || false) ||
-        (application.preferredSpecialty?.toLowerCase().includes(search.toLowerCase()) || false)) &&
-      (statusFilter === "All" || formatStatus(application) === statusFilter)
+      (application._id?.toLowerCase().includes(search.toLowerCase()) ||
+        false ||
+        application.preferredSpecialty
+          ?.toLowerCase()
+          .includes(search.toLowerCase()) ||
+        false) &&
+      (statusFilter === "All" || formatStatus(application) === statusFilter),
   );
 
   return (
@@ -99,7 +130,9 @@ export default function AllApplicationsPage() {
         </div>
         <select
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value as (typeof STATUS_OPTIONS)[number])}
+          onChange={(e) =>
+            setStatusFilter(e.target.value as (typeof STATUS_OPTIONS)[number])
+          }
           className="h-11 rounded-xl border border-brand-border bg-[#F4F6F8] px-4 text-sm text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-teal"
         >
           {STATUS_OPTIONS.map((option) => (
@@ -114,59 +147,68 @@ export default function AllApplicationsPage() {
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-brand-teal"></div>
-            <p className="mt-4 text-sm text-brand-muted">Loading applications...</p>
+            <p className="mt-4 text-sm text-brand-muted">
+              Loading applications...
+            </p>
           </div>
         </div>
       ) : (
         <>
           <div className="space-y-3 md:hidden">
             {filtered.map((application, index) => {
-                const applicationId = getApplicationId(application, index);
-                const status = formatStatus(application);
+              const applicationId = getApplicationId(application, index);
+              const status = formatStatus(application);
 
-                return (
-          <div key={applicationId} className="rounded-2xl bg-white p-4 shadow-soft">
-            <div className="mb-3 flex items-start justify-between gap-3">
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-brand-muted">
-                  Application ID
-                </p>
-                <p className="mt-1 text-sm font-semibold text-brand-navy">
-                  {applicationId}
-                </p>
-              </div>
-              <span
-                className={`rounded-full px-3 py-1 text-xs font-medium ${statusStyles[status]}`}
-              >
-                {status}
-              </span>
-            </div>
+              return (
+                <div
+                  key={applicationId}
+                  className="rounded-2xl bg-white p-4 shadow-soft"
+                >
+                  <div className="mb-3 flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-medium uppercase tracking-wide text-brand-muted">
+                        Application ID
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-brand-navy">
+                        {applicationId}
+                      </p>
+                    </div>
+                    <span
+                      className={`rounded-full px-3 py-1 text-xs font-medium ${statusStyles[status]}`}
+                    >
+                      {status}
+                    </span>
+                  </div>
 
-            <div className="space-y-3">
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-brand-muted">
-                  Program
-                </p>
-                <p className="mt-1 text-sm text-brand-slate">{getProgramName(application)}</p>
-              </div>
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-brand-muted">
-                  Date
-                </p>
-                <p className="mt-1 text-sm text-brand-slate">
-                  {application.createdAt ? new Date(application.createdAt).toLocaleDateString() : 'N/A'}
-                </p>
-              </div>
-              <Link
-                href={`/dashboard/applications/${application._id}`}
-                className="inline-flex items-center justify-center rounded-lg border border-brand-teal px-4 py-2 text-sm font-medium text-brand-teal transition-colors hover:bg-brand-teal hover:text-white"
-              >
-                View
-              </Link>
-            </div>
-          </div>
-                );
-              })}
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-xs font-medium uppercase tracking-wide text-brand-muted">
+                        Program
+                      </p>
+                      <p className="mt-1 text-sm text-brand-slate">
+                        {getProgramName(application)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium uppercase tracking-wide text-brand-muted">
+                        Date
+                      </p>
+                      <p className="mt-1 text-sm text-brand-slate">
+                        {application.createdAt
+                          ? new Date(application.createdAt).toLocaleDateString()
+                          : "N/A"}
+                      </p>
+                    </div>
+                    <Link
+                      href={`/dashboard/applications/${application._id}`}
+                      className="inline-flex items-center justify-center rounded-lg border border-brand-teal px-4 py-2 text-sm font-medium text-brand-teal transition-colors hover:bg-brand-teal hover:text-white"
+                    >
+                      View
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
             {filtered.length === 0 && (
               <div className="rounded-2xl bg-white p-6 text-center text-sm text-brand-muted shadow-soft">
                 No applications match the current filters.
@@ -177,68 +219,78 @@ export default function AllApplicationsPage() {
           <div className="hidden overflow-hidden rounded-2xl bg-white shadow-soft md:block">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-brand-border">
-                {["Application ID", "Program", "Date", "Status", "Action"].map((heading) => (
-                  <th
-                    key={heading}
-                    className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-brand-muted"
-                  >
-                    {heading}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((application, index) => {
-                const applicationId = getApplicationId(application, index);
-                const status = formatStatus(application);
-
-                return (
-                <tr
-                  key={applicationId}
-                  className="border-t border-brand-border transition-colors hover:bg-brand-light"
-                >
-                  <td className="px-6 py-4 text-sm font-medium text-brand-navy">
-                    {applicationId}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-brand-slate">
-                    {getProgramName(application)}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-brand-slate">
-                    {application.createdAt ? new Date(application.createdAt).toLocaleDateString() : 'N/A'}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`rounded-full px-3 py-1 text-xs font-medium ${statusStyles[status]}`}
-                    >
-                      {status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <Link
-                      href={`/dashboard/applications/${application._id}`}
-                      className="inline-flex items-center justify-center rounded-lg border border-brand-teal px-4 py-2 text-sm font-medium text-brand-teal transition-colors hover:bg-brand-teal hover:text-white"
-                    >
-                      View
-                    </Link>
-                  </td>
-                </tr>
-                );
-              })}
-                {filtered.length === 0 && (
-                  <tr>
-                    <td
-                      colSpan={5}
-                      className="px-6 py-10 text-center text-sm text-brand-muted"
-                    >
-                      No applications match the current filters.
-                    </td>
+                <thead>
+                  <tr className="border-b border-brand-border">
+                    {[
+                      "Application ID",
+                      "Program",
+                      "Date",
+                      "Status",
+                      "Action",
+                    ].map((heading) => (
+                      <th
+                        key={heading}
+                        className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-brand-muted"
+                      >
+                        {heading}
+                      </th>
+                    ))}
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {filtered.map((application, index) => {
+                    const applicationId = getApplicationId(application, index);
+                    const status = formatStatus(application);
+
+                    return (
+                      <tr
+                        key={applicationId}
+                        className="border-t border-brand-border transition-colors hover:bg-brand-light"
+                      >
+                        <td className="px-6 py-4 text-sm font-medium text-brand-navy">
+                          {applicationId}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-brand-slate">
+                          {getProgramName(application)}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-brand-slate">
+                          {application.createdAt
+                            ? new Date(
+                                application.createdAt,
+                              ).toLocaleDateString()
+                            : "N/A"}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span
+                            className={`rounded-full px-3 py-1 text-xs font-medium ${statusStyles[status]}`}
+                          >
+                            {status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <Link
+                            href={`/dashboard/applications/${application._id}`}
+                            className="inline-flex items-center justify-center rounded-lg border border-brand-teal px-4 py-2 text-sm font-medium text-brand-teal transition-colors hover:bg-brand-teal hover:text-white"
+                          >
+                            View
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                  {filtered.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan={5}
+                        className="px-6 py-10 text-center text-sm text-brand-muted"
+                      >
+                        No applications match the current filters.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </>
       )}
