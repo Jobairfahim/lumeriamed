@@ -21,8 +21,7 @@ export default function Footer() {
               />
             </Link>
             <p className="text-brand-slate text-sm leading-relaxed max-w-xs">
-              Matching medical students with exceptional electives in China, offering unique experiences and exposure to a whole new healthcare system and culture.
-
+             Matching medical students with exceptional electives in China, offering unique experiences and exposure to an entirely new healthcare system and culture.
             </p>
           </div>
 

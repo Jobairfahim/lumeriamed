@@ -85,7 +85,7 @@ export default function AboutPage() {
                   </svg>
                 ),
                 title: "Support",
-                desc: "From initial enquiry to program completion, we provide comprehensive guidance and support at every step of your journey.",
+                desc: "From initial enquiry to programme completion, we provide comprehensive guidance and support at every step of your journey.",
               },
               {
                 icon: (
@@ -94,7 +94,7 @@ export default function AboutPage() {
                   </svg>
                 ),
                 title: "Growth",
-                desc: "We're committed to continuous improvement, expanding our network and enhancing the elective experience for every student.",
+                desc: "We are committed to continuous improvement, expanding our network and enhancing the elective experience for every student.",
               },
             ].map((v) => (
               <div key={v.title} className="group bg-white rounded-2xl p-6 shadow-soft hover:bg-brand-teal transition-colors cursor-pointer">

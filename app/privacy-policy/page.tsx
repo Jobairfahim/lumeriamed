@@ -688,7 +688,7 @@ export default function PrivacyPolicyPage() {
         /* GROUP LABEL */
         .group-label {
           padding: 40px 64px 0;
-          font-size: 0.68rem;
+          font-size: 1.25rem;
           font-weight: 600;
           letter-spacing: 0.14em;
           text-transform: uppercase;

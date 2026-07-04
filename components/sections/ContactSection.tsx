@@ -91,7 +91,7 @@ export default function ContactSection() {
                     +44 7786 236891
                   </a>
                   <p className="text-brand-muted text-xs mt-0.5">
-                    Available for quick inquiries
+                    Available for quick enquiries
                   </p>
                 </div>
               </div>
@@ -117,7 +117,7 @@ export default function ContactSection() {
                   </div>
                 ))}
                 <p className="text-brand-muted text-xs mt-2 pt-2 border-t border-brand-border">
-                  Emergency support available 24/7 for current students
+                  Emergency support available 24/7 for students currently on placement
                 </p>
               </div>
             </div>

@@ -30,13 +30,13 @@ export const FAQ_ITEMS = [
   },
   {
     id: "timing",
-    question: "When can I start my elective?",
-    answer: "Placements are available year-round, subject to availability at partner hospitals. We recommend applying at least 8–12 weeks in advance to allow sufficient time for documentation and arrangements. Specific dates can be discussed during the matching process.",
+    question: "When can I start my elective? To When should I apply for my elective?",
+    answer: "Placements are available year-round, subject to availability at partner hospitals. We recommend applying at least 8 to 12 weeks in advance to allow sufficient time for documentation and arrangements. Specific dates can be discussed during the matching process.",
   },
   {
     id: "financial",
     question: "Is financial assistance available?",
-    answer: "We do not currently offer direct financial assistance, but we can provide documentation to support external funding applications. Many students secure elective bursaries through their medical school or national medical associations. Contact us for advice on available funding sources.",
+    answer: "We do not currently offer direct financial assistance, but we can provide documentation to support external funding applications. Many students secure elective bursaries through their medical schools or national medical associations. Contact us for advice on available funding sources.",
   },
   {
     id: "accommodation",
@@ -78,7 +78,7 @@ export const WHY_CHOOSE_FEATURES = [
     id: 3,
     icon: "heart",
     title: "Cultural Immersion",
-    description: "Experience China's rich culture while building your medical career in one of the world's most dynamic countries.",
+    description: "Experience China's rich culture while building your medical career in one of the world's most exciting countries.",
     highlight: false,
   },
 ] as const;
@@ -94,14 +94,14 @@ export const HOW_IT_WORKS_STEPS = [
   {
     id: 2,
     title: "Get Matched",
-    description: "Our team reviews your application and matches you withthe perfect hospital placement within 1-2 weeks.",
+    description: "Our team reviews your application and matches you with the perfect hospital placement within 1 to 2 weeks.",
     image: "/images/step-match.jpg",
     alt: "Hospital matching process",
   },
   {
     id: 3,
     title: "Start Your Journey",
-    description: "Complete documentation, arrive in China, and begin your transformative medical elective experience.",
+    description: "Complete documentation, arrive in China, and begin your medical elective experience.",
     image: "/images/step-begin.jpg",
     alt: "Student starting medical placement",
   },
