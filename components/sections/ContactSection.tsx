@@ -72,7 +72,7 @@ export default function ContactSection() {
                     support@lumieramed.com
                   </a>
                   <p className="text-brand-muted text-xs mt-0.5">
-                    We typically respond within 24 hours
+                    We typically respond within 48 hours
                   </p>
                 </div>
               </div>
@@ -137,7 +137,7 @@ export default function ContactSection() {
                 <h4 className="font-semibold text-brand-navy text-lg">Message Sent!</h4>
                 <p className="text-brand-slate text-sm max-w-xs">
                   Thank you for reaching out. Our team will get back to you within
-                  24 hours.
+                  48 hours.
                 </p>
                 <button
                   onClick={() => { setSubmitted(false); setFormData({ firstName: "", lastName: "", email: "", phone: "", message: "" }); }}

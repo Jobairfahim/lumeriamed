@@ -149,7 +149,7 @@ export default function AboutPage() {
           <div className="flex flex-col gap-4 text-brand-slate text-sm md:text-base leading-relaxed">
             <p className="text-center">Hi, my name is Ding, and I am the founder of LumieraMed.</p>
             <p>
-              I was brought up in England and studied Medicine in the UK. I come from a Chinese background, with both parents being Chinese. Growing up between two cultures shaped how I see the world and over time, how I came to understand medicine.
+              I was brought up in England and studied Medicine in the UK. I come from a Chinese background, with both parents being Chinese. Growing up between two cultures shaped how I see the world, and over time, how I came to understand medicine.
             </p>
             <p>
               During my training, I recognised how rarely students are exposed to systems beyond their own. We learn deeply within one framework, yet medicine globally looks very different.

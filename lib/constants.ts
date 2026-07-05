@@ -30,7 +30,7 @@ export const FAQ_ITEMS = [
   },
   {
     id: "timing",
-    question: "When can I start my elective? To When should I apply for my elective?",
+    question: "When should I apply for my elective?",
     answer: "Placements are available year-round, subject to availability at partner hospitals. We recommend applying at least 8 to 12 weeks in advance to allow sufficient time for documentation and arrangements. Specific dates can be discussed during the matching process.",
   },
   {

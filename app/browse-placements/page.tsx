@@ -77,7 +77,7 @@ export default function BrowsePlacementsPage() {
             How Our Placement Process Works
           </h2>
           <p className="text-brand-slate text-sm md:text-base leading-relaxed mb-10 max-w-lg mx-auto">
-            We don&apos;t show placement listings because every student&apos;s
+            We do not show placement listings because every student&apos;s
             needs are unique. Instead, we personally match you with the ideal
             placement.
           </p>
@@ -96,7 +96,7 @@ export default function BrowsePlacementsPage() {
               {
                 image: "confirmation",
                 title: "Confirmation",
-                desc: "Receive placement details, documentation requirements, and guidance within 1–2 weeks.",
+                desc: "Receive placement details, documentation requirements, and guidance within 1 to 2 weeks.",
               },
               {
                 image: "begin",
@@ -149,7 +149,7 @@ export default function BrowsePlacementsPage() {
             </h2>
             <p className="text-brand-slate text-sm md:text-base max-w-md mx-auto leading-relaxed">
               We offer placements across a wide range of specialties, tailored
-              to your interests and career goals
+              to your interests and career goals.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -188,7 +188,7 @@ export default function BrowsePlacementsPage() {
             <p className="text-brand-slate text-sm md:text-base leading-relaxed mb-5">
               We work exclusively with accredited, high-quality medical
               institutions that have demonstrated commitment to international
-              medical education. Our partner hospitals include:
+              medical education. Our partners include:
             </p>
             <ul className="space-y-3 text-brand-slate text-sm md:text-base leading-relaxed mb-5">
               <li className="flex gap-3">
@@ -254,7 +254,7 @@ export default function BrowsePlacementsPage() {
         </h2>
         <p className="text-white/80 text-sm md:text-base mb-7 max-w-md mx-auto">
           Submit your enquiry today and our team will personally match you with
-          the right hospital within 1–2 weeks.
+          the right hospital within 1 to 2 weeks.
         </p>
         <button
           onClick={() => openPlacement()}

@@ -70,7 +70,7 @@ export default function ContactPage() {
             Contact <span className="text-brand-teal">Us</span>
           </h1>
           <p className="mx-auto max-w-sm text-sm leading-relaxed text-brand-slate md:text-base">
-            Have questions? We would love to hear from you to stay consistent.
+            Have questions? We would love to hear from you. Send us a message and we will respond as soon as possible.
           </p>
         </div>
 
