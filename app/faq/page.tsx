@@ -102,7 +102,7 @@ const FAQ_GROUPS = [
         id: "cost-start",
         question: "What are the rough estimated costs for the elective placement?",
         answer:
-          "The total cost includes a £250 deposit to begin the matching process. If no placement is found, this is refunded in full. Once a placement is confirmed and you proceed, the deposit becomes non-refundable. Placement fees range from £500 to £2,000, covering hospital administration and placement coordination. Accommodation, visa, and travel costs are additional and will vary based on individual circumstances.",
+          "The total cost includes a £250 deposit to begin the matching process. If no placement is found, this is refunded in full. Once a placement is confirmed and you proceed, the deposit becomes non-refundable. Placement fees typically range from £500 to £2,000, covering hospital administration and placement coordination. Accommodation, visa, and travel costs are additional and will vary based on individual circumstances.",
       },
       {
         id: "financial",
@@ -114,7 +114,7 @@ const FAQ_GROUPS = [
         id: "deposit-cancel",
         question: "What happens to my deposit if I cancel?",
         answer:
-          "If you cancel before a placement has been confirmed, your deposit will be refunded in full. If a placement has already been confirmed and you subsequently cancel, the deposit becomes non-refundable. Please refer to our Terms of Service for full details on our cancellation and refund policy.",
+          "If you cancel before a placement has been confirmed, your deposit will be refunded in full. If a placement has already been confirmed and you subsequently cancel, the deposit becomes non-refundable. Please refer to our Terms & Conditions for full details on our cancellation and refund policy.",
       },
     ],
   },

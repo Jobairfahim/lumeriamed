@@ -56,7 +56,7 @@ export const FOOTER_QUICK_LINKS = [
 export const FOOTER_LEGAL_LINKS = [
   { label: "For Consultants", href: "/contact" },
   { label: "Privacy Policy",  href: "/privacy-policy" },
-  { label: "Terms of Service",href: "/terms" },
+  { label: "Terms & Conditions",href: "/terms" },
 ] as const;
 
 export const WHY_CHOOSE_FEATURES = [

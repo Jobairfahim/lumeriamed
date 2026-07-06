@@ -53,7 +53,7 @@ const groups = [
     ],
   },
   {
-    label: "How & Why We Use Your Data",
+    label: "How We Use & Protect Your Data",
     sections: [
       {
         number: "03",
@@ -66,7 +66,7 @@ const groups = [
             </p>
             <ul>
               <li>
-                <strong>Contract:</strong> to process your placement application, communicate with you about
+                <strong>Contract:</strong> to process your Placement application, communicate with you about
                 your enquiry, collect and submit documents on your behalf, and fulfil our
                 obligations under our Terms and Conditions.
               </li>
@@ -132,8 +132,8 @@ const groups = [
             <ul>
               <li>Respond to your enquiries and communicate with you about our services.</li>
               <li>Create and manage your account and Client Portal access.</li>
-              <li>Process and manage your placement application, including matching you with suitable Host Hospitals, collecting and submitting your documents, and tracking progress through the Client Portal.</li>
-              <li>Share your professional and academic documents (including your CV, transcript, personal statement and supporting documents) with Host Hospitals and relevant third parties solely for the purpose of facilitating your placement.</li>
+              <li>Process and manage your Placement application, including matching you with suitable Host Hospitals, collecting and submitting your documents, and tracking progress through the Client Portal.</li>
+              <li>Share your professional and academic documents (including your CV, transcript, personal statement and supporting documents) with Host Hospitals and relevant third parties solely for the purpose of facilitating your Placement.</li>
               <li>Provide general guidance on related processes such as visa applications (noting that this is not immigration or legal advice).</li>
               <li>Send you service-related communications, including placement updates, document requests, and confirmations.</li>
               <li>Send you marketing communications where you have given consent, and manage your communication preferences.</li>
@@ -183,7 +183,7 @@ const groups = [
     ],
   },
   {
-    label: "Sharing & International Transfers",
+    label: "Cookies, Sharing & International Transfers",
     sections: [
       {
         number: "07",
@@ -214,7 +214,7 @@ const groups = [
             <p>
               As a core part of our service, we share your professional, academic and personal
               documents with Host Hospitals (including partner hospitals in China) for the purpose
-              of assessing and facilitating your placement. This is necessary to perform our
+              of assessing and facilitating your Placement. This is necessary to perform our
               contract with you.
             </p>
 
@@ -296,7 +296,7 @@ const groups = [
             <p>
               When you create an account with LumieraMed, we collect and store the
               registration information and activity data described in Clause 2. Your Client Portal
-              is used to manage your placement application, upload documents, and communicate
+              is used to manage your Placement application, upload documents, and communicate
               with our team.
             </p>
 
@@ -868,7 +868,9 @@ export default function PrivacyPolicyPage() {
                 Terms and Conditions
               </a>
               . We process your personal data in accordance with the UK General Data
-              Protection Regulation (UK GDPR) and the Data Protection Act 2018.
+              Protection Regulation (UK GDPR) and the Data Protection Act 2018. Capitalised
+              terms used in this policy (such as Placement, Host Hospital and Client Portal) have
+              the meanings given in our Terms and Conditions unless otherwise defined here.
             </p>
           </div>
         </div>

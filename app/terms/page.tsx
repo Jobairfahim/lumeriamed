@@ -23,7 +23,7 @@ const groups = [
         title: "These Terms",
         content: (
           <p>
-            These Terms, together with our Privacy Policy and any Placement Confirmation (as defined in Clause 7) we
+            These Terms, together with our Privacy Policy and any Placement Confirmation (as defined in Clause 3) we
             issue to you, form the entire agreement between you and us in relation to your use of the Website and our
             Services, and supersede any prior discussions, representations or arrangements. In the event of any
             conflict, a Placement Confirmation takes precedence over these Terms, and these Terms take precedence over
@@ -692,7 +692,7 @@ const groups = [
             process your personal data in accordance with our Privacy Policy and applicable UK data protection law,
             including the UK GDPR and the Data Protection Act 2018. Full details of how we collect, store, use and
             share your data, and of your rights (including access, correction and deletion), are set out in our{" "}
-            <a href="https://lumieramed.com/privacy">Privacy Policy</a>, which forms part of these Terms.
+            <a href="https://lumieramed.com/privacy-policy">Privacy Policy</a>, which forms part of these Terms.
           </p>
         ),
       },
