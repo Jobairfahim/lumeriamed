@@ -5,12 +5,12 @@ const NEXT_STEPS = [
   {
     number: "01",
     title: "Confirmation Email",
-    desc: "Check your inbox for an automated confirmation of the enquiry submission.",
+    desc: "Check your inbox for a confirmation email acknowledging your enquiry",
   },
   {
     number: "02",
     title: "Team Review",
-    desc: "Our placement specialists will review your preferences and begin identifying suitable matches.",
+    desc: "Our team will review your preferences and begin identifying suitable matches.",
   },
   {
     number: "03",
@@ -31,7 +31,7 @@ export default function EnquirySuccessPage() {
             <span className="text-brand-teal">Your Enquiry!</span>
           </h1>
           <p className="text-brand-slate text-sm md:text-base max-w-md mx-auto leading-relaxed">
-            We&apos;ve received your submission and our team will review your information
+            We have received your submission and our team will review your information
             carefully. You can expect to hear back from us within 48 hours.
           </p>
         </div>
@@ -60,7 +60,7 @@ export default function EnquirySuccessPage() {
         <div className="bg-white rounded-xl px-5 py-4 mb-8 text-center border border-brand-border">
           <p className="text-brand-slate text-sm leading-relaxed">
             <strong className="text-brand-navy">Note:</strong> Please check your spam/junk folder
-            if you don&apos;t see our email. Add{" "}
+            if you do not see our email. Add{" "}
             <a href="mailto:support@lumieramed.com" className="text-brand-teal hover:underline font-medium">
               support@lumieramed.com
             </a>{" "}
