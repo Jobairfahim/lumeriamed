@@ -68,7 +68,7 @@ export default function SubmitEnquiryModal({ isOpen, onClose, onSubmit }: Submit
         <div className="px-7 pt-7 pb-5 border-b border-brand-border">
           <h2 className="font-display font-semibold text-brand-navy text-2xl">Submit Enquiry</h2>
           <p className="text-brand-slate text-sm mt-1">
-            Tell us about your clinical elective needs and we&apos;ll get back to you within 48 hours.
+            Tell us about your clinical elective needs and we will get back to you within 48 hours.
           </p>
         </div>
 

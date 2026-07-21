@@ -5,7 +5,7 @@ const NEXT_STEPS = [
   {
     number: "01",
     title: "Confirmation Email",
-    desc: "Check your inbox for a confirmation email acknowledging your enquiry",
+    desc: "Check your inbox for a confirmation email acknowledging your enquiry.",
   },
   {
     number: "02",

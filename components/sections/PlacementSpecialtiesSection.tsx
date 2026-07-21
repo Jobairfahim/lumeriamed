@@ -16,7 +16,7 @@ const SPECIALTIES = [
     desc: "Fast-paced emergency departments in major urban hospitals with diverse case presentations.",
   },
   {
-    title: "Obstetrics & Gynecology",
+    title: "Obstetrics & Gynaecology",
     desc: "Prenatal care, labor & delivery, gynecological procedures, and reproductive health.",
   },
   {
