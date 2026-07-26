@@ -240,7 +240,7 @@ export default function PlacementEnquiryModal({
               Placement Enquiry Form
             </h2>
             <p className="mt-3 max-w-[690px] text-[11px] leading-[1.45] text-[#808487]">
-              Please provide the following information so we can match you with the best placement options. Fields marked with * are required..
+              Please provide the following information so we can match you with the best placement options. Fields marked with are required..
             </p>
             {placementTitle && (
               <div className="mt-3 inline-flex items-center rounded-full bg-[#eaf8f7] px-3 py-1 text-[11px] font-medium text-brand-teal">
