@@ -120,8 +120,7 @@ export default function NewApplicationPage() {
       </div>
       <p className="mb-6 text-xs leading-relaxed text-brand-slate sm:mb-7">
         Please Provide The Following Information So We Can Match You With The
-        Best Placement Options. Fields Marked With{" "}
-        <span className="text-red-500">*</span> Are Required.
+        Best Placement Options. Fields Marked With Are Required.
       </p>
 
       <div className="flex flex-col gap-4 rounded-2xl bg-white p-4 shadow-soft sm:p-6">
