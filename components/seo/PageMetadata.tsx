@@ -17,7 +17,7 @@ export default function PageMetadata({
   canonical,
   noindex = false,
 }: PageMetadataProps) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lumieramed.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.lumieramed.com";
   const fullCanonical = canonical ? `${siteUrl}${canonical}` : siteUrl;
 
   return (

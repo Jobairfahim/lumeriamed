@@ -18,6 +18,8 @@ import type {
   UpdateStudentProfileRequest,
   VerifyOtpRequest,
   GoogleAuthRequest,
+  BlogPost,
+  FaqItem,
 } from "./types";
 
 const DEFAULT_BASE_URL = "https://server.lumieramed.com/api/v1";
@@ -464,6 +466,29 @@ export async function getPlacements(params?: {
     ),
   ).toString();
   return request(`/placements${query ? `?${query}` : ""}`);
+}
+
+export async function getBlogPosts(): Promise<ApiResult<BlogPost[]>> {
+  return request("/blogs", {
+    method: "GET",
+    cache: "no-store",
+  });
+}
+
+export async function getBlogPostBySlug(
+  slug: string,
+): Promise<ApiResult<BlogPost>> {
+  return request(`/blogs/${encodeURIComponent(slug)}`, {
+    method: "GET",
+    cache: "no-store",
+  });
+}
+
+export async function getFaqs(): Promise<ApiResult<FaqItem[]>> {
+  return request("/faqs", {
+    method: "GET",
+    cache: "no-store",
+  });
 }
 
 export interface Notification {

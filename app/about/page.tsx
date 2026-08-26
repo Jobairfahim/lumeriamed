@@ -1,22 +1,17 @@
+import type { Metadata } from "next";
 import CTABannerSection from '@/components/sections/CTABannerSection';
 import Image from 'next/image';
-import PageMetadata from '@/components/seo/PageMetadata';
+
+export const metadata: Metadata = {
+  title: "About LumieraMed | Medical Electives in China",
+  description:
+    "Learn how LumieraMed connects international medical students with tailored clinical elective placements and hospital opportunities across China.",
+  alternates: { canonical: "/about" },
+};
 
 export default function AboutPage() {
   return (
     <>
-      <PageMetadata
-        title="About LumieraMed - Clinical Elective Placement Platform"
-        description="Learn about LumieraMed's mission to connect medical students with accredited clinical elective placements in China's leading hospitals."
-        keywords={[
-          "about lumieramed",
-          "clinical elective platform",
-          "medical education china",
-          "healthcare placements",
-          "medical student opportunities"
-        ]}
-        canonical="/about"
-      />
       <div className="pt-16">
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}

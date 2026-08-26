@@ -20,6 +20,23 @@ export interface Placement {
   tags?: string[];
 }
 
+export interface BlogPost {
+  id?: string;
+  _id?: string;
+  image: string;
+  title: string;
+  content: string;
+  slug?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface FaqItem {
+  category: string;
+  question: string;
+  answer: string;
+}
+
 // ─── Forms ────────────────────────────────────────────────────────────────────
 
 /** Simple contact / enquiry form */

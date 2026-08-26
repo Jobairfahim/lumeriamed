@@ -53,8 +53,8 @@ export default function ContactPage() {
   return (
     <>
       <PageMetadata
-        title="Contact LumieraMed - Get in Touch"
-        description="Contact LumieraMed for clinical elective placements in China. Call us at +44 7786 236891 or email support@lumieramed.com."
+        title="Contact LumieraMed | China Medical Elective Support"
+        description="Contact LumieraMed for help with medical electives in China, including specialties, dates, eligibility, documents, costs and placement matching."
         keywords={[
           "contact lumieramed",
           "medical elective contact",

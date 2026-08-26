@@ -1,6 +1,15 @@
+import type { Metadata } from "next";
 import CTABannerSection from "@/components/sections/CTABannerSection";
 import AccordionItem from "@/components/ui/AccordionItem";
-import PageMetadata from "@/components/seo/PageMetadata";
+import { getFaqs } from "@/lib/api";
+import type { FaqItem } from "@/lib/types";
+
+export const metadata: Metadata = {
+  title: "China Medical Electives FAQ: Cost, Visa & Eligibility",
+  description:
+    "Get answers about medical electives in China, including eligibility, costs, visas, documents, duration, supervision and university recognition.",
+  alternates: { canonical: "/faq" },
+};
 
 const FAQ_GROUPS = [
   {
@@ -155,21 +164,43 @@ const FAQ_GROUPS = [
   },
 ] as const;
 
-export default function FAQPage() {
+type FaqGroup = {
+  title: string;
+  items: Array<{
+    id: string;
+    question: string;
+    answer: string;
+  }>;
+};
+
+function groupFaqsByCategory(faqs: FaqItem[]): FaqGroup[] {
+  const groups = new Map<string, FaqGroup>();
+
+  for (const faq of faqs) {
+    const category = faq?.category.trim();
+    const question = faq?.question.trim();
+    const answer = faq?.answer.trim();
+    if (!category || !question || !answer) continue;
+
+    const group = groups.get(category) ?? { title: category, items: [] };
+    group.items.push({
+      id: `${category}-${group.items.length}-${question}`,
+      question,
+      answer,
+    });
+    groups.set(category, group);
+  }
+
+  return Array.from(groups.values());
+}
+
+export default async function FAQPage() {
+  const result = await getFaqs();
+  const backendGroups = result.success ? groupFaqsByCategory(result.data) : [];
+  const faqGroups = backendGroups.length > 0 ? backendGroups : FAQ_GROUPS;
+
   return (
     <>
-      <PageMetadata
-        title="FAQ - LumieraMed Clinical Elective Placements"
-        description="Find answers to frequently asked questions about clinical electives in China, eligibility, application process, and placement details."
-        keywords={[
-          "medical elective faq",
-          "clinical placement questions",
-          "china elective requirements",
-          "medical student eligibility",
-          "application process"
-        ]}
-        canonical="/faq"
-      />
       <div className="pt-16 bg-white">
       <div className="bg-brand-light py-14 md:py-20 text-center px-4 border-b border-brand-border">
         <h1 className="font-display text-3xl md:text-4xl font-bold text-brand-navy mb-3">
@@ -182,7 +213,7 @@ export default function FAQPage() {
 
       <section className="bg-[#f6f7f7] py-14 md:py-20 px-4">
         <div className="max-w-5xl mx-auto space-y-10">
-          {FAQ_GROUPS.map((group, groupIndex) => (
+          {faqGroups.map((group, groupIndex) => (
             <div key={group.title}>
               <div className="mb-4 border-b border-brand-teal/30 pb-3">
                 <h2 className="text-xl md:text-2xl font-semibold text-brand-navy">

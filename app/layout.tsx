@@ -9,9 +9,12 @@ const instrumentSans = Instrument_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "LumieraMed – Find Your Medical Elective in China ",
+  title: {
+    default: "Medical Electives in China | LumieraMed",
+    template: "%s",
+  },
   description:
-    "LumieraMed connects international medical students with accredited clinical elective placements across China's leading hospitals. Gain hands-on experience in world-class healthcare facilities.",
+    "LumieraMed helps international medical students find tailored clinical elective placements across China.",
   keywords: [
     "medical elective",
     "clinical placement",
@@ -34,16 +37,13 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://lumieramed.com"),
-  alternates: {
-    canonical: "/",
-  },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.lumieramed.com"),
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://lumieramed.com",
+    url: "https://www.lumieramed.com",
     title: "LumieraMed – Clinical Elective Placements in China",
-    description: "Connect with accredited clinical elective placements across China's leading hospitals. Gain hands-on medical experience.",
+    description: "LumieraMed helps international medical students find tailored clinical elective placements across China.",
     siteName: "LumieraMed",
     images: [
       {

@@ -4,6 +4,7 @@ import Image from "next/image";
 // import { cn } from "@/lib/utils";
 // import Button from "@/components/ui/Button";
 import { useModal } from "@/components/modals/ModalProvider";
+import PageMetadata from "@/components/seo/PageMetadata";
 
 const SPECIALTIES = [
   {
@@ -51,6 +52,11 @@ export default function BrowsePlacementsPage() {
 
   return (
     <div className="pt-16 min-h-screen bg-white">
+      <PageMetadata
+        title="Clinical Elective Placements in China | LumieraMed"
+        description="Explore clinical elective placements in China across medicine, surgery, paediatrics, emergency medicine, TCM, oncology, radiology and more."
+        canonical="/browse-placements"
+      />
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <div className="bg-brand-light py-14 md:py-20 text-center px-4 border-b border-brand-border">
         <h1 className="font-display text-3xl md:text-4xl font-bold text-brand-navy mb-3">

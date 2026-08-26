@@ -1,6 +1,7 @@
 export const NAV_LINKS = [
   { label: "Home",              href: "/" },
   { label: "Browse Placements", href: "/browse-placements" },
+  { label: "Blog",              href: "/blog" },
   { label: "About Us",          href: "/about" },
   { label: "FAQ",               href: "/faq" },
   { label: "Contact",           href: "/contact" },
@@ -49,6 +50,7 @@ export const FOOTER_QUICK_LINKS = [
   { label: "Home",              href: "/" },
   { label: "About Us",          href: "/about" },
   { label: "Browse Placements", href: "/browse-placements" },
+  { label: "Blog",              href: "/blog" },
   { label: "FAQ",               href: "/faq" },
   { label: "Contact",           href: "/contact" },
 ] as const;
