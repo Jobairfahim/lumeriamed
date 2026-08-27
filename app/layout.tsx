@@ -107,7 +107,7 @@ export default function RootLayout({
             j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             'https://www.googletagmanager.com/gtm.js?id='+i+dl;
             f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-NB7P4CQ5');
+            })(window,document,'script','dataLayer','GTM-N87P4CQ5');
           `}
         </Script>
       </head>
@@ -115,7 +115,7 @@ export default function RootLayout({
       <body className={`${instrumentSans.variable} font-body antialiased`}>
         <noscript>
           <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-NB7P4CQ5"
+            src="https://www.googletagmanager.com/ns.html?id=GTM-N87P4CQ5"
             height="0"
             width="0"
             style={{
