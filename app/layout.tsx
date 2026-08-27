@@ -3,6 +3,8 @@ import { Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import ConditionalShell from "@/components/layout/ConditionalShell";
 import StructuredData from "@/components/seo/StructuredData";
+import Script from "next/script";
+
 const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
   variable: "--font-instrument-sans",
@@ -72,10 +74,10 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    google: "your-google-verification-code",
-    yandex: "your-yandex-verification-code",
+verification: {
+    google: "ND6-8Lk-eiXTdtubECQ9vRJIFOLtn9olqCS_mks0WvY",
   },
+
   icons: {
     icon: "/images/logo-2.png",
   },
@@ -83,14 +85,47 @@ export const metadata: Metadata = {
 
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <head>
         <StructuredData />
+
+        <Script
+          id="google-tag-manager"
+          strategy="afterInteractive"
+        >
+          {`
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+            f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-NB7P4CQ5');
+          `}
+        </Script>
       </head>
+
       <body className={`${instrumentSans.variable} font-body antialiased`}>
-        <ConditionalShell>{children}</ConditionalShell>
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-NB7P4CQ5"
+            height="0"
+            width="0"
+            style={{
+              display: "none",
+              visibility: "hidden",
+            }}
+          />
+        </noscript>
+
+        <ConditionalShell>
+          {children}
+        </ConditionalShell>
       </body>
     </html>
   );
