@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 function getPostId(post: BlogPost) {
-  return post._id ?? post.id;
+  return post.slug ?? post._id ?? post.id;
 }
 
 function formatDate(value?: string) {

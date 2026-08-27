@@ -1,10 +1,6 @@
 import type { MetadataRoute } from "next";
 import { absoluteUrl } from "@/lib/seo/config";
-import {
-  getPublishedBlogPosts,
-  getPublishedPages,
-  getSeoSettings,
-} from "@/lib/seo/repository";
+import { getPublishedBlogPosts, getSeoSettings } from "@/lib/seo/repository";
 
 const PUBLIC_ROUTES = [
   "/",
@@ -13,6 +9,8 @@ const PUBLIC_ROUTES = [
   "/contact",
   "/browse-placements",
   "/blog",
+  "/privacy-policy",
+  "/terms",
 ] as const;
 
 function asDate(value?: string | Date | null) {
@@ -26,22 +24,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (!settings.sitemapEnabled) return [];
 
   const excluded = new Set(settings.excludedUrls);
+  const includedUrls = new Set<string>();
   const entries: MetadataRoute.Sitemap = PUBLIC_ROUTES.filter(
     (route) => !excluded.has(route),
-  ).map((route) => ({
-    url: absoluteUrl(route),
-    changeFrequency: route === "/" ? "weekly" : "monthly",
-    priority: route === "/" ? 1 : 0.7,
-  }));
-
-  if (settings.includePublishedPages) {
-    const pages = await getPublishedPages();
-    for (const page of pages) {
-      const path = page.slug.startsWith("/") ? page.slug : `/${page.slug}`;
-      if (excluded.has(path) || !path || page.canonicalOverride) continue;
-      entries.push({ url: absoluteUrl(path), lastModified: asDate(page.updatedAt) });
-    }
-  }
+  ).map((route) => {
+    const url = absoluteUrl(route);
+    includedUrls.add(url);
+    return {
+      url,
+      changeFrequency: route === "/" ? "weekly" : "monthly",
+      priority: route === "/" ? 1 : 0.7,
+    };
+  });
 
   if (settings.includePublishedPosts) {
     const posts = await getPublishedBlogPosts();
@@ -49,9 +43,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const identifier = post.slug || post._id || post.id;
       if (!identifier) continue;
       const path = `/blog/${identifier}`;
-      if (excluded.has(path)) continue;
+      const url = absoluteUrl(path);
+      if (excluded.has(path) || includedUrls.has(url)) continue;
+      includedUrls.add(url);
       entries.push({
-        url: absoluteUrl(path),
+        url,
         lastModified: asDate(post.updatedAt ?? post.createdAt),
       });
     }

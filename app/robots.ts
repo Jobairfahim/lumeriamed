@@ -1,15 +1,27 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo/config";
-import { getSeoSettings } from "@/lib/seo/repository";
 
-export default async function robots(): Promise<MetadataRoute.Robots> {
-  const settings = await getSeoSettings();
+const DISALLOWED_PATHS = [
+  "/_next/",
+  "/api/",
+  "/admin/",
+  "/dashboard/",
+  "/login/",
+  "/account/",
+  "/preview/",
+  "/draft/",
+  "/test/",
+  "/staging/",
+  "/search",
+  "/*?",
+];
 
+export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: settings.robotsDisallow,
+      disallow: DISALLOWED_PATHS,
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };

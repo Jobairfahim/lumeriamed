@@ -6,16 +6,6 @@ const API_BASE_URL = (
   "https://server.lumieramed.com/api/v1"
 ).replace(/\/+$/, "");
 
-export interface PageSeo {
-  pageKey: string;
-  slug: string;
-  seoTitle?: string | null;
-  metaDescription?: string | null;
-  focusKeyword?: string | null;
-  canonicalOverride?: string | null;
-  updatedAt?: string | Date | null;
-}
-
 export interface SeoSettings {
   sitemapEnabled: boolean;
   includePublishedPages: boolean;
@@ -41,15 +31,6 @@ async function fetchApi<T>(path: string): Promise<T | null> {
   } catch {
     return null;
   }
-}
-
-export async function getPageSeo(pageKey: string): Promise<PageSeo | null> {
-  return fetchApi<PageSeo>(`/pages/${encodeURIComponent(pageKey)}/seo`);
-}
-
-export async function getPublishedPages(): Promise<PageSeo[]> {
-  const pages = await fetchApi<PageSeo[]>("/pages?status=PUBLISHED");
-  return Array.isArray(pages) ? pages : [];
 }
 
 export async function getPublishedBlogPosts(): Promise<BlogPost[]> {
