@@ -40,9 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (settings.includePublishedPosts) {
     const posts = await getPublishedBlogPosts();
     for (const post of posts) {
-      const identifier = post.slug || post._id || post.id;
-      if (!identifier) continue;
-      const path = `/blog/${identifier}`;
+      const path = `/blog/${post.slug}`;
       const url = absoluteUrl(path);
       if (excluded.has(path) || includedUrls.has(url)) continue;
       includedUrls.add(url);

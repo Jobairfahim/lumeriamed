@@ -35,7 +35,7 @@ async function fetchApi<T>(path: string): Promise<T | null> {
 
 export async function getPublishedBlogPosts(): Promise<BlogPost[]> {
   const posts = await fetchApi<BlogPost[]>("/blogs");
-  return Array.isArray(posts) ? posts : [];
+  return Array.isArray(posts) ? posts.filter((post) => !post.isDeleted) : [];
 }
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 function getPostId(post: BlogPost) {
-  return post.slug ?? post._id ?? post.id;
+  return post.slug;
 }
 
 function formatDate(value?: string) {
@@ -29,7 +29,6 @@ function formatDate(value?: string) {
 
 export default async function BlogPage() {
   const result = await getBlogPosts();
-  console.log(result)
   const posts = result.success ? result.data : [];
 
   return (
@@ -60,7 +59,7 @@ export default async function BlogPage() {
             </div>
             <span className="hidden text-sm text-brand-muted sm:block">{posts.length} {posts.length === 1 ? "article" : "articles"}</span>
           </div>
-          
+
 
           {posts.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-brand-border bg-brand-light px-6 py-16 text-center">

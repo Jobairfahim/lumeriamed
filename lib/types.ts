@@ -26,7 +26,11 @@ export interface BlogPost {
   image: string;
   title: string;
   content: string;
-  slug?: string;
+  slug: string;
+  metaTitle: string;
+  metaDescription: string;
+  metaKeywords: string;
+  isDeleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

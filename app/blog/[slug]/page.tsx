@@ -18,8 +18,9 @@ export async function generateMetadata({ params }: BlogDetailsPageProps): Promis
   }
 
   return {
-    title: `${result.data.title} | LumieraMed`,
-    description: result.data.title,
+    title: result.data.metaTitle,
+    description: result.data.metaDescription,
+    keywords: result.data.metaKeywords,
     alternates: { canonical: `/blog/${params.slug}` },
   };
 }
