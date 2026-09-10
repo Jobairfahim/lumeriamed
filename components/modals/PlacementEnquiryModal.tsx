@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { ChevronDown, Paperclip, Send, Upload, X } from "lucide-react";
 import Button from "@/components/ui/ui/Button";
+import DatePicker from "@/components/ui/DatePicker";
 import { submitPlacementEnquiry } from "@/lib/api";
 import type { PlacementEnquiryForm } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -337,14 +338,17 @@ export default function PlacementEnquiryModal({
             />
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <Field
-                label="Preferred Start Date"
-                name="preferredStartDate"
-                value={form.preferredStartDate}
-                placeholder="mm/dd/yyyy"
-                required
-                onChange={handleChange}
-              />
+              <div className="flex flex-col gap-2">
+                <label className="text-[12px] font-medium text-[#43474a]">
+                  Preferred Start Date
+                  <span className="text-[#e16464]">*</span>
+                </label>
+                <DatePicker
+                  name="preferredStartDate"
+                  value={form.preferredStartDate}
+                  onChange={handleChange}
+                />
+              </div>
               <SelectField
                 label="Language"
                 name="language"
