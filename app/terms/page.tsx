@@ -692,7 +692,7 @@ const groups = [
             process your personal data in accordance with our Privacy Policy and applicable UK data protection law,
             including the UK GDPR and the Data Protection Act 2018. Full details of how we collect, store, use and
             share your data, and of your rights (including access, correction and deletion), are set out in our{" "}
-            <a href="https://lumieramed.com/privacy-policy">Privacy Policy</a>, which forms part of these Terms.
+            <a href="https://www.lumieramed.com/privacy-policy">Privacy Policy</a>, which forms part of these Terms.
           </p>
         ),
       },
@@ -1100,7 +1100,7 @@ export default function TermsPage() {
             </div>
             <div className="hero-chip">
               <span className="hero-chip-label">Website</span>
-              <span className="hero-chip-value">https://lumieramed.com</span>
+              <span className="hero-chip-value">https://www.lumieramed.com</span>
             </div>
             <div className="hero-chip">
               <span className="hero-chip-label">Sections</span>
@@ -1115,7 +1115,7 @@ export default function TermsPage() {
             <p>
               Welcome to <strong>LumieraMed</strong>. These Terms and Conditions (the &quot;Terms&quot;) govern
               your access to and use of the LumieraMed website at{" "}
-              <a href="https://lumieramed.com">https://lumieramed.com</a> (the &quot;Website&quot;) and the
+              <a href="https://www.lumieramed.com">https://www.lumieramed.com</a> (the &quot;Website&quot;) and the
               placement and related services we provide. Please read them carefully and keep a copy for your
               records. By accessing the Website, submitting an enquiry, paying any fee, or otherwise engaging our
               Services, you confirm that you have read, understood and agree to be bound by these Terms. If you do

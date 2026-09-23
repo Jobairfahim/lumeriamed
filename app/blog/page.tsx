@@ -3,12 +3,17 @@ import { ArrowRight, BookOpen } from "lucide-react";
 import { getBlogPosts } from "@/lib/api";
 import type { BlogPost } from "@/lib/types";
 import type { Metadata } from "next";
+import { buildSocialMetadata } from "@/lib/seo/config";
+
+const TITLE = "Medical Electives in China Blog & Guides | LumieraMed";
+const DESCRIPTION =
+  "Explore expert guides on medical electives in China, including placements, specialties, costs, visas, applications and practical advice for medical students.";
 
 export const metadata: Metadata = {
-  title: "Medical Electives in China Blog & Guides | LumieraMed",
-  description:
-    "Explore expert guides on medical electives in China, including placements, specialties, costs, visas, applications and practical advice for medical students.",
+  title: TITLE,
+  description: DESCRIPTION,
   alternates: { canonical: "/blog" },
+  ...buildSocialMetadata({ title: TITLE, description: DESCRIPTION, path: "/blog" }),
 };
 
 function getPostId(post: BlogPost) {

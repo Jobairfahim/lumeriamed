@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     "healthcare experience",
     "LumieraMed",
     "medical training abroad",
-    "elective programs",
+    "elective programmes",
     "clinical observership"
   ],
   authors: [{ name: "LumieraMed" }],
@@ -44,16 +44,16 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_GB",
     url: "https://www.lumieramed.com",
     title: "LumieraMed – Clinical Elective Placements in China",
     description: "LumieraMed helps international medical students find tailored clinical elective placements across China.",
     siteName: "LumieraMed",
     images: [
       {
-        url: "/images/logo.png",
-        width: 400,
-        height: 133,
+        url: "/images/og-share.png",
+        width: 1200,
+        height: 630,
         alt: "LumieraMed - Clinical Elective Placements in China",
       },
     ],
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "LumieraMed – Clinical Elective Placements in China",
     description: "Connect with accredited clinical elective placements across China's leading hospitals.",
-    images: ["/images/logo.png"],
+    images: ["/images/og-share.png"],
     creator: "@lumieramed",
   },
   robots: {

@@ -4,7 +4,6 @@ import Image from "next/image";
 // import { cn } from "@/lib/utils";
 // import Button from "@/components/ui/Button";
 import { useModal } from "@/components/modals/ModalProvider";
-import PageMetadata from "@/components/seo/PageMetadata";
 
 const SPECIALTIES = [
   {
@@ -52,16 +51,11 @@ export default function BrowsePlacementsPage() {
 
   return (
     <div className="pt-16 min-h-screen bg-white">
-      <PageMetadata
-        title="Clinical Elective Placements in China | LumieraMed"
-        description="Explore clinical elective placements in China across medicine, surgery, paediatrics, emergency medicine, TCM, oncology, radiology and more."
-        canonical="/browse-placements"
-      />
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <div className="bg-brand-light py-14 md:py-20 text-center px-4 border-b border-brand-border">
         <h1 className="font-display text-3xl md:text-4xl font-bold text-brand-navy mb-3">
           Find Your Perfect{" "}
-          <span className="text-brand-teal">Clinical Elective</span>
+          <span className="text-brand-teal">Clinical Elective</span> in China
         </h1>
         <p className="text-brand-slate text-sm md:text-base max-w-lg mx-auto leading-relaxed mb-7">
           We carefully match medical students with top hospitals across China
@@ -83,9 +77,9 @@ export default function BrowsePlacementsPage() {
             How Our Placement Process Works
           </h2>
           <p className="text-brand-slate text-sm md:text-base leading-relaxed mb-10 max-w-lg mx-auto">
-            We do not show placement listings because every student&apos;s
-            needs are unique. Instead, we personally match you with the ideal
-            placement.
+            We don&apos;t show generic listings because every student&apos;s
+            needs are different. Instead, our team personally matches you
+            with a placement suited to your specialty, dates and goals.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
@@ -151,11 +145,12 @@ export default function BrowsePlacementsPage() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="font-display text-2xl md:text-3xl font-bold text-brand-navy mb-3">
-              What We Offer
+              Choose Your Specialty
             </h2>
             <p className="text-brand-slate text-sm md:text-base max-w-md mx-auto leading-relaxed">
-              We offer placements across a wide range of specialties, tailored
-              to your interests and career goals.
+              Placements are available across a wide range of medical
+              specialties in China — matched individually to your interests,
+              experience level and career direction.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

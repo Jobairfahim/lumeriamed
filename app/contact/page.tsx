@@ -7,7 +7,6 @@ import { Input, Textarea } from "@/components/ui/ui/Input";
 import Button from "@/components/ui/ui/Button";
 import { submitContactEnquiry } from "@/lib/api";
 import type { EnquiryForm } from "@/lib/types";
-import PageMetadata from "@/components/seo/PageMetadata";
 
 const EMPTY: EnquiryForm = {
   firstName: "",
@@ -52,18 +51,6 @@ export default function ContactPage() {
 
   return (
     <>
-      <PageMetadata
-        title="Contact LumieraMed | China Medical Elective Support"
-        description="Contact LumieraMed for help with medical electives in China, including specialties, dates, eligibility, documents, costs and placement matching."
-        keywords={[
-          "contact lumieramed",
-          "medical elective contact",
-          "china hospital contact",
-          "support team",
-          "student enquiries",
-        ]}
-        canonical="/contact"
-      />
       <div className="min-h-screen bg-white pt-16">
         <div className="border-b border-brand-border bg-brand-light px-4 py-12 text-center md:py-16">
           <h1 className="mb-3 font-display text-3xl font-bold text-brand-navy md:text-4xl">

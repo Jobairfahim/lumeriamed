@@ -65,15 +65,15 @@ export const WHY_CHOOSE_FEATURES = [
   {
     id: 1,
     icon: "globe",
-    title: "World-Class Hospitals",
-    description: "Access to China's top-tier medical institutions with advanced technology and renowned medical professionals.",
+    title: "World-Class Teaching Hospitals",
+    description: "Placements at China's leading tertiary hospitals — advanced technology, high patient volumes, and complex clinical cases across every major specialty.",
     highlight: true,
   },
   {
     id: 2,
     icon: "stethoscope",
-    title: "Diverse Learning",
-    description: "Gain exposure to unique cases and medical practices in one of the world's largest healthcare systems.",
+    title: "Immersive Clinical Learning",
+    description: "Experience complex cases, diverse specialties, and clinical practices in one of the world's largest healthcare systems.",
     highlight: true,
   },
   {

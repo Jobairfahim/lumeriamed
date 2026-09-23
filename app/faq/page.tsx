@@ -3,12 +3,17 @@ import CTABannerSection from "@/components/sections/CTABannerSection";
 import AccordionItem from "@/components/ui/AccordionItem";
 import { getFaqs } from "@/lib/api";
 import type { FaqItem } from "@/lib/types";
+import { buildSocialMetadata } from "@/lib/seo/config";
+
+const TITLE = "China Medical Electives FAQ: Cost, Visa & Eligibility | LumieraMed";
+const DESCRIPTION =
+  "Everything you need to know about medical electives in China — eligibility, costs, visas, documents, supervision, university recognition, and more.";
 
 export const metadata: Metadata = {
-  title: "China Medical Electives FAQ: Cost, Visa & Eligibility",
-  description:
-    "Get answers about medical electives in China, including eligibility, costs, visas, documents, duration, supervision and university recognition.",
+  title: TITLE,
+  description: DESCRIPTION,
   alternates: { canonical: "/faq" },
+  ...buildSocialMetadata({ title: TITLE, description: DESCRIPTION, path: "/faq" }),
 };
 
 const FAQ_GROUPS = [
@@ -194,6 +199,25 @@ function groupFaqsByCategory(faqs: FaqItem[]): FaqGroup[] {
   return Array.from(groups.values());
 }
 
+function buildFaqJsonLd(
+  groups: readonly { title: string; items: readonly { question: string; answer: string }[] }[],
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: groups.flatMap((group) =>
+      group.items.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.answer,
+        },
+      })),
+    ),
+  };
+}
+
 export default async function FAQPage() {
   const result = await getFaqs();
   const backendGroups = result.success ? groupFaqsByCategory(result.data) : [];
@@ -201,6 +225,10 @@ export default async function FAQPage() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(faqGroups)) }}
+      />
       <div className="pt-16 bg-white">
       <div className="bg-brand-light py-14 md:py-20 text-center px-4 border-b border-brand-border">
         <h1 className="font-display text-3xl md:text-4xl font-bold text-brand-navy mb-3">

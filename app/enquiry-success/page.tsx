@@ -1,5 +1,19 @@
 import { Home, ArrowRight } from "lucide-react";
 import Button from "@/components/ui/ui/Button";
+import type { Metadata } from "next";
+import { buildSocialMetadata } from "@/lib/seo/config";
+
+const TITLE = "Enquiry Received | LumieraMed";
+const DESCRIPTION =
+  "Thank you for your enquiry. The LumieraMed team will be in touch shortly to discuss your clinical elective placement in China.";
+
+export const metadata: Metadata = {
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/enquiry-success" },
+  robots: { index: false, follow: true },
+  ...buildSocialMetadata({ title: TITLE, description: DESCRIPTION, path: "/enquiry-success" }),
+};
 
 const NEXT_STEPS = [
   {

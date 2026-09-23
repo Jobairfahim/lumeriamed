@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
 import CTABannerSection from '@/components/sections/CTABannerSection';
 import Image from 'next/image';
+import { buildSocialMetadata } from "@/lib/seo/config";
+
+const TITLE = "About LumieraMed | Clinical Electives Abroad in China";
+const DESCRIPTION =
+  "Meet LumieraMed — our mission, our story, and how we help medical students access clinical elective placements at China's leading hospitals.";
 
 export const metadata: Metadata = {
-  title: "About LumieraMed | Medical Electives in China",
-  description:
-    "Learn how LumieraMed connects international medical students with tailored clinical elective placements and hospital opportunities across China.",
+  title: TITLE,
+  description: DESCRIPTION,
   alternates: { canonical: "/about" },
+  ...buildSocialMetadata({ title: TITLE, description: DESCRIPTION, path: "/about" }),
 };
 
 export default function AboutPage() {
