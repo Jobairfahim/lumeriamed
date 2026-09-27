@@ -10,7 +10,7 @@ export function absoluteUrl(path = "/") {
 }
 
 const DEFAULT_OG_IMAGE = {
-  url: "/images/og-share.png",
+  url: "/images/og-share.jpg",
   width: 1200,
   height: 630,
   alt: "LumieraMed - Clinical Elective Placements in China",

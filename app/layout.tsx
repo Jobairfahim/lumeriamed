@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     siteName: "LumieraMed",
     images: [
       {
-        url: "/images/og-share.png",
+        url: "/images/og-share.jpg",
         width: 1200,
         height: 630,
         alt: "LumieraMed - Clinical Elective Placements in China",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "LumieraMed – Clinical Elective Placements in China",
     description: "Connect with accredited clinical elective placements across China's leading hospitals.",
-    images: ["/images/og-share.png"],
+    images: ["/images/og-share.jpg"],
     creator: "@lumieramed",
   },
   robots: {
