@@ -3,7 +3,7 @@ import { buildSocialMetadata } from "@/lib/seo/config";
 
 const TITLE = "Clinical Elective Placements in China | LumieraMed";
 const DESCRIPTION =
-  "Explore clinical elective placements across every major specialty in China — from family medicine and internal medicine to cardiology, surgery and more. Personally matched to your interests.";
+  "Explore clinical elective placements across China's leading hospitals, from family medicine to cardiology and surgery. Personally matched to your interests.";
 
 export const metadata: Metadata = {
   title: TITLE,
