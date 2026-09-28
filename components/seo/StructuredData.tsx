@@ -5,7 +5,7 @@ export default function StructuredData() {
     "name": "LumieraMed",
     "description": "Connects international medical students with accredited clinical elective placements across China's leading hospitals",
     "url": "https://www.lumieramed.com",
-    "logo": "https://www.lumieramed.com/images/logo.ico",
+    "logo": "https://www.lumieramed.com/images/logo.png",
     "contactPoint": {
       "@type": "ContactPoint",
       "telephone": "+44 7786 236891",
