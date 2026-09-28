@@ -189,7 +189,7 @@ export default function DashboardLayout({
         <div className="px-4 py-5 border-b border-brand-border">
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/images/logo.png"
+              src="/images/logo.ico"
               alt="LumieraMed"
               width={82}
               height={42}
